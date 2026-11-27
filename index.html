@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>GrammarFlow v3.1 - 総合英文法リファレンス＆AI学習</title>
+<title>GrammarFlow v3.2 - 総合英文法リファレンス＆AI学習</title>
 <style>
   :root {
     --bg: #f4f6f9;
@@ -322,7 +322,7 @@
   }
   .detail-body { font-size: 14.5px; white-space: pre-line; }
 
-  /* Situational Comparison */
+  /* Grammar in Use style Situational Comparison */
   .scene-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -730,6 +730,172 @@
     .brand span { display: none; }
     .modal.resizable { width: 96vw; height: 85dvh; resize: none; }
   }
+
+  /* Grammar Highlight inside Examples */
+  .grammar-hl {
+    background: rgba(250, 204, 21, 0.34);
+    color: var(--text);
+    padding: 1px 4px;
+    border-radius: 4px;
+    border-bottom: 2px solid var(--warn);
+    font-weight: 800;
+  }
+  [data-theme="dark"] .grammar-hl {
+    background: rgba(250, 204, 21, 0.22);
+    border-bottom-color: #fbbf24;
+  }
+  body.hl-off .grammar-hl {
+    background: transparent !important;
+    border-bottom: none !important;
+    padding: 0 !important;
+    font-weight: inherit !important;
+  }
+
+  /* Example Set Switcher */
+  .ex-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed var(--border);
+  }
+  .ex-set-tabs { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; }
+  .ex-set-tab {
+    padding: 4px 10px;
+    border-radius: 99px;
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .ex-set-tab.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+  .ex-set-del {
+    font-size: 11px;
+    opacity: 0.8;
+    cursor: pointer;
+    margin-left: 2px;
+  }
+  .ex-set-del:hover { opacity: 1; }
+
+  .glossary-tag {
+    cursor: pointer;
+    transition: 0.15s;
+  }
+  .glossary-tag:hover {
+    border-color: var(--primary);
+    background: var(--primary-light);
+  }
+
+  /* Floating Selection Lookup Button */
+  #selLookupBtn {
+    position: fixed;
+    z-index: 999;
+    display: none;
+    background: var(--primary);
+    color: #fff;
+    border: 2px solid #fff;
+    border-radius: 99px;
+    padding: 6px 13px;
+    font-size: 12.5px;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.32);
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
+  }
+  #selLookupBtn:hover { background: var(--primary-dark); }
+
+  /* Dictionary Modal (LingoFlow Compatible) */
+  .edict-search-row { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+  .edict-search-row input {
+    flex: 1;
+    min-width: 180px;
+    padding: 9px 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface-2);
+    color: var(--text);
+    font-size: 14.5px;
+  }
+  .edict-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 12px; }
+  .edict-chip {
+    font-size: 12px;
+    padding: 3px 9px;
+    border-radius: 99px;
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    color: var(--text);
+    cursor: pointer;
+    font-weight: 600;
+  }
+  .edict-chip:hover { border-color: var(--primary); color: var(--primary); }
+  .edict-chip.pinned { background: var(--warn-light); border-color: var(--warn); color: var(--warn); }
+
+  .edict-head-box {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .edict-word-title { font-size: 20px; font-weight: 800; color: var(--text); }
+  .edict-phonetic { font-size: 13px; color: var(--primary); font-weight: 600; margin-top: 2px; }
+  .edict-subtabs {
+    display: flex;
+    gap: 4px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 12px;
+    overflow-x: auto;
+  }
+  .edict-subtab {
+    padding: 7px 12px;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+  }
+  .edict-subtab.active { color: var(--primary); border-bottom-color: var(--primary); }
+  .edict-subpanel { display: none; }
+  .edict-subpanel.active { display: block; }
+  .edict-sense-box { margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px dashed var(--border); }
+  .edict-sense-box:last-child { border-bottom: none; }
+  .pos-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 4px;
+    background: var(--purple-light);
+    color: var(--purple);
+    margin-bottom: 4px;
+  }
+  .mydict-card {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 11px 13px;
+    margin-bottom: 9px;
+  }
+  .mydict-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px; }
+
 </style>
 </head>
 <body>
@@ -737,9 +903,10 @@
 <header>
   <div class="header-left">
     <button class="menu-btn" onclick="toggleSidebar()">☰</button>
-    <div class="brand">GrammarFlow <span>v3.1 総合英文法</span></div>
+    <div class="brand">GrammarFlow <span>v3.2 総合英文法</span></div>
   </div>
   <div class="header-actions">
+    <button class="icon-btn" onclick="openDictModal('edict')">📖 辞書 <span class="chapter-badge" id="headerDictBadge">0</span></button>
     <button class="icon-btn" onclick="openQuizModal('weak')">🎯 弱点 <span class="weak-badge" id="headerWeakBadge">0</span></button>
     <button class="icon-btn" onclick="openModal('importModal')">＋ 単元追加</button>
     <button class="icon-btn" onclick="openModal('settingsModal')">⚙ 設定</button>
@@ -965,7 +1132,66 @@
   </div>
 </div>
 
+
+<!-- テキスト選択時フローティング辞書ボタン -->
+<button id="selLookupBtn" onmousedown="event.preventDefault()" onclick="triggerSelectionLookup()">📖 辞書で引く</button>
+
+<!-- 辞書モーダル（LingoFlow完全互換・相互反映） -->
+<div class="modal-overlay" id="dictModal">
+  <div class="modal resizable" id="dictModalBox" style="width:820px; height:84dvh;">
+    <div class="modal-header">
+      <span>📖 AI電子辞書 ＆ My辞書（LingoFlow連携）</span>
+      <div class="modal-header-actions">
+        <button class="btn sm" id="dictMaxBtn" onclick="toggleDictMaximize()">⛶ 拡大</button>
+        <button class="modal-close" onclick="closeModal('dictModal')">×</button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="tab-bar">
+        <button class="tab-btn active" id="dtab-edict" onclick="switchDictTab('edict')">📖 AI電子辞書</button>
+        <button class="tab-btn" id="dtab-mydict" onclick="switchDictTab('mydict')">⭐ My辞書 (<span id="myDictCount">0</span>)</button>
+      </div>
+
+      <!-- Panel 1: AI電子辞書 -->
+      <div id="dictPanel-edict">
+        <div class="edict-search-row">
+          <input type="text" id="edictSearchInput" placeholder="英単語・熟語・フレーズを入力（例: comply with / oversight）" onkeydown="if(event.key==='Enter') runEdictLookup()">
+          <button class="btn ai-btn" id="edictSearchBtn" onclick="runEdictLookup()">🔍 辞書を引く</button>
+        </div>
+        <div style="font-size:12px; color:var(--text-muted); margin-bottom:8px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:6px;">
+          <span>※2回検索した単語はMy辞書へ自動追加（LingoFlowと共通データ）</span>
+          <span id="edictStatusText"></span>
+        </div>
+        <div class="edict-chips" id="edictChips"></div>
+        <div id="edictResultWrap">
+          <div style="text-align:center; padding:30px; color:var(--text-muted); font-size:14px;">
+            調べたい単語を入力するか、本文中の分からない英単語を選択して「📖 辞書で引く」を押してください。<br>
+            LingoFlowと同一のキャッシュ（<code>lf_edict_cache</code>）を共有するため、既出語は0トークンで即表示されます。
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel 2: My辞書 (LingoFlow共有) -->
+      <div id="dictPanel-mydict" style="display:none;">
+        <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px; align-items:center;">
+          <input type="text" id="myDictSearch" placeholder="🔍 My辞書を検索..." oninput="renderMyDictList()" style="flex:1; min-width:160px; padding:7px 10px; border:1px solid var(--border); border-radius:8px; background:var(--surface-2); color:var(--text); font-size:13.5px;">
+          <button class="btn sm" onclick="exportLingoFlowDict()" title="LingoFlowでそのまま復元できるJSONを書き出し">⬇ LingoFlow互換書出</button>
+          <label class="btn sm" style="cursor:pointer;" title="LingoFlowのバックアップJSONを取り込んで重複マージ">
+            ⬆ LingoFlow JSON取込
+            <input type="file" accept=".json" style="display:none;" onchange="importLingoFlowDict(event)">
+          </label>
+        </div>
+        <div style="font-size:12px; color:var(--text-muted); margin-bottom:10px;">
+          ※同じドメイン（GitHub Pages等）に置いたLingoFlowとは <code>lf_dictionary</code> を直接共有するため自動同期されます。別環境間は上のJSON書出/取込で相互反映できます。
+        </div>
+        <div id="myDictList"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
+
 
 const BUILTIN_CHAPTERS = [
   {
@@ -1086,6 +1312,10 @@ const BUILTIN_CHAPTERS = [
                 "w": "exceptionally",
                 "m": "並外れて、極めて（副詞→形容詞highを修飾）"
               }
+            ],
+            "highlights": [
+              "The reliability",
+              "remains exceptionally high"
             ]
           },
           {
@@ -1101,6 +1331,10 @@ const BUILTIN_CHAPTERS = [
                 "w": "under discussion",
                 "m": "協議中で、議論中で"
               }
+            ],
+            "highlights": [
+              "Whether the supplier can meet the tight deadline",
+              "is still under discussion"
             ]
           }
         ],
@@ -1227,6 +1461,9 @@ const BUILTIN_CHAPTERS = [
                 "w": "costly",
                 "m": "高くつく、大きな損害を招く（形容詞）"
               }
+            ],
+            "highlights": [
+              "prove costly"
             ]
           },
           {
@@ -1246,6 +1483,9 @@ const BUILTIN_CHAPTERS = [
                 "w": "forecast",
                 "m": "予測、見通し"
               }
+            ],
+            "highlights": [
+              "fell slightly short of"
             ]
           },
           {
@@ -1265,6 +1505,9 @@ const BUILTIN_CHAPTERS = [
                 "w": "as long as ~",
                 "m": "〜する限り"
               }
+            ],
+            "highlights": [
+              "It doesn't matter"
             ]
           }
         ],
@@ -1391,6 +1634,9 @@ const BUILTIN_CHAPTERS = [
                 "w": "solder bridging",
                 "m": "はんだブリッジ（基板上の短絡不良）"
               }
+            ],
+            "highlights": [
+              "addressed the solder bridging issue"
             ]
           },
           {
@@ -1406,6 +1652,9 @@ const BUILTIN_CHAPTERS = [
                 "w": "thermal shock test",
                 "m": "熱衝撃試験"
               }
+            ],
+            "highlights": [
+              "suggested that we conduct"
             ]
           },
           {
@@ -1421,6 +1670,9 @@ const BUILTIN_CHAPTERS = [
                 "w": "voltage surge",
                 "m": "電圧サージ（急激な電圧上昇）"
               }
+            ],
+            "highlights": [
+              "survived the extreme voltage surge"
             ]
           }
         ],
@@ -1538,6 +1790,9 @@ const BUILTIN_CHAPTERS = [
                 "w": "credibility",
                 "m": "信頼性、信用"
               }
+            ],
+            "highlights": [
+              "cost our division both credibility and a major contract"
             ]
           },
           {
@@ -1557,6 +1812,9 @@ const BUILTIN_CHAPTERS = [
                 "w": "distribution right",
                 "m": "販売権、流通権"
               }
+            ],
+            "highlights": [
+              "have been granted exclusive distribution rights"
             ]
           }
         ],
@@ -1688,6 +1946,9 @@ const BUILTIN_CHAPTERS = [
                 "w": "inoperable",
                 "m": "稼働不能な、操作できない"
               }
+            ],
+            "highlights": [
+              "left hundreds of servers completely inoperable"
             ]
           },
           {
@@ -1703,6 +1964,9 @@ const BUILTIN_CHAPTERS = [
                 "w": "revised",
                 "m": "改訂された"
               }
+            ],
+            "highlights": [
+              "were made to comply"
             ]
           },
           {
@@ -1718,6 +1982,9 @@ const BUILTIN_CHAPTERS = [
                 "w": "essential",
                 "m": "不可欠な"
               }
+            ],
+            "highlights": [
+              "consider this interconnect standard essential"
             ]
           }
         ],
@@ -1841,6 +2108,9 @@ const BUILTIN_CHAPTERS = [
                 "w": "absorb moisture",
                 "m": "湿気を吸収する"
               }
+            ],
+            "highlights": [
+              "prevented the resin from absorbing"
             ]
           },
           {
@@ -1860,6 +2130,9 @@ const BUILTIN_CHAPTERS = [
                 "w": "attendee",
                 "m": "出席者"
               }
+            ],
+            "highlights": [
+              "seat up to five hundred attendees"
             ]
           },
           {
@@ -1875,6 +2148,9 @@ const BUILTIN_CHAPTERS = [
                 "w": "come to a complete stop",
                 "m": "完全に停止する"
               }
+            ],
+            "highlights": [
+              "remain seated"
             ]
           }
         ],
@@ -1994,6 +2270,9 @@ const BUILTIN_CHAPTERS = [
                 "w": "initial screening",
                 "m": "初期選別、一次検査"
               }
+            ],
+            "highlights": [
+              "take it for granted that"
             ]
           },
           {
@@ -2009,6 +2288,9 @@ const BUILTIN_CHAPTERS = [
                 "w": "due to ~",
                 "m": "〜が原因で"
               }
+            ],
+            "highlights": [
+              "There remains a slight possibility"
             ]
           },
           {
@@ -2020,6 +2302,9 @@ const BUILTIN_CHAPTERS = [
                 "w": "see to it that ~",
                 "m": "〜するよう取り計らう、確実にする"
               }
+            ],
+            "highlights": [
+              "see to it that"
             ]
           }
         ],
@@ -2147,6 +2432,9 @@ const BUILTIN_CHAPTERS = [
                 "w": "supply constraint",
                 "m": "供給制約"
               }
+            ],
+            "highlights": [
+              "are steadily rising"
             ]
           },
           {
@@ -2166,6 +2454,9 @@ const BUILTIN_CHAPTERS = [
                 "w": "heat-resistant",
                 "m": "耐熱性の"
               }
+            ],
+            "highlights": [
+              "consists of"
             ]
           },
           {
@@ -2181,6 +2472,9 @@ const BUILTIN_CHAPTERS = [
                 "w": "compliance",
                 "m": "適合、法令遵守"
               }
+            ],
+            "highlights": [
+              "are being overly cautious"
             ]
           }
         ],
@@ -2295,6 +2589,10 @@ const BUILTIN_CHAPTERS = [
                 "w": "dramatically",
                 "m": "劇的に、飛躍的に"
               }
+            ],
+            "highlights": [
+              "Over the past decade",
+              "have increased"
             ]
           },
           {
@@ -2306,6 +2604,9 @@ const BUILTIN_CHAPTERS = [
                 "w": "comprehensive",
                 "m": "包括的な、網羅的な"
               }
+            ],
+            "highlights": [
+              "I have ever reviewed"
             ]
           },
           {
@@ -2321,6 +2622,10 @@ const BUILTIN_CHAPTERS = [
                 "w": "plant manager",
                 "m": "工場長"
               }
+            ],
+            "highlights": [
+              "spoke",
+              "just now"
             ]
           }
         ],
@@ -2432,6 +2737,10 @@ const BUILTIN_CHAPTERS = [
                 "w": "distributor",
                 "m": "代理店、販売業者"
               }
+            ],
+            "highlights": [
+              "have been negotiating",
+              "for nearly three months"
             ]
           },
           {
@@ -2443,6 +2752,9 @@ const BUILTIN_CHAPTERS = [
                 "w": "be back",
                 "m": "戻る"
               }
+            ],
+            "highlights": [
+              "has gone to"
             ]
           }
         ],
@@ -2562,6 +2874,10 @@ const BUILTIN_CHAPTERS = [
                 "w": "shortage",
                 "m": "不足、欠乏"
               }
+            ],
+            "highlights": [
+              "No sooner had we resolved",
+              "than"
             ]
           },
           {
@@ -2577,6 +2893,10 @@ const BUILTIN_CHAPTERS = [
                 "w": "organize",
                 "m": "〜を整理する、体系化する"
               }
+            ],
+            "highlights": [
+              "By the time the audit team arrives",
+              "will have organized"
             ]
           }
         ],
@@ -2701,6 +3021,9 @@ const BUILTIN_CHAPTERS = [
                 "w": "guideline",
                 "m": "指針、ガイドライン"
               }
+            ],
+            "highlights": [
+              "are to take effect"
             ]
           },
           {
@@ -2720,6 +3043,9 @@ const BUILTIN_CHAPTERS = [
                 "w": "compromise",
                 "m": "妥協、折衷案"
               }
+            ],
+            "highlights": [
+              "were on the verge of canceling"
             ]
           },
           {
@@ -2735,6 +3061,9 @@ const BUILTIN_CHAPTERS = [
                 "w": "batch",
                 "m": "（製造の）1ロット、ひとまとまり"
               }
+            ],
+            "highlights": [
+              "is due to arrive"
             ]
           }
         ],
@@ -2848,6 +3177,9 @@ const BUILTIN_CHAPTERS = [
                 "w": "simulation",
                 "m": "シミュレーション、模擬実験"
               }
+            ],
+            "highlights": [
+              "after the engineering team has completed"
             ]
           },
           {
@@ -2863,6 +3195,9 @@ const BUILTIN_CHAPTERS = [
                 "w": "primary supplier",
                 "m": "主要サプライヤー"
               }
+            ],
+            "highlights": [
+              "in case the primary supplier fails"
             ]
           }
         ],
@@ -2968,6 +3303,9 @@ const BUILTIN_CHAPTERS = [
                 "w": "pricing structure",
                 "m": "価格体系"
               }
+            ],
+            "highlights": [
+              "I was hoping we could"
             ]
           },
           {
@@ -2983,6 +3321,10 @@ const BUILTIN_CHAPTERS = [
                 "w": "production line",
                 "m": "生産ライン"
               }
+            ],
+            "highlights": [
+              "had been operating",
+              "for months"
             ]
           },
           {
@@ -2994,6 +3336,9 @@ const BUILTIN_CHAPTERS = [
                 "w": "pass by ~",
                 "m": "〜のそばを通る"
               }
+            ],
+            "highlights": [
+              "Will you be passing by"
             ]
           }
         ],
@@ -3112,6 +3457,9 @@ const BUILTIN_CHAPTERS = [
                 "w": "mitigate",
                 "m": "（リスク・被害を）軽減する、緩和する"
               }
+            ],
+            "highlights": [
+              "It is high time we reconsidered"
             ]
           },
           {
@@ -3127,6 +3475,10 @@ const BUILTIN_CHAPTERS = [
                 "w": "contact interface",
                 "m": "接触界面"
               }
+            ],
+            "highlights": [
+              "explained that",
+              "prevents"
             ]
           }
         ],
@@ -3160,7 +3512,12 @@ const STORAGE_KEYS = {
   THEME: "grammarflow_theme_v1",
   AI_HISTORY: "grammarflow_ai_history_v3",
   SAVED_QUIZZES: "grammarflow_saved_quizzes_v3",
-  WEAKNESSES: "grammarflow_weaknesses_v3"
+  WEAKNESSES: "grammarflow_weaknesses_v3",
+  CUSTOM_EXAMPLES: "grammarflow_custom_examples_v32",
+  HL_ENABLED: "grammarflow_hl_enabled_v32",
+  LF_DICT: "lf_dictionary",
+  LF_EDICT_CACHE: "lf_edict_cache",
+  LF_API_KEY: "lf_api_key"
 };
 
 let allChapters = [];
@@ -3183,6 +3540,14 @@ let currentFilter = "all";
 let currentQuizTab = "new";
 let currentWeakScope = "all";
 let activeQuizSet = null; // 現在画面に開いているクイズデータ
+let customExamplesMap = {}; // { topicId: [ { id, createdAt, examples: [...] } ] }
+let activeExSetIndex = {};  // { topicId: -1 (標準) or 0, 1, ... }
+let hlEnabled = true;
+let lfDictionary = [];      // LingoFlow完全互換 (lf_dictionary)
+let lfEdictCache = [];      // LingoFlow完全互換 (lf_edict_cache)
+let currentEdictEntry = null;
+let currentEdictSubTab = "basic";
+let pendingSelectedText = "";
 
 function safeParse(key, fallback) {
   try {
@@ -3199,7 +3564,18 @@ function loadAllData() {
   aiHistoryMap = safeParse(STORAGE_KEYS.AI_HISTORY, {});
   savedQuizzes = safeParse(STORAGE_KEYS.SAVED_QUIZZES, []);
   weaknesses = safeParse(STORAGE_KEYS.WEAKNESSES, []);
+  customExamplesMap = safeParse(STORAGE_KEYS.CUSTOM_EXAMPLES, {});
+  lfDictionary = safeParse(STORAGE_KEYS.LF_DICT, []);
+  lfEdictCache = safeParse(STORAGE_KEYS.LF_EDICT_CACHE, []);
+  hlEnabled = localStorage.getItem(STORAGE_KEYS.HL_ENABLED) !== "false";
+  document.body.classList.toggle("hl-off", !hlEnabled);
+
   settings = Object.assign(settings, safeParse(STORAGE_KEYS.SETTINGS, {}));
+  // LingoFlowと同じブラウザ領域にAPIキーがあれば自動フォールバック
+  if (!settings.apiKey) {
+    const lfKey = (localStorage.getItem(STORAGE_KEYS.LF_API_KEY) || "").trim();
+    if (lfKey) settings.apiKey = lfKey;
+  }
   tokenStats = Object.assign(tokenStats, safeParse(STORAGE_KEYS.TOKENS, {}));
 
   const theme = localStorage.getItem(STORAGE_KEYS.THEME) || "light";
@@ -3231,6 +3607,10 @@ function updateGlobalBadges() {
   if (wq) wq.textContent = activeWeak;
   const sq = document.getElementById("savedQuizCount");
   if (sq) sq.textContent = savedQuizzes.length;
+  const db = document.getElementById("headerDictBadge");
+  if (db) db.textContent = lfDictionary.length;
+  const md = document.getElementById("myDictCount");
+  if (md) md.textContent = lfDictionary.length;
 }
 
 function getAllTopicsFlat() {
@@ -3491,13 +3871,19 @@ function renderMain() {
     html += `</div></div>`;
   }
 
-  // 実践例文（音声ボタン＆速度切替付き）
+  // 実践例文（文法ハイライト・別例文生成＆保存切替・音声・語釈辞書ジャンプ）
   if (t.examples && t.examples.length) {
+    const customSets = customExamplesMap[t.id] || [];
+    let activeSet = activeExSetIndex[t.id];
+    if (typeof activeSet !== "number" || activeSet >= customSets.length) activeSet = -1;
+    const displayExamples = activeSet === -1 ? t.examples : customSets[activeSet].examples;
+
     html += `
       <div class="card">
         <div class="card-title">
-          <span>💬 実践例文（発音・和訳・語釈）</span>
+          <span>💬 実践例文（文法ハイライト・発音・和訳・語釈）</span>
           <div class="audio-bar">
+            <button class="btn sm ${hlEnabled ? 'ai-btn' : ''}" onclick="toggleGrammarHighlight()" title="文法該当箇所の色分け表示を切替">🎨 ハイライト ${hlEnabled ? 'ON' : 'OFF'}</button>
             <select onchange="updateQuickAudioSetting('voiceLang', this.value)" title="英語アクセント">
               <option value="en-US" ${settings.voiceLang === 'en-US' ? 'selected' : ''}>🇺🇸 米国</option>
               <option value="en-GB" ${settings.voiceLang === 'en-GB' ? 'selected' : ''}>🇬🇧 英国</option>
@@ -3510,19 +3896,31 @@ function renderMain() {
             </select>
           </div>
         </div>
+        <div class="ex-toolbar">
+          <div class="ex-set-tabs">
+            <button class="ex-set-tab ${activeSet === -1 ? 'active' : ''}" onclick="switchExampleSet('${t.id}', -1)">📘 標準例文</button>
+            ${customSets.map((cs, i) => `
+              <span class="ex-set-tab ${activeSet === i ? 'active' : ''}" onclick="switchExampleSet('${t.id}', ${i})">
+                ✨ 生成セット${i + 1}
+                <span class="ex-set-del" title="このセットを削除" onclick="event.stopPropagation(); deleteExampleSet('${t.id}', ${i})">×</span>
+              </span>
+            `).join("")}
+          </div>
+          <button class="btn sm quiz-btn" id="genExamplesBtn" onclick="generateNewExamples()">🔄 別の例文を生成 (3文)</button>
+        </div>
     `;
-    t.examples.forEach(ex => {
+    displayExamples.forEach(ex => {
       html += `
         <div class="example-box">
           <div class="ex-en-row">
-            <div class="ex-en">${escapeHtml(ex.en)}</div>
+            <div class="ex-en">${renderHighlightedEnglish(ex.en, ex.highlights)}</div>
             <button class="speak-btn" onclick="speakEnglish('${escapeJs(ex.en)}', this)">🔊 再生</button>
           </div>
           <div class="ex-ja">${escapeHtml(ex.ja)}</div>
           ${ex.note ? `<div class="ex-note">${escapeHtml(ex.note)}</div>` : ""}
           ${ex.glossary && ex.glossary.length ? `
             <div class="glossary-list">
-              ${ex.glossary.map(g => `<span class="glossary-tag"><b>${escapeHtml(g.w)}</b>：${escapeHtml(g.m)}</span>`).join("")}
+              ${ex.glossary.map(g => `<span class="glossary-tag" title="クリックして辞書で調べる" onclick="openDictWithWord('${escapeJs(g.w)}')">📖 <b>${escapeHtml(g.w)}</b>：${escapeHtml(g.m)}</span>`).join("")}
             </div>
           ` : ""}
         </div>
@@ -4157,7 +4555,10 @@ function exportBackup() {
     memos: memoMap,
     aiHistoryMap,
     savedQuizzes,
-    weaknesses
+    weaknesses,
+    customExamplesMap,
+    dictionary: lfDictionary,
+    edictCache: lfEdictCache
   };
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
   const a = document.createElement("a");
@@ -4179,6 +4580,9 @@ function restoreBackup(e) {
       if (data.aiHistoryMap) localStorage.setItem(STORAGE_KEYS.AI_HISTORY, JSON.stringify(data.aiHistoryMap));
       if (data.savedQuizzes) localStorage.setItem(STORAGE_KEYS.SAVED_QUIZZES, JSON.stringify(data.savedQuizzes));
       if (data.weaknesses) localStorage.setItem(STORAGE_KEYS.WEAKNESSES, JSON.stringify(data.weaknesses));
+      if (data.customExamplesMap) localStorage.setItem(STORAGE_KEYS.CUSTOM_EXAMPLES, JSON.stringify(data.customExamplesMap));
+      if (Array.isArray(data.dictionary)) localStorage.setItem(STORAGE_KEYS.LF_DICT, JSON.stringify(data.dictionary));
+      if (Array.isArray(data.edictCache)) localStorage.setItem(STORAGE_KEYS.LF_EDICT_CACHE, JSON.stringify(data.edictCache));
       loadAllData();
       renderSidebar();
       renderMain();
@@ -4314,6 +4718,510 @@ function escapeJs(str) {
     .replace(/'/g, "\\'")
     .replace(/"/g, "&quot;")
     .replace(/\r?\n/g, " ");
+}
+
+
+/* =========================================================
+   実践例文：文法ハイライト＆AI別例文生成（保存切替対応）
+========================================================= */
+function renderHighlightedEnglish(enText, highlights) {
+  let html = escapeHtml(enText || "");
+  if (!Array.isArray(highlights) || highlights.length === 0) return html;
+  // 長いフレーズから先に置換して入れ子衝突を防ぐ
+  const sorted = [...highlights].filter(Boolean).sort((a, b) => b.length - a.length);
+  const tokens = [];
+  sorted.forEach((phrase, idx) => {
+    const escapedPhrase = escapeHtml(phrase);
+    const re = new RegExp(escapedPhrase.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
+    html = html.replace(re, (m) => {
+      const key = `@@HL_${idx}_${tokens.length}@@`;
+      tokens.push({ key, val: `<span class="grammar-hl">${m}</span>` });
+      return key;
+    });
+  });
+  tokens.forEach(t => { html = html.replace(t.key, t.val); });
+  return html;
+}
+
+function toggleGrammarHighlight() {
+  hlEnabled = !hlEnabled;
+  localStorage.setItem(STORAGE_KEYS.HL_ENABLED, String(hlEnabled));
+  document.body.classList.toggle("hl-off", !hlEnabled);
+  renderMain();
+}
+
+function switchExampleSet(topicId, idx) {
+  activeExSetIndex[topicId] = idx;
+  renderMain();
+}
+
+function deleteExampleSet(topicId, idx) {
+  if (!confirm("この生成例文セットを削除しますか？")) return;
+  const sets = customExamplesMap[topicId] || [];
+  sets.splice(idx, 1);
+  customExamplesMap[topicId] = sets;
+  localStorage.setItem(STORAGE_KEYS.CUSTOM_EXAMPLES, JSON.stringify(customExamplesMap));
+  activeExSetIndex[topicId] = -1;
+  renderMain();
+}
+
+async function generateNewExamples() {
+  const { ch, t } = getCurrentContext();
+  if (!ch || !t) return;
+  const btn = document.getElementById("genExamplesBtn");
+  if (btn) { btn.disabled = true; btn.textContent = "生成中..."; }
+
+  const existingEns = [
+    ...(t.examples || []).map(e => e.en),
+    ...(customExamplesMap[t.id] || []).flatMap(s => s.examples.map(e => e.en))
+  ].slice(0, 12);
+
+  const sys = `あなたは日本人学習者向けの英文法書著者です。指定された文法項目のルールが明確に表れる、ビジネス・日常で実用的な新しい英語例文を3文作成し、必ず指定のJSON配列のみを返してください。
+各例文には必ず「highlights（その単元の文法ポイントになっている英文中の正確な部分文字列の配列）」を含めてください。`;
+
+  const prompt = `【単元】第${ch.number}章 / ${t.title}
+【核心ルール】${t.core}
+【既存例文（これらとは別の新しい文脈・語彙で作ること）】
+${existingEns.join("\n")}
+
+【出力JSONフォーマット】
+[
+  {
+    "en": "新しい英語例文",
+    "ja": "自然な日本語訳",
+    "note": "この例文の文法構造・使い分けの簡潔な日本語解説",
+    "highlights": ["文法ポイントに該当するen内の正確な語句"],
+    "glossary": [
+      { "w": "重要語句1", "m": "日本語の意味" },
+      { "w": "重要語句2", "m": "日本語の意味" }
+    ]
+  }
+]`;
+
+  try {
+    const raw = await callGemini([{ role: "user", parts: [{ text: prompt }] }], sys, "application/json");
+    const cleaned = raw.replace(/^```json\s*/i, "").replace(/```$/i, "").trim();
+    const examples = JSON.parse(cleaned);
+    if (!Array.isArray(examples) || examples.length === 0) throw new Error("例文データの形式が不正です。");
+
+    if (!customExamplesMap[t.id]) customExamplesMap[t.id] = [];
+    customExamplesMap[t.id].push({
+      id: "exset_" + Date.now(),
+      createdAt: new Date().toLocaleString("ja-JP"),
+      examples
+    });
+    localStorage.setItem(STORAGE_KEYS.CUSTOM_EXAMPLES, JSON.stringify(customExamplesMap));
+    activeExSetIndex[t.id] = customExamplesMap[t.id].length - 1;
+    renderMain();
+  } catch (err) {
+    alert("別例文の生成に失敗しました：" + err.message);
+    if (btn) { btn.disabled = false; btn.textContent = "🔄 別の例文を生成 (3文)"; }
+  }
+}
+
+/* =========================================================
+   テキスト選択 → フローティング「📖 辞書で引く」ジャンプ
+========================================================= */
+function updateSelectionPopup() {
+  const btn = document.getElementById("selLookupBtn");
+  const sel = window.getSelection ? window.getSelection() : null;
+  if (!sel || sel.isCollapsed) {
+    btn.style.display = "none";
+    pendingSelectedText = "";
+    return;
+  }
+  const text = sel.toString().trim();
+  // 1〜50文字、かつ入力欄(textarea/input)外での選択を対象
+  const anchorNode = sel.anchorNode;
+  const el = anchorNode?.nodeType === 3 ? anchorNode.parentElement : anchorNode;
+  if (!text || text.length > 55 || el?.closest("input, textarea, #dictModal")) {
+    btn.style.display = "none";
+    pendingSelectedText = "";
+    return;
+  }
+
+  try {
+    const range = sel.getRangeAt(0);
+    const rect = range.getBoundingClientRect();
+    if (rect.width === 0 && rect.height === 0) return;
+    pendingSelectedText = text;
+    const top = Math.max(10, rect.top - 42);
+    const left = Math.min(window.innerWidth - 150, Math.max(10, rect.left + rect.width / 2 - 65));
+    btn.style.top = top + "px";
+    btn.style.left = left + "px";
+    btn.style.display = "inline-flex";
+  } catch {
+    btn.style.display = "none";
+  }
+}
+
+document.addEventListener("mouseup", () => setTimeout(updateSelectionPopup, 10));
+document.addEventListener("touchend", () => setTimeout(updateSelectionPopup, 80));
+document.addEventListener("scroll", () => {
+  const btn = document.getElementById("selLookupBtn");
+  if (btn) btn.style.display = "none";
+}, true);
+
+function triggerSelectionLookup() {
+  const word = pendingSelectedText;
+  document.getElementById("selLookupBtn").style.display = "none";
+  if (window.getSelection) window.getSelection().removeAllRanges();
+  if (word) openDictWithWord(word);
+}
+
+/* =========================================================
+   辞書機能（LingoFlow完全互換：lf_dictionary / lf_edict_cache）
+========================================================= */
+function openDictModal(tab = "edict") {
+  // 開くたびに最新状態をlocalStorageから再読込（別タブのLingoFlow更新を即反映）
+  lfDictionary = safeParse(STORAGE_KEYS.LF_DICT, []);
+  lfEdictCache = safeParse(STORAGE_KEYS.LF_EDICT_CACHE, []);
+  updateGlobalBadges();
+  switchDictTab(tab);
+  openModal("dictModal");
+}
+
+function openDictWithWord(word) {
+  openDictModal("edict");
+  const clean = String(word || "").replace(/[~～]/g, "").trim();
+  document.getElementById("edictSearchInput").value = clean;
+  runEdictLookup(clean);
+}
+
+function toggleDictMaximize() {
+  const box = document.getElementById("dictModalBox");
+  const btn = document.getElementById("dictMaxBtn");
+  const isMax = box.classList.toggle("maximized");
+  btn.textContent = isMax ? "🗗 標準サイズ" : "⛶ 拡大";
+}
+
+function switchDictTab(tab) {
+  ["edict", "mydict"].forEach(k => {
+    document.getElementById(`dtab-${k}`).classList.toggle("active", k === tab);
+    document.getElementById(`dictPanel-${k}`).style.display = k === tab ? "block" : "none";
+  });
+  if (tab === "edict") renderEdictChips();
+  if (tab === "mydict") renderMyDictList();
+}
+
+function saveLingoFlowDict() {
+  localStorage.setItem(STORAGE_KEYS.LF_DICT, JSON.stringify(lfDictionary));
+  updateGlobalBadges();
+}
+
+function saveLingoFlowEdictCache() {
+  const pinned = lfEdictCache.filter(x => x.pinned);
+  const recent = lfEdictCache.filter(x => !x.pinned).slice(0, 30);
+  lfEdictCache = [...pinned, ...recent];
+  localStorage.setItem(STORAGE_KEYS.LF_EDICT_CACHE, JSON.stringify(lfEdictCache));
+  renderEdictChips();
+}
+
+function addWordToMyDict(entry, silent = false) {
+  const exists = lfDictionary.find(d => (d.word || "").toLowerCase() === (entry.word || "").toLowerCase());
+  if (exists) {
+    if (!silent) alert("すでにMy辞書に登録されています。");
+    return false;
+  }
+  lfDictionary.unshift({
+    id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+    word: entry.word,
+    lang: entry.lang || "en",
+    reading: entry.reading || "",
+    meaning: entry.meaning || "",
+    note: entry.note || "",
+    example: entry.example || "",
+    autoAdded: !!entry.autoAdded,
+    srsLevel: 0,
+    nextReview: new Date().toISOString().slice(0, 10),
+    mastered: false,
+    createdAt: new Date().toISOString()
+  });
+  saveLingoFlowDict();
+  return true;
+}
+
+function renderEdictChips() {
+  const el = document.getElementById("edictChips");
+  if (!el) return;
+  if (lfEdictCache.length === 0) {
+    el.innerHTML = `<span style="font-size:12px; color:var(--text-muted);">📌 最近の検索・ピン留めがここに表示されます（キャッシュ済みの語は0トークン）</span>`;
+    return;
+  }
+  const list = [
+    ...lfEdictCache.filter(x => x.pinned),
+    ...lfEdictCache.filter(x => !x.pinned).slice(0, 14)
+  ];
+  el.innerHTML = list.map(e => `
+    <button class="edict-chip ${e.pinned ? 'pinned' : ''}" onclick="openDictWithWord('${escapeJs(e.query)}')">
+      ${e.pinned ? '📌 ' : ''}${escapeHtml(e.query)} (${e.lookupCount || 1}回)
+    </button>
+  `).join("");
+}
+
+async function runEdictLookup(forceWord) {
+  const query = (typeof forceWord === "string" ? forceWord : document.getElementById("edictSearchInput").value).trim();
+  if (!query) return;
+  const statusEl = document.getElementById("edictStatusText");
+  const wrap = document.getElementById("edictResultWrap");
+
+  // キャッシュ確認（LingoFlowと共有・0トークン）
+  const cached = lfEdictCache.find(x => (x.query || "").toLowerCase() === query.toLowerCase());
+  if (cached) {
+    cached.lookupCount = (cached.lookupCount || 1) + 1;
+    cached.ts = Date.now();
+    saveLingoFlowEdictCache();
+    currentEdictEntry = cached;
+    statusEl.textContent = "⚡ キャッシュ表示（0トークン）";
+    if (cached.lookupCount >= 2) {
+      const d = cached.data;
+      const ex0 = d.examples?.[0] ? `${d.examples[0].sentence} (${d.examples[0].translation})` : "";
+      addWordToMyDict({
+        word: d.headword || cached.query,
+        lang: d.lang || "en",
+        reading: d.phonetic || "",
+        meaning: d.shortMeaning || d.coreMeaning || "",
+        note: d.coreMeaning || "",
+        example: ex0,
+        autoAdded: true
+      }, true);
+    }
+    renderEdictResult();
+    return;
+  }
+
+  const btn = document.getElementById("edictSearchBtn");
+  btn.disabled = true;
+  btn.textContent = "検索中...";
+  statusEl.textContent = "";
+  wrap.innerHTML = `<div style="text-align:center; padding:30px;">🤖 AI電子辞書で「${escapeHtml(query)}」を検索中...</div>`;
+
+  const sys = `あなたは最高水準の電子辞書AIです。検索語句について日本語話者向けに構造化して解説し、必ず指定JSONのみを返してください。`;
+  const prompt = `語句「${query}」について、以下のJSON形式で返答してください:
+{
+  "headword": "見出し語",
+  "lang": "en" | "zh" | "ja",
+  "phonetic": "英語なら発音記号（米/英）、中国語なら声調付きピンイン、日本語なら主要英訳",
+  "coreMeaning": "コアイメージ（1〜2文で本質をわかりやすく）",
+  "shortMeaning": "単語帳登録用の簡潔な日本語訳（1行）",
+  "senses": [{ "pos": "品詞", "definitions": ["語義1", "語義2"] }],
+  "examples": [{ "scene": "ビジネス" | "日常" | "技術", "sentence": "実用例文", "reading": "", "translation": "自然な日本語訳" }],
+  "synonyms": [{ "word": "類義語", "diff": "見出し語とのニュアンス・使い分けの違い" }],
+  "antonyms": ["対義語・関連表現（訳付き）"],
+  "collocations": [{ "phrase": "コロケーション・イディオム", "meaning": "意味", "example": "短い使用例" }],
+  "etymology": "語源・成り立ち（記憶のフック）"
+}`;
+
+  try {
+    const raw = await callGemini([{ role: "user", parts: [{ text: prompt }] }], sys, "application/json");
+    const cleaned = raw.replace(/^```json\s*/i, "").replace(/```$/i, "").trim();
+    const data = JSON.parse(cleaned);
+    const entry = { query, data, pinned: false, lookupCount: 1, ts: Date.now() };
+    lfEdictCache = lfEdictCache.filter(x => (x.query || "").toLowerCase() !== query.toLowerCase());
+    lfEdictCache.unshift(entry);
+    saveLingoFlowEdictCache();
+    currentEdictEntry = entry;
+    statusEl.textContent = "✅ 検索完了（LingoFlowキャッシュへ保存済）";
+    renderEdictResult();
+  } catch (err) {
+    wrap.innerHTML = `<div style="color:var(--danger); padding:16px;">⚠️ 辞書検索エラー：${escapeHtml(err.message)}</div>`;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "🔍 辞書を引く";
+  }
+}
+
+function switchEdictSubTab(tab) {
+  currentEdictSubTab = tab;
+  renderEdictResult();
+}
+
+function renderEdictResult() {
+  const wrap = document.getElementById("edictResultWrap");
+  if (!currentEdictEntry) return;
+  const d = currentEdictEntry.data;
+  const inMyDict = lfDictionary.some(x => (x.word || "").toLowerCase() === (d.headword || "").toLowerCase());
+
+  wrap.innerHTML = `
+    <div class="edict-head-box">
+      <div>
+        <div class="edict-word-title">${escapeHtml(d.headword)} <span style="font-size:12px; font-weight:600; color:var(--text-muted);">(${currentEdictEntry.lookupCount || 1}回目)</span></div>
+        <div class="edict-phonetic">${escapeHtml(d.phonetic || "")}</div>
+      </div>
+      <div style="display:flex; gap:6px; flex-wrap:wrap;">
+        <button class="speak-btn" onclick="speakEnglish('${escapeJs(d.headword)}', this)">🔊 再生</button>
+        <button class="btn sm ${currentEdictEntry.pinned ? 'done' : ''}" onclick="toggleEdictPin()">${currentEdictEntry.pinned ? '📌 ピン中' : '📌 ピン留め'}</button>
+        <button class="btn sm ${inMyDict ? 'done' : 'ai-btn'}" onclick="saveCurrentEdictToMyDict()">${inMyDict ? '✓ My辞書登録済' : '⭐ My辞書に登録'}</button>
+      </div>
+    </div>
+
+    <div class="edict-subtabs">
+      <button class="edict-subtab ${currentEdictSubTab === 'basic' ? 'active' : ''}" onclick="switchEdictSubTab('basic')">📘 基本・例文</button>
+      <button class="edict-subtab ${currentEdictSubTab === 'synonyms' ? 'active' : ''}" onclick="switchEdictSubTab('synonyms')">⚖️ 類語・ニュアンス</button>
+      <button class="edict-subtab ${currentEdictSubTab === 'collocation' ? 'active' : ''}" onclick="switchEdictSubTab('collocation')">🔗 コロケーション・語源</button>
+    </div>
+
+    <div class="edict-subpanel ${currentEdictSubTab === 'basic' ? 'active' : ''}">
+      <div class="card core-card" style="padding:12px 14px; margin-bottom:12px;">
+        <div style="font-size:12.5px; font-weight:800; color:var(--primary); margin-bottom:4px;">🎯 コアイメージ</div>
+        <div style="font-size:14px;">${escapeHtml(d.coreMeaning || "")}</div>
+      </div>
+      <div style="margin-bottom:12px;">
+        ${(d.senses || []).map(s => `
+          <div class="edict-sense-box">
+            <span class="pos-badge">${escapeHtml(s.pos)}</span>
+            <ol style="padding-left:20px; font-size:13.8px;">${(s.definitions || []).map(def => `<li>${escapeHtml(def)}</li>`).join("")}</ol>
+          </div>
+        `).join("")}
+      </div>
+      <div>
+        ${(d.examples || []).map(ex => `
+          <div class="example-box" style="padding:10px 12px;">
+            <div class="ex-en-row">
+              <div style="font-weight:700; font-size:14px;"><span class="pos-badge" style="margin-right:6px;">${escapeHtml(ex.scene || '例文')}</span>${escapeHtml(ex.sentence)}</div>
+              <button class="speak-btn" onclick="speakEnglish('${escapeJs(ex.sentence)}', this)">🔊 再生</button>
+            </div>
+            <div style="font-size:13px; color:var(--text-muted);">${escapeHtml(ex.translation)}</div>
+          </div>
+        `).join("")}
+      </div>
+    </div>
+
+    <div class="edict-subpanel ${currentEdictSubTab === 'synonyms' ? 'active' : ''}">
+      ${(d.synonyms || []).map(s => `
+        <div class="pitfall-item">
+          <div style="font-weight:800; color:var(--primary); font-size:14px;">${escapeHtml(s.word)}</div>
+          <div style="font-size:13.5px; margin-top:4px;">${escapeHtml(s.diff)}</div>
+        </div>
+      `).join("") || "<p style='color:var(--text-muted); font-size:13.5px;'>類語情報はありません。</p>"}
+      ${d.antonyms && d.antonyms.length ? `<div style="margin-top:10px; font-size:13.5px;"><b>↔️ 対義語・関連語：</b>${escapeHtml(d.antonyms.join(" / "))}</div>` : ""}
+    </div>
+
+    <div class="edict-subpanel ${currentEdictSubTab === 'collocation' ? 'active' : ''}">
+      ${(d.collocations || []).map(c => `
+        <div class="pitfall-item">
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
+            <b style="font-size:14px; color:var(--text);">${escapeHtml(c.phrase)}</b>
+            <button class="speak-btn" onclick="speakEnglish('${escapeJs(c.phrase)}', this)">🔊 再生</button>
+          </div>
+          <div style="font-size:13.5px; margin-top:3px;">${escapeHtml(c.meaning)}</div>
+          ${c.example ? `<div style="font-size:12.5px; color:var(--text-muted); margin-top:3px;">${escapeHtml(c.example)}</div>` : ""}
+        </div>
+      `).join("")}
+      <div class="tip-box" style="margin-top:10px;"><b>🌱 語源・成り立ち：</b>\n${escapeHtml(d.etymology || "情報なし")}</div>
+    </div>
+  `;
+}
+
+function toggleEdictPin() {
+  if (!currentEdictEntry) return;
+  currentEdictEntry.pinned = !currentEdictEntry.pinned;
+  saveLingoFlowEdictCache();
+  renderEdictResult();
+}
+
+function saveCurrentEdictToMyDict() {
+  if (!currentEdictEntry) return;
+  const d = currentEdictEntry.data;
+  const ex0 = d.examples?.[0] ? `${d.examples[0].sentence} (${d.examples[0].translation})` : "";
+  addWordToMyDict({
+    word: d.headword,
+    lang: d.lang || "en",
+    reading: d.phonetic || "",
+    meaning: d.shortMeaning || d.coreMeaning || "",
+    note: d.coreMeaning || "",
+    example: ex0
+  }, false);
+  renderEdictResult();
+}
+
+function renderMyDictList() {
+  const container = document.getElementById("myDictList");
+  const q = (document.getElementById("myDictSearch")?.value || "").trim().toLowerCase();
+  const list = lfDictionary.filter(d => !q ||
+    (d.word || "").toLowerCase().includes(q) ||
+    (d.meaning || "").toLowerCase().includes(q) ||
+    (d.reading || "").toLowerCase().includes(q)
+  );
+  if (list.length === 0) {
+    container.innerHTML = `<div style="text-align:center; padding:28px; color:var(--text-muted); font-size:14px;">登録されている単語はありません。</div>`;
+    return;
+  }
+  container.innerHTML = list.map(d => `
+    <div class="mydict-card">
+      <div class="mydict-top">
+        <div>
+          <span class="pos-badge">${escapeHtml((d.lang || 'EN').toUpperCase())}</span>
+          <b style="font-size:15px; margin-left:4px;">${escapeHtml(d.word)}</b>
+          ${d.reading ? `<span style="font-size:12.5px; color:var(--primary); margin-left:6px;">${escapeHtml(d.reading)}</span>` : ""}
+        </div>
+        <div style="display:flex; gap:5px;">
+          <button class="btn sm" onclick="openDictWithWord('${escapeJs(d.word)}')">📖 詳しく</button>
+          <button class="speak-btn" onclick="speakEnglish('${escapeJs(d.word)}', this)">🔊 再生</button>
+          <button class="btn sm danger-btn" onclick="deleteMyDictWord('${escapeJs(d.id)}')">削除</button>
+        </div>
+      </div>
+      <div style="font-size:13.8px; font-weight:600;">${escapeHtml(d.meaning)}</div>
+      ${d.example ? `<div style="font-size:12.5px; color:var(--text-muted); margin-top:3px;">${escapeHtml(d.example)}</div>` : ""}
+    </div>
+  `).join("");
+}
+
+function deleteMyDictWord(id) {
+  if (!confirm("この単語をMy辞書から削除しますか？（LingoFlow側からも削除されます）")) return;
+  lfDictionary = lfDictionary.filter(d => d.id !== id);
+  saveLingoFlowDict();
+  renderMyDictList();
+}
+
+function exportLingoFlowDict() {
+  const payload = {
+    app: "LingoFlow",
+    exportedAt: new Date().toISOString(),
+    dictionary: lfDictionary,
+    edictCache: lfEdictCache
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `LingoFlow_dict_sync_${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+}
+
+function importLingoFlowDict(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const data = JSON.parse(reader.result);
+      let addedDict = 0, addedCache = 0;
+      if (Array.isArray(data.dictionary)) {
+        data.dictionary.forEach(item => {
+          if (item.word && !lfDictionary.some(x => (x.word || "").toLowerCase() === item.word.toLowerCase())) {
+            lfDictionary.push(item);
+            addedDict++;
+          }
+        });
+        saveLingoFlowDict();
+      }
+      if (Array.isArray(data.edictCache)) {
+        data.edictCache.forEach(entry => {
+          if (entry.query && !lfEdictCache.some(x => (x.query || "").toLowerCase() === entry.query.toLowerCase())) {
+            lfEdictCache.push(entry);
+            addedCache++;
+          }
+        });
+        saveLingoFlowEdictCache();
+      }
+      renderMyDictList();
+      alert(`LingoFlowデータをマージしました！（My辞書 +${addedDict}件 / 電子辞書キャッシュ +${addedCache}件）`);
+    } catch (err) {
+      alert("JSON読み込みエラー：" + err.message);
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = "";
 }
 
 // 初期化
