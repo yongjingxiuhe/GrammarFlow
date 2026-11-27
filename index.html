@@ -1,0 +1,4325 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>GrammarFlow v3.1 - 総合英文法リファレンス＆AI学習</title>
+<style>
+  :root {
+    --bg: #f4f6f9;
+    --surface: #ffffff;
+    --surface-2: #f8fafc;
+    --text: #1e293b;
+    --text-muted: #64748b;
+    --border: #e2e8f0;
+    --primary: #2563eb;
+    --primary-dark: #1d4ed8;
+    --primary-light: #eff6ff;
+    --accent: #0f766e;
+    --accent-light: #f0fdfa;
+    --danger: #dc2626;
+    --danger-light: #fef2f2;
+    --warn: #d97706;
+    --warn-light: #fffbeb;
+    --success: #16a34a;
+    --success-light: #f0fdf4;
+    --purple: #7c3aed;
+    --purple-light: #f5f3ff;
+    --radius: 12px;
+    --shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+  }
+  [data-theme="dark"] {
+    --bg: #0f172a;
+    --surface: #1e293b;
+    --surface-2: #273449;
+    --text: #f1f5f9;
+    --text-muted: #94a3b8;
+    --border: #334155;
+    --primary: #3b82f6;
+    --primary-dark: #60a5fa;
+    --primary-light: #1e3a5f;
+    --accent: #14b8a6;
+    --accent-light: #134e4a;
+    --danger: #f87171;
+    --danger-light: #450a0a;
+    --warn: #fbbf24;
+    --warn-light: #451a03;
+    --success: #4ade80;
+    --success-light: #052e16;
+    --purple: #a78bfa;
+    --purple-light: #2e1065;
+    --shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* Header */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    z-index: 30;
+    flex-shrink: 0;
+  }
+  .header-left { display: flex; align-items: center; gap: 10px; }
+  .menu-btn {
+    display: none;
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  .brand {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--primary);
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .brand span {
+    font-size: 11px;
+    font-weight: 700;
+    background: var(--primary-light);
+    color: var(--primary);
+    padding: 2px 7px;
+    border-radius: 99px;
+  }
+  .header-actions { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .icon-btn {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: 0.15s;
+  }
+  .icon-btn:hover { border-color: var(--primary); color: var(--primary); }
+  .weak-badge {
+    background: var(--danger);
+    color: #fff;
+    font-size: 11px;
+    padding: 0 5px;
+    border-radius: 99px;
+    font-weight: 700;
+  }
+
+  /* Layout */
+  .app-body {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Sidebar */
+  aside {
+    width: 315px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    z-index: 25;
+    transition: transform 0.25s ease;
+  }
+  .sidebar-top {
+    padding: 12px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .search-input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface-2);
+    color: var(--text);
+    font-size: 14px;
+  }
+  .search-input:focus { outline: none; border-color: var(--primary); }
+  .progress-box {
+    background: var(--surface-2);
+    padding: 8px 10px;
+    border-radius: 8px;
+    font-size: 12px;
+  }
+  .progress-header { display: flex; justify-content: space-between; font-weight: 600; margin-bottom: 5px; }
+  .progress-bar { height: 6px; background: var(--border); border-radius: 99px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--success); width: 0%; transition: width 0.3s; }
+  .filter-row { display: flex; gap: 6px; font-size: 12px; }
+  .filter-chip {
+    flex: 1;
+    text-align: center;
+    padding: 4px 6px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-muted);
+    cursor: pointer;
+    font-weight: 600;
+  }
+  .filter-chip.active { background: var(--primary-light); color: var(--primary); border-color: var(--primary); }
+
+  .toc-list { flex: 1; overflow-y: auto; padding: 8px; }
+  .chapter-group { margin-bottom: 10px; }
+  .chapter-header {
+    padding: 8px 10px;
+    background: var(--surface-2);
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 13px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+  }
+  .chapter-badge {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    background: var(--surface);
+    padding: 1px 6px;
+    border-radius: 99px;
+    border: 1px solid var(--border);
+  }
+  .topic-items { margin-top: 4px; padding-left: 6px; display: flex; flex-direction: column; gap: 2px; }
+  .topic-item {
+    padding: 7px 10px;
+    border-radius: 8px;
+    font-size: 13px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    color: var(--text);
+    transition: 0.12s;
+  }
+  .topic-item-left { display: flex; align-items: center; gap: 7px; min-width: 0; }
+  .topic-item:hover { background: var(--surface-2); }
+  .topic-item.active { background: var(--primary-light); color: var(--primary); font-weight: 700; }
+  .topic-mini-badges { display: flex; gap: 3px; flex-shrink: 0; font-size: 11px; }
+
+  /* Main Content */
+  main { flex: 1; overflow-y: auto; padding: 20px 24px 90px; }
+  .content-wrap { max-width: 880px; margin: 0 auto; }
+
+  .topic-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .breadcrumb { font-size: 13px; font-weight: 700; color: var(--primary); }
+  .topic-title { font-size: 24px; font-weight: 800; line-height: 1.35; margin-bottom: 14px; }
+
+  .action-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+    align-items: center;
+  }
+  .btn {
+    padding: 8px 13px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: 0.15s;
+  }
+  .btn:hover:not(:disabled) { border-color: var(--primary); color: var(--primary); }
+  .btn:disabled { opacity: 0.55; cursor: not-allowed; }
+  .btn.sm { padding: 4px 9px; font-size: 12px; border-radius: 6px; }
+  .btn.done { background: var(--success-light); color: var(--success); border-color: var(--success); }
+  .btn.ai-btn { background: var(--primary); color: #fff; border-color: var(--primary); }
+  .btn.ai-btn:hover:not(:disabled) { background: var(--primary-dark); color: #fff; }
+  .btn.quiz-btn { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .btn.quiz-btn:hover:not(:disabled) { opacity: 0.9; color: #fff; }
+  .btn.danger-btn { background: var(--danger-light); color: var(--danger); border-color: var(--danger); }
+
+  /* Cards */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    margin-bottom: 18px;
+    box-shadow: var(--shadow);
+  }
+  .card-title {
+    font-size: 15px;
+    font-weight: 800;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    flex-wrap: wrap;
+    color: var(--text);
+  }
+  .core-card { background: var(--primary-light); border-color: var(--primary); }
+  .core-card .card-title { color: var(--primary); }
+
+  /* SVG Diagram Card */
+  .diagram-wrap {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px;
+    overflow-x: auto;
+    text-align: center;
+  }
+  .diagram-wrap svg { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+  .diagram-caption { font-size: 12.5px; color: var(--text-muted); margin-top: 8px; text-align: left; }
+
+  .detail-section { margin-bottom: 14px; }
+  .detail-section:last-child { margin-bottom: 0; }
+  .detail-heading {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 5px;
+    border-left: 3px solid var(--primary);
+    padding-left: 8px;
+  }
+  .detail-body { font-size: 14.5px; white-space: pre-line; }
+
+  /* Situational Comparison */
+  .scene-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .scene-grid:last-child { margin-bottom: 0; }
+  .scene-box {
+    background: var(--purple-light);
+    border: 1px solid var(--purple);
+    border-radius: 10px;
+    padding: 12px 14px;
+  }
+  .scene-label {
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--purple);
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+  }
+  .scene-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 10px;
+    margin-bottom: 7px;
+  }
+  .scene-item:last-of-type { margin-bottom: 8px; }
+  .scene-en-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 2px; }
+  .scene-tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--purple);
+    background: var(--purple-light);
+    padding: 1px 6px;
+    border-radius: 4px;
+    margin-right: 5px;
+  }
+  .scene-en { font-size: 14px; font-weight: 700; color: var(--text); line-height: 1.5; }
+  .scene-ja { font-size: 12.8px; color: var(--text-muted); line-height: 1.5; }
+  .scene-point { font-size: 13px; color: var(--text); border-top: 1px dashed var(--border); padding-top: 7px; white-space: pre-line; }
+
+  /* Table */
+  .table-wrap { overflow-x: auto; margin-top: 10px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  th, td { border: 1px solid var(--border); padding: 8px 10px; text-align: left; vertical-align: top; }
+  th { background: var(--surface-2); font-weight: 700; }
+
+  /* Examples & Audio */
+  .audio-bar {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .audio-bar select {
+    padding: 3px 7px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    color: var(--text);
+    font-size: 12px;
+  }
+  .speak-btn {
+    background: var(--primary-light);
+    color: var(--primary);
+    border: 1px solid var(--primary);
+    border-radius: 99px;
+    padding: 3px 9px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+    transition: 0.15s;
+  }
+  .speak-btn:hover { background: var(--primary); color: #fff; }
+  .speak-btn.speaking { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+  .example-box {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 13px 15px;
+    margin-bottom: 12px;
+  }
+  .example-box:last-child { margin-bottom: 0; }
+  .ex-en-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 4px; }
+  .ex-en { font-size: 15.5px; font-weight: 700; color: var(--text); }
+  .ex-ja { font-size: 14px; color: var(--text-muted); margin-bottom: 8px; }
+  .ex-note {
+    font-size: 13px;
+    background: var(--surface);
+    border-left: 3px solid var(--accent);
+    padding: 6px 10px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+  }
+  .glossary-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+  .glossary-tag {
+    font-size: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 2px 8px;
+    border-radius: 6px;
+    color: var(--text);
+  }
+  .glossary-tag b { color: var(--primary); }
+
+  /* Pitfalls */
+  .pitfall-item {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    background: var(--surface-2);
+  }
+  .pitfall-item:last-child { margin-bottom: 0; }
+  .ng-line { color: var(--danger); font-weight: 700; font-size: 14px; }
+  .ok-line { color: var(--success); font-weight: 700; font-size: 14px; margin-top: 2px; }
+  .pitfall-exp { font-size: 13.5px; margin-top: 6px; color: var(--text); }
+
+  .tip-box {
+    background: var(--warn-light);
+    border: 1px solid var(--warn);
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 14px;
+    white-space: pre-line;
+  }
+
+  .memo-area {
+    width: 100%;
+    min-height: 110px;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface-2);
+    color: var(--text);
+    font-size: 14px;
+    font-family: inherit;
+    line-height: 1.65;
+    resize: vertical;
+  }
+
+  .nav-footer { display: flex; justify-content: space-between; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
+
+  /* Modal */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.55);
+    z-index: 50;
+    align-items: center;
+    justify-content: center;
+    padding: 14px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    width: 760px;
+    max-width: 96vw;
+    max-height: 92dvh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.28);
+  }
+  /* Resizable AI Modal */
+  .modal.resizable {
+    resize: both;
+    min-width: 340px;
+    min-height: 420px;
+    height: 78dvh;
+  }
+  .modal.maximized {
+    width: 98vw !important;
+    height: 95dvh !important;
+    max-width: 98vw !important;
+    max-height: 95dvh !important;
+    resize: none;
+  }
+  .modal-header {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    font-weight: 800;
+    font-size: 15.5px;
+    flex-shrink: 0;
+  }
+  .modal-header-actions { display: flex; align-items: center; gap: 6px; }
+  .modal-close {
+    background: none;
+    border: none;
+    font-size: 22px;
+    line-height: 1;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 2px 6px;
+  }
+  .modal-body {
+    padding: 14px 16px;
+    overflow-y: auto;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .modal-footer {
+    padding: 10px 16px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  /* AI Chat */
+  .quick-prompts { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; flex-shrink: 0; }
+  .quick-chip {
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 99px;
+    border: 1px solid var(--primary);
+    background: var(--primary-light);
+    color: var(--primary);
+    cursor: pointer;
+    font-weight: 600;
+  }
+  .chat-log {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+    min-height: 180px;
+    overflow-y: auto;
+    padding: 12px;
+    background: var(--surface-2);
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    margin-bottom: 10px;
+  }
+  .chat-msg {
+    padding: 10px 13px;
+    border-radius: 10px;
+    font-size: 14px;
+    max-width: 94%;
+    white-space: pre-wrap;
+    line-height: 1.65;
+  }
+  .chat-msg.user { align-self: flex-end; background: var(--primary); color: #fff; }
+  .chat-msg.ai { align-self: flex-start; background: var(--surface); border: 1px solid var(--border); color: var(--text); }
+  .msg-actions {
+    margin-top: 8px;
+    padding-top: 7px;
+    border-top: 1px dashed var(--border);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .chat-input-row { display: flex; gap: 8px; flex-shrink: 0; }
+  .chat-input-row input {
+    flex: 1;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface-2);
+    color: var(--text);
+    font-size: 14px;
+  }
+
+  /* Quiz Tabs & Cards */
+  .tab-bar {
+    display: flex;
+    gap: 6px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 10px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+  .tab-btn {
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .tab-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+  .quiz-controls { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; align-items: center; }
+  .quiz-controls select {
+    padding: 7px 10px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface-2);
+    color: var(--text);
+    font-size: 13px;
+  }
+  .weak-check-row {
+    width: 100%;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--warn-light);
+    border: 1px solid var(--warn);
+    padding: 7px 10px;
+    border-radius: 8px;
+    color: var(--text);
+  }
+  .quiz-q-card {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 14px;
+  }
+  .quiz-q-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 10px; }
+  .quiz-q-text { font-weight: 700; font-size: 15px; }
+  .quiz-options { display: flex; flex-direction: column; gap: 7px; }
+  .quiz-opt {
+    padding: 9px 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface);
+    color: var(--text);
+    text-align: left;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.15s;
+  }
+  .quiz-opt:hover:not(:disabled) { border-color: var(--primary); background: var(--primary-light); }
+  .quiz-opt.correct { background: var(--success-light); border-color: var(--success); color: var(--success); font-weight: 700; }
+  .quiz-opt.wrong { background: var(--danger-light); border-color: var(--danger); color: var(--danger); }
+  .quiz-exp {
+    margin-top: 10px;
+    padding: 10px;
+    background: var(--surface);
+    border-left: 3px solid var(--primary);
+    border-radius: 6px;
+    font-size: 13.5px;
+    display: none;
+  }
+  .quiz-exp.show { display: block; }
+
+  .saved-quiz-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+  }
+
+  /* Form controls */
+  .form-group { margin-bottom: 14px; }
+  .form-group label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 5px; }
+  .form-group input, .form-group select, .form-group textarea {
+    width: 100%;
+    padding: 9px 11px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface-2);
+    color: var(--text);
+    font-size: 14px;
+  }
+  .hint { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+
+  .sidebar-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 20; }
+
+  @media (max-width: 820px) {
+    .menu-btn { display: inline-flex; }
+    aside {
+      position: fixed;
+      top: 53px;
+      bottom: 0;
+      left: 0;
+      transform: translateX(-100%);
+      width: 85vw;
+      max-width: 320px;
+    }
+    aside.open { transform: translateX(0); }
+    .sidebar-backdrop.open { display: block; }
+    main { padding: 14px 12px 90px; }
+    .topic-title { font-size: 20px; }
+    .brand span { display: none; }
+    .modal.resizable { width: 96vw; height: 85dvh; resize: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+    <div class="brand">GrammarFlow <span>v3.1 総合英文法</span></div>
+  </div>
+  <div class="header-actions">
+    <button class="icon-btn" onclick="openQuizModal('weak')">🎯 弱点 <span class="weak-badge" id="headerWeakBadge">0</span></button>
+    <button class="icon-btn" onclick="openModal('importModal')">＋ 単元追加</button>
+    <button class="icon-btn" onclick="openModal('settingsModal')">⚙ 設定</button>
+    <button class="icon-btn" id="themeBtn" onclick="toggleTheme()">🌙</button>
+  </div>
+</header>
+
+<div class="app-body">
+  <div class="sidebar-backdrop" id="sidebarBackdrop" onclick="toggleSidebar(false)"></div>
+  <aside id="sidebar">
+    <div class="sidebar-top">
+      <input type="text" id="searchInput" class="search-input" placeholder="🔍 文法・例文・語句を検索..." oninput="renderSidebar()">
+      <div class="progress-box">
+        <div class="progress-header">
+          <span>学習達成率</span>
+          <span id="progressText">0 / 0 (0%)</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      </div>
+      <div class="filter-row">
+        <div class="filter-chip active" id="filterAll" onclick="setFilter('all')">すべて</div>
+        <div class="filter-chip" id="filterTodo" onclick="setFilter('todo')">未完了のみ</div>
+      </div>
+    </div>
+    <div class="toc-list" id="tocList"></div>
+  </aside>
+
+  <main id="mainArea">
+    <div class="content-wrap" id="contentWrap"></div>
+  </main>
+</div>
+
+<!-- AI質問モーダル（リサイズ＆全画面対応・履歴永続化・マイメモ要約） -->
+<div class="modal-overlay" id="aiModal">
+  <div class="modal resizable" id="aiModalBox">
+    <div class="modal-header">
+      <span>🤖 AI使い分け・深掘り質問</span>
+      <div class="modal-header-actions">
+        <button class="btn sm" id="aiMaxBtn" onclick="toggleAIMaximize()" title="拡大/標準切替">⛶ 拡大</button>
+        <button class="btn sm danger-btn" onclick="clearCurrentAIHistory()" title="この単元の質問履歴を削除">🗑 履歴クリア</button>
+        <button class="modal-close" onclick="closeModal('aiModal')">×</button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div style="font-size:12.5px; color:var(--text-muted); margin-bottom:8px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:6px;">
+        <span>参照項目：<b id="aiContextLabel" style="color:var(--primary);"></b></span>
+        <span>※履歴は自動保存されます（PCは右下ドラッグでサイズ調整可）</span>
+      </div>
+      <div class="quick-prompts">
+        <button class="quick-chip" onclick="sendQuickAI('似た表現とのニュアンスの使い分けを場面比較で詳しく解説してください')">ニュアンスの使い分け</button>
+        <button class="quick-chip" onclick="sendQuickAI('ビジネス英語やメールで使える実践的な例文を3つ、日本語訳と語釈付きで作ってください')">ビジネス例文3つ</button>
+        <button class="quick-chip" onclick="sendQuickAI('TOEICでひっかけ問題になりやすいポイントと解き方のコツを教えてください')">TOEICひっかけ対策</button>
+        <button class="quick-chip" onclick="sendQuickAI('ネイティブが頭の中で感じるイメージや場面の違いを詳しく教えてください')">ネイティブのイメージ</button>
+      </div>
+      <div class="chat-log" id="chatLog"></div>
+      <div class="chat-input-row">
+        <input type="text" id="aiInput" placeholder="例：will と be going to はビジネスでどう使い分ける？" onkeydown="if(event.key==='Enter') sendAI()">
+        <button class="btn ai-btn" id="aiSendBtn" onclick="sendAI()">送信</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 類題演習・保存済みテスト・弱点復習モーダル -->
+<div class="modal-overlay" id="quizModal">
+  <div class="modal" style="width:820px; height:86dvh;">
+    <div class="modal-header">
+      <span>📝 AI類題演習・保存テスト・弱点復習</span>
+      <button class="modal-close" onclick="closeModal('quizModal')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="tab-bar">
+        <button class="tab-btn active" id="qtab-new" onclick="switchQuizTab('new')">🆕 新規類題を作成</button>
+        <button class="tab-btn" id="qtab-saved" onclick="switchQuizTab('saved')">📂 保存済みテスト (<span id="savedQuizCount">0</span>)</button>
+        <button class="tab-btn" id="qtab-weak" onclick="switchQuizTab('weak')">🎯 弱点復習 (<span id="weakQuizCount">0</span>)</button>
+      </div>
+
+      <!-- Tab 1: New Quiz -->
+      <div id="quizPanel-new">
+        <div class="quiz-controls">
+          <select id="quizScope">
+            <option value="topic">現在の項目から出題</option>
+            <option value="chapter">この章全体から総合出題</option>
+          </select>
+          <select id="quizLevel">
+            <option value="基礎確認（ルール定着）">基礎確認</option>
+            <option value="TOEIC 700点レベル（Part 5形式・ビジネス文脈）" selected>TOEIC 700点 (Part 5)</option>
+            <option value="応用・微妙な使い分け">応用・使い分け</option>
+          </select>
+          <button class="btn quiz-btn" id="genQuizBtn" onclick="generateQuiz()">類題を5問作成＆保存</button>
+          <label class="weak-check-row">
+            <input type="checkbox" id="useWeaknessCheck" checked style="width:auto;">
+            <span><b>過去の弱点を踏まえて出題する</b>（間違えた履歴をAIに渡し、弱点克服用の類題を優先生成します）</span>
+          </label>
+        </div>
+        <div id="quizContainer">
+          <div style="text-align:center; padding:28px; color:var(--text-muted); font-size:14px;">
+            「類題を5問作成＆保存」を押すと、AIがオリジナル問題を作成し、自動的にアプリ内へ保存します。<br>次回からは「保存済みテスト」タブからトークン消費ゼロで何度でも解き直せます。
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 2: Saved Quizzes -->
+      <div id="quizPanel-saved" style="display:none;">
+        <div id="savedQuizList"></div>
+        <div id="savedQuizPlayArea"></div>
+      </div>
+
+      <!-- Tab 3: Weakness Review -->
+      <div id="quizPanel-weak" style="display:none;">
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:12px; flex-wrap:wrap;">
+          <div style="display:flex; gap:6px;">
+            <button class="btn sm" id="weakScopeTopic" onclick="setWeakScope('topic')">この単元のみ</button>
+            <button class="btn sm ai-btn" id="weakScopeAll" onclick="setWeakScope('all')">全単元の弱点</button>
+          </div>
+          <span style="font-size:12px; color:var(--text-muted);">※トークン消費ゼロで何度でも復習できます</span>
+        </div>
+        <div id="weaknessListArea"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 単元追加・バックアップモーダル -->
+<div class="modal-overlay" id="importModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span>📚 単元データの追加＆全データバックアップ</span>
+      <button class="modal-close" onclick="closeModal('importModal')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>追加単元データ（JSON）を取り込む</label>
+        <textarea id="importJsonArea" rows="6" placeholder='追加単元JSONを貼り付けるか、下のボタンから .json ファイルを読み込んでください。'></textarea>
+        <div style="margin-top:8px; display:flex; gap:8px; flex-wrap:wrap;">
+          <button class="btn ai-btn" onclick="mergeChaptersFromText()">＋ 単元をマージ</button>
+          <label class="btn" style="cursor:pointer;">
+            📂 JSONファイル読込
+            <input type="file" accept=".json" style="display:none;" onchange="importJsonFile(event)">
+          </label>
+        </div>
+      </div>
+      <hr style="border:none; border-top:1px solid var(--border); margin:14px 0;">
+      <div class="form-group">
+        <label>全データのバックアップ（追加単元・進捗・メモ・AI質問履歴・保存テスト・弱点履歴）</label>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button class="btn" onclick="exportBackup()">💾 全データをバックアップ (.json)</button>
+          <label class="btn" style="cursor:pointer;">
+            🔄 バックアップから復元
+            <input type="file" accept=".json" style="display:none;" onchange="restoreBackup(event)">
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 設定モーダル -->
+<div class="modal-overlay" id="settingsModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span>⚙ 設定（Gemini API・音声読み上げ）</span>
+      <button class="modal-close" onclick="closeModal('settingsModal')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Gemini API キー（Google AI Studio）</label>
+        <input type="password" id="apiKeyInput" placeholder="AIzaSy...">
+        <div class="hint">※キーはお使いのブラウザ（localStorage）内にのみ保存されます。</div>
+      </div>
+      <div class="form-group">
+        <label>使用モデル</label>
+        <select id="modelSelect">
+          <option value="gemini-3.5-flash">gemini-3.5-flash（推奨・バランス型）</option>
+          <option value="gemini-3.5-flash-lite">gemini-3.5-flash-lite（高速・省トークン）</option>
+          <option value="gemini-3.5-pro">gemini-3.5-pro（高精度・深い解説）</option>
+          <option value="gemini-3-flash-preview">gemini-3-flash-preview</option>
+          <option value="custom">カスタム入力...</option>
+        </select>
+        <input type="text" id="customModelInput" placeholder="モデルIDを入力" style="display:none; margin-top:6px;">
+      </div>
+      <div class="form-group">
+        <label>接続テスト（APIキー・モデル・通信経路の確認）</label>
+        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+          <button type="button" class="btn quiz-btn" id="testConnBtn" onclick="testConnection()">🔌 接続テストを実行</button>
+          <span style="font-size:12px; color:var(--text-muted);">※成功時は設定も自動保存します</span>
+        </div>
+        <div id="connTestResult" style="margin-top:8px; padding:10px 12px; border-radius:8px; font-size:13px; background:var(--surface-2); border:1px solid var(--border); display:none; white-space:pre-wrap; line-height:1.55;"></div>
+      </div>
+      <hr style="border:none; border-top:1px solid var(--border); margin:14px 0;">
+      <div class="form-group">
+        <label>例文の音声読み上げ設定（Web Speech API・トークン消費ゼロ）</label>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+          <div>
+            <div class="hint" style="margin-bottom:4px;">英語アクセント</div>
+            <select id="voiceLangSelect">
+              <option value="en-US">アメリカ英語 (en-US)</option>
+              <option value="en-GB">イギリス英語 (en-GB)</option>
+            </select>
+          </div>
+          <div>
+            <div class="hint" style="margin-bottom:4px;">読み上げ速度</div>
+            <select id="voiceRateSelect">
+              <option value="1.0">標準 (1.0x)</option>
+              <option value="0.85">ややゆっくり (0.85x)</option>
+              <option value="0.72">ゆっくり (0.72x)</option>
+              <option value="1.15">速め (1.15x)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>累計トークン使用量（目安）</label>
+        <div id="tokenStats" style="font-size:13.5px; color:var(--text-muted); background:var(--surface-2); padding:8px 10px; border-radius:8px;">
+          入力: 0 / 出力: 0
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('settingsModal')">閉じる</button>
+      <button class="btn ai-btn" onclick="saveSettings()">保存する</button>
+    </div>
+  </div>
+</div>
+
+<script>
+
+const BUILTIN_CHAPTERS = [
+  {
+    "id": "ch1",
+    "number": 1,
+    "title": "文型と文の要素・動詞の語法（SVOC完全制覇）",
+    "summary": "英語は「配置（語順）」が意味を決定する言語です。5文型の論理、自動詞・他動詞の厳密な区別、重要動詞の語法、さらに英語の情報構造（エンド・ウェイト）までを網羅します。",
+    "topics": [
+      {
+        "id": "ch1-1",
+        "title": "1-1. 品詞と文の要素（S・V・O・C・M）および句・節の構造",
+        "core": "「品詞」は辞書に載っている単語の身分、「文の要素（S・V・O・C・M）」は文の中での職務です。英語の文構造を見抜く最大のカギは、①『前置詞＋名詞』は原則M（修飾語）として骨格から外すこと、②複数の語が1つの品詞として機能する『句（phrase）』と『節（clause）』を塊（チャンク）で捉えることです。",
+        "svg": "<svg viewBox=\"0 0 720 185\" xmlns=\"http://www.w3.org/2000/svg\" font-family=\"sans-serif\">\n  <rect x=\"10\" y=\"12\" width=\"142\" height=\"44\" rx=\"8\" fill=\"var(--primary-light)\" stroke=\"var(--primary)\" stroke-width=\"1.5\"/>\n  <text x=\"81\" y=\"39\" text-anchor=\"middle\" font-size=\"13.5\" font-weight=\"bold\" fill=\"var(--primary)\">第1文型 S + V</text>\n  <text x=\"166\" y=\"39\" font-size=\"13\" fill=\"var(--text)\">動作がSだけで完結（完全自動詞） 例: This strategy works.</text>\n\n  <rect x=\"10\" y=\"66\" width=\"142\" height=\"44\" rx=\"8\" fill=\"var(--accent-light)\" stroke=\"var(--accent)\" stroke-width=\"1.5\"/>\n  <text x=\"81\" y=\"93\" text-anchor=\"middle\" font-size=\"13.5\" font-weight=\"bold\" fill=\"var(--accent)\">第2文型 S + V + C</text>\n  <text x=\"166\" y=\"93\" font-size=\"13\" fill=\"var(--text)\">S ＝ C のイコール関係（不完全自動詞） 例: The result proved true.</text>\n\n  <rect x=\"10\" y=\"120\" width=\"142\" height=\"44\" rx=\"8\" fill=\"var(--warn-light)\" stroke=\"var(--warn)\" stroke-width=\"1.5\"/>\n  <text x=\"81\" y=\"147\" text-anchor=\"middle\" font-size=\"13.5\" font-weight=\"bold\" fill=\"var(--warn)\">第3文型 S + V + O</text>\n  <text x=\"166\" y=\"147\" font-size=\"13\" fill=\"var(--text)\">S → O へ動作のエネルギーが直接届く（完全他動詞） 例: We discussed it.</text>\n</svg>",
+        "svgCaption": "第1〜3文型の骨格。長い英文も、修飾語（M）をカッコでくくると必ず5文型のいずれかに還元されます。",
+        "details": [
+          {
+            "heading": "文の5要素と、そこに配置できる品詞の厳密な対応",
+            "body": "・S（主語）：名詞相当語句のみ（名詞・代名詞・動名詞・to不定詞の名詞用法・that節・whether節・間接疑問文など）。\n・V（述語動詞）：時制と人称を背負う「定動詞」が1つの節につき原則1つ。\n・O（目的語）：名詞相当語句のみ。他動詞の動作・状態の直接の対象（〜を・〜に）。\n・C（補語）：名詞 または 形容詞相当語句。SやOと「イコール（主述関係）」を結ぶ。\n・M（修飾語）：副詞相当語句（副詞・前置詞＋名詞・不定詞の副詞用法・分詞構文・副詞節）。文の骨格（文型）には一切カウントしない。"
+          },
+          {
+            "heading": "「句（Phrase）」と「節（Clause）」の明確な区別",
+            "body": "・句（Phrase）：2語以上が集まって1つの品詞の働きをするが、中に「S＋V」を含まないもの。\n  例：in the laboratory（前置詞句＝副詞/形容詞の働き）、to pass the test（不定詞句）\n・節（Clause）：中に「S＋V」を含み、全体で名詞・形容詞・副詞のいずれかの働きをするもの。\n  例：what he said（名詞節）、which I bought yesterday（形容詞節）、when the bell rang（副詞節）\n※この「名詞節／形容詞節／副詞節」の判別ができると、関係詞や時制のルールが一気に体系化されます。"
+          },
+          {
+            "heading": "「前置詞＋名詞」が例外的に補語（C）になるケース",
+            "body": "原則として「前置詞＋名詞」はMですが、of + 抽象名詞（of importance = important / of no use = useless）や、状態を表す前置詞句（in trouble, out of order, under review, at ease, on duty）は「形容詞相当」として第2文型・第5文型の補語（C）になります。\n例：This document is of great importance.（この文書は非常に重要だ＝SVC）"
+          }
+        ],
+        "scenes": [
+          {
+            "label": "形容詞（補語C）と副詞（修飾語M）の決定的違い",
+            "items": [
+              {
+                "tag": "文A (SVC)",
+                "en": "He looked angry during the inspection.",
+                "ja": "彼は検査中、怒っているように見えた。"
+              },
+              {
+                "tag": "文B (SVM)",
+                "en": "He looked angrily at the defective sample.",
+                "ja": "彼は不良サンプルを怒った目つきで見た。"
+              }
+            ],
+            "point": "文Aは「He ＝ angry」という状態描写なので形容詞（C）。文Bは look at（見る）という動作の仕方を説明しているので副詞（M）になります。"
+          },
+          {
+            "label": "「of + 抽象名詞」による格調高い補語（C）表現",
+            "items": [
+              {
+                "tag": "通常表現",
+                "en": "Your feedback is very valuable to our team.",
+                "ja": "あなたのフィードバックは私たちのチームにとって非常に貴重だ。"
+              },
+              {
+                "tag": "フォーマル",
+                "en": "Your feedback is of great value to our team.",
+                "ja": "あなたのフィードバックは当チームにとって極めて価値あるものである。"
+              }
+            ],
+            "point": "of + value (= valuable), of + use (= useful), of + significance (= significant) は書き言葉・ビジネス文書で好まれ、強調には very ではなく great / much / no を使います。"
+          }
+        ],
+        "table": {
+          "headers": [
+            "文の要素",
+            "入れる品詞・カタマリ",
+            "省略の可否",
+            "代表例"
+          ],
+          "rows": [
+            [
+              "S (主語)",
+              "名詞・代名詞・動名詞・不定詞・名詞節",
+              "原則不可（命令文除く）",
+              "What he proposed (S) surprised us."
+            ],
+            [
+              "V (述語動詞)",
+              "定動詞（時制を持つ動詞）",
+              "原則不可",
+              "surprised / has been reviewed"
+            ],
+            [
+              "O (目的語)",
+              "名詞相当語句",
+              "他動詞では不可",
+              "the specification / that it failed"
+            ],
+            [
+              "C (補語)",
+              "名詞・形容詞・分詞・状態の前置詞句",
+              "SVC/SVOCでは不可",
+              "clear / broken / under review"
+            ],
+            [
+              "M (修飾語)",
+              "副詞・前置詞句・副詞節・分詞構文",
+              "文法的には省略可",
+              "carefully / in the cleanroom"
+            ]
+          ]
+        },
+        "examples": [
+          {
+            "en": "The reliability of these high-speed connectors in harsh environments remains exceptionally high.",
+            "ja": "過酷な環境下におけるこれらの高速コネクタの信頼性は、依然として極めて高いままだ。",
+            "note": "of these high-speed connectors と in harsh environments はどちらも前置詞句（M）。本当の主語は単数名詞 The reliability なので、動詞は remains（三単現）になります。",
+            "glossary": [
+              {
+                "w": "reliability",
+                "m": "信頼性"
+              },
+              {
+                "w": "harsh environment",
+                "m": "過酷な環境"
+              },
+              {
+                "w": "exceptionally",
+                "m": "並外れて、極めて（副詞→形容詞highを修飾）"
+              }
+            ]
+          },
+          {
+            "en": "Whether the supplier can meet the tight deadline is still under discussion.",
+            "ja": "そのサプライヤーが厳しい納期に間に合わせられるかどうかは、まだ協議中だ。",
+            "note": "Whether ~ deadline までが1つの名詞節（S＝単数扱い）。under discussion が状態を表す形容詞相当の補語（C）。",
+            "glossary": [
+              {
+                "w": "meet a deadline",
+                "m": "納期・締め切りに間に合わせる"
+              },
+              {
+                "w": "under discussion",
+                "m": "協議中で、議論中で"
+              }
+            ]
+          }
+        ],
+        "pitfalls": [
+          {
+            "ng": "The quality of the raw materials used in this batch are inconsistent.",
+            "ok": "The quality of the raw materials used in this batch is inconsistent.",
+            "exp": "of ~ と過去分詞句 used ~ はすべて修飾語（M）。主語の核は単数の The quality なので動詞は is です。"
+          },
+          {
+            "ng": "This manual is very of use for new engineers.",
+            "ok": "This manual is of great use for new engineers.",
+            "exp": "of use は名詞 use を含んでいるため、強調するときは副詞 very ではなく形容詞 great / much を名詞の直前に置きます。"
+          }
+        ],
+        "tips": "【長文読解・TOEIC品詞問題の鉄則】\n1. 動詞の前に複数の名詞が並んでいたら、「最初の前置詞の直前の名詞」が主語の核（Head Noun）である確率が9割以上です。\n2. 1つの単文に定動詞（時制を持つV）は1つだけ。接続詞や関係詞がないのに定動詞が2つあったら、どちらかは分詞・不定詞などの準動詞にする必要があります。"
+      },
+      {
+        "id": "ch1-2",
+        "title": "1-2. 第1文型（SV）と第2文型（SVC）：自動詞の重要語法と補語の深層",
+        "core": "第1文型（SV）は「存在・移動・自立した作用」を表し、第2文型（SVC）は「S＝C の状態・変化・知覚・判明」を表します。第1文型で意外な重要意味を持つ自動詞と、第2文型を作る連結動詞（Linking Verbs）の微妙な使い分けが上級者への分かれ目です。",
+        "details": [
+          {
+            "heading": "第1文型（SV）で超重要意味を持つ自動詞リスト（語法必須）",
+            "body": "・matter / count（重要である）：It doesn't matter.（構わない）／ Every second counts.（一秒一秒が重要だ）\n・work（機能する・効果がある）：The new algorithm works well.\n・pay（採算が合う・割に合う）：Crime doesn't pay.（悪事は割に合わない）／ Honesty pays.\n・do（間に合う・十分である）：Will this cable do?（このケーブルで足りますか？）\n・last（続く・持つ）：The battery lasts for 12 hours.\n・stand / lie（位置している・ある）：The factory stands near the port.\n・run（作動する・伸びている・（契約等が）有効である）：The contract runs until December."
+          },
+          {
+            "heading": "第2文型（SVC）を作る連結動詞（Linking Verbs）の4分類と細かい使い分け",
+            "body": "① 状態維持：be / remain / stay / keep / hold（hold true＝当てはまる）/ stand（stand firm＝断固として譲らない）\n② 状態変化：become / get / grow / turn / go / come / fall / run\n   ・become：最も中立的。補語に「名詞」も「形容詞」もOK（getは原則形容詞のみ）。\n   ・grow：時間をかけて徐々に変化（grow old / grow dark / grow impatient）。\n   ・turn：色・性質・天候の劇的な変化（turn red / turn sour / turn cold）。名詞が来るときは冠詞を省く（turn traitor＝裏切り者になる）。\n   ・go：主に「悪い状態・制御不能」への変化（go bad / go bankrupt / go crazy / go bald / go wrong）。\n   ・come：良い方向・実現・正常化への変化（come true / come loose / come undone / come alive）。\n   ・fall：無意識に悪い/静かな状態へ落ちる（fall asleep / fall ill / fall silent / fall short of）。\n   ・run：不足・枯渇・高い状態（run short / run dry / run wild / run high）。\n③ 感覚・知覚：look / sound / smell / taste / feel（名詞の前には like 必須）\n④ 印象・判明：seem / appear / prove / turn out（後ろに to be を補える）"
+          },
+          {
+            "heading": "「疑似補語（Quasi-complement）」という上級用法（SV + C）",
+            "body": "本来は第1文型の自動詞（die, marry, return, sit, lie など）の後ろに形容詞や名詞を置き、「〜の状態でVする」を表す構文です。\n・He died young.（彼は若くして亡くなった）\n・She returned home safe and sound.（彼女は無事に帰宅した）\n・The door stood open.（ドアは開いたままになっていた）"
+          }
+        ],
+        "scenes": [
+          {
+            "label": "変化動詞のネイティブ感覚：go（悪化） vs come（実現・正常化）",
+            "items": [
+              {
+                "tag": "悪化 (go)",
+                "en": "Something went wrong with the soldering machine.",
+                "ja": "はんだ付け装置の調子がおかしくなった。"
+              },
+              {
+                "tag": "実現 (come)",
+                "en": "After years of research, their vision finally came true.",
+                "ja": "長年の研究の末、彼らの構想がついに実現した。"
+              }
+            ],
+            "point": "英語では「正常な状態から逸脱して離れていく＝go」「目指していた理想・本来の状態に近づく＝come」という空間メタファーが働いています。"
+          },
+          {
+            "label": "seem vs appear vs look のニュアンス差",
+            "items": [
+              {
+                "tag": "look (視覚)",
+                "en": "He looks exhausted after the long flight.",
+                "ja": "長旅の後で彼は疲れ切っているように見える（外見）。"
+              },
+              {
+                "tag": "seem (総合)",
+                "en": "The proposal seems reasonable based on the data.",
+                "ja": "データからすると、その提案は妥当に思われる（主観的判断）。"
+              },
+              {
+                "tag": "appear (客観)",
+                "en": "The system appears to be functioning normally.",
+                "ja": "システムは表面上・客観的に見て正常に稼働しているようだ（硬め）。"
+              }
+            ],
+            "point": "lookは視覚情報、seemは話者の総合的な印象、appearは「外見・データ上はそう見える（実際は違うかもしれない含みを持つことも）」という硬めの表現です。"
+          }
+        ],
+        "table": {
+          "headers": [
+            "変化動詞",
+            "コアイメージ",
+            "定番コロケーション（必須語法）"
+          ],
+          "rows": [
+            [
+              "go",
+              "正常から逸脱・悪化",
+              "go bad / go bankrupt / go wrong / go blind / go unnoticed"
+            ],
+            [
+              "come",
+              "到達・実現・緩み",
+              "come true / come alive / come loose / come clean（白状する）"
+            ],
+            [
+              "fall",
+              "無意識に陥る",
+              "fall asleep / fall ill / fall silent / fall short of（〜に達しない）"
+            ],
+            [
+              "run",
+              "尽きる・制御不能",
+              "run dry / run short of / run wild / run high（感情が高ぶる）"
+            ],
+            [
+              "turn",
+              "色・性質の急変",
+              "turn pale / turn sour / turn 50（50歳になる）"
+            ]
+          ]
+        },
+        "examples": [
+          {
+            "en": "Any minor delay in customs clearance could prove costly to the entire supply chain.",
+            "ja": "通関手続きにおけるわずかな遅延であっても、サプライチェーン全体に高い代償をもたらすことが判明しかねない。",
+            "note": "prove + 形容詞（costly＝高くつく）の第2文型。costly は -ly がついていますが副詞ではなく「形容詞」なので補語になれます。",
+            "glossary": [
+              {
+                "w": "customs clearance",
+                "m": "通関手続き"
+              },
+              {
+                "w": "prove + 形容詞",
+                "m": "〜だと判明する（= prove to be ~）"
+              },
+              {
+                "w": "costly",
+                "m": "高くつく、大きな損害を招く（形容詞）"
+              }
+            ]
+          },
+          {
+            "en": "Our quarterly revenue fell slightly short of the initial forecast.",
+            "ja": "当四半期の売上高は、当初の予測をわずかに下回った。",
+            "note": "fall short of ~（〜に達しない・不足する）は第2文型の定番イディオム。ビジネス報告で極めて頻出です。",
+            "glossary": [
+              {
+                "w": "revenue",
+                "m": "売上高、歳入"
+              },
+              {
+                "w": "fall short of ~",
+                "m": "〜に達しない、及ばない"
+              },
+              {
+                "w": "forecast",
+                "m": "予測、見通し"
+              }
+            ]
+          },
+          {
+            "en": "It doesn't matter whether the connector is plated with gold or palladium, as long as it meets the spec.",
+            "ja": "仕様を満たしている限り、コネクタのめっきが金かパラジウムかは問題ではない。",
+            "note": "形式主語 It + matter（重要である：第1文型）の構文。",
+            "glossary": [
+              {
+                "w": "matter",
+                "m": "重要である、問題である（自動詞）"
+              },
+              {
+                "w": "be plated with ~",
+                "m": "〜でめっきされている"
+              },
+              {
+                "w": "as long as ~",
+                "m": "〜する限り"
+              }
+            ]
+          }
+        ],
+        "pitfalls": [
+          {
+            "ng": "The project remained smoothly despite the staff shortage.",
+            "ok": "The project remained smooth (または on track) despite the staff shortage.",
+            "exp": "remain は第2文型（SVC）の動詞なので、補語に副詞 smoothly は置けません。形容詞 smooth や状態の前置詞句 on track にします。"
+          },
+          {
+            "ng": "She turned a lawyer at the age of thirty.",
+            "ok": "She became a lawyer at the age of thirty.",
+            "exp": "職業になる場合は become を使います。turn + 無冠詞名詞（turn traitor / turn professional）は「立場・属性がガラッと変わる」特殊な表現に限定されます。"
+          }
+        ],
+        "tips": "【-ly で終わる「形容詞」の罠】\ncostly（高くつく）, friendly（友好的な）, timely（タイムリーな）, likely（ありそうな）, lively（活気ある）, orderly（整然とした）はすべて「名詞 + ly ＝ 形容詞」です。第2文型の補語（prove costly / remain friendly / seem likely）として堂々と使えます。"
+      },
+      {
+        "id": "ch1-3",
+        "title": "1-3. 第3文型（SVO）：前置詞不要の他動詞完全網羅と説明・提案系動詞",
+        "core": "他動詞（Vt）は「動作のエネルギーが直接目的語（O）にぶつかる」イメージです。日本語訳の「〜について・〜に・〜と」に引きずられて前置詞を入れてしまう誤用を根絶し、さらに第4文型をとれない「explain / suggest型」を完璧に区別します。",
+        "details": [
+          {
+            "heading": "前置詞を絶対に挟んではいけない最重要他動詞（完全網羅18選）",
+            "body": "・discuss O（Oについて議論する）※about ×\n・mention O（Oに言及する）※about ×\n・attend O（Oに出席する）※to/at ×（※attend to O＝Oに対処する・世話をする）\n・reach O（Oに到着する・達する）※at/to ×（※reach for O＝Oに手を伸ばす）\n・approach O（Oに近づく・取り組む）※to ×\n・enter O（Oに入る）※into ×（※enter into a contract/negotiation＝契約・交渉に入るはOK）\n・marry O（Oと結婚する）※with ×（※be/get married to 人 はOK）\n・resemble O（Oに似ている）※to/with ×（※進行形・受動態ともに不可）\n・contact O（Oに連絡する）※with/to ×\n・address O（Oに対処する・Oに話しかける）※to ×\n・await O（Oを待つ）※for ×（= wait for O）\n・accompany O（Oに同行する）※with ×\n・inhabit O（Oに居住する）※in ×\n・oppose O（Oに反対する）※to ×（= object to O / be opposed to O）\n・survive O（Oを生き延びる・Oより長生きする）※from ×\n・regret O（Oを後悔する）※about ×\n・comprise O（Oから構成される）※of ×（= consist of O / be comprised of O）\n・leave O（Oを出発する）※from ×（※leave for O＝Oへ向けて出発する）"
+          },
+          {
+            "heading": "「人」を直接Oにとれない説明・提案・伝達系動詞（say / explain型）",
+            "body": "以下の動詞は SVOO（人＋モノ）をとれません。必ず「V + モノ + to + 人」または「V + to + 人 + that節」にします。\n・explain（説明する）, suggest（提案する）, propose（提案する）, describe（描写する）, introduce（紹介する）, announce（発表する）, report（報告する）, mention（言及する）, confess（告白する）, prove（証明する）, say（言う）, admit（認める）\n※特に「suggest + 人 + to do」は絶対NG！正しくは「suggest that S (should) do」または「suggest -ing」です。"
+          },
+          {
+            "heading": "再帰代名詞（oneself）を目的語にとる重要他動詞",
+            "body": "日本語では自動詞のように感じるのに、英語では他動詞のため目的語（oneself）を補う表現です。\n・seat oneself（座る＝be seated）\n・devote oneself to ~（〜に専念する＝be devoted to ~）\n・adapt / adjust oneself to ~（〜に適応する）\n・avail oneself of ~（〜を利用する：硬いビジネス表現）\n・absent oneself from ~（〜を欠席する）\n・pride oneself on ~（〜を誇りにする＝take pride in ~）"
+          }
+        ],
+        "scenes": [
+          {
+            "label": "enter O（物理的に入る） vs enter into O（契約・関係に入る）",
+            "items": [
+              {
+                "tag": "物理的空間",
+                "en": "Visitors must wear a badge before entering the facility.",
+                "ja": "訪問者は施設に入る前にバッジを着用しなければならない。"
+              },
+              {
+                "tag": "抽象的契約",
+                "en": "Both firms entered into a strategic partnership last month.",
+                "ja": "両社は先月、戦略的パートナーシップを締結した。"
+              }
+            ],
+            "point": "部屋・建物・学校・市場などに入るのは他動詞 enter O（into不要）。一方、契約・交渉・議論などの「抽象的なプロセスに足を踏み入れる」ときは enter into O を使います。"
+          },
+          {
+            "label": "leave O（出発地） vs leave for O（目的地）",
+            "items": [
+              {
+                "tag": "出発地 (O)",
+                "en": "The ferry leaves Naha at 7:00 a.m.",
+                "ja": "そのフェリーは午前7時に那覇を出発する。"
+              },
+              {
+                "tag": "目的地 (for)",
+                "en": "The ferry leaves for Yoron Island at 7:00 a.m.",
+                "ja": "そのフェリーは午前7時に与論島へ向けて出発する。"
+              }
+            ],
+            "point": "leave の直後に地名を置くと「そこを離れる（出発地）」になり、for を挟むと「そこへ向かう（目的地）」と意味が真逆になります。"
+          }
+        ],
+        "table": {
+          "headers": [
+            "他動詞（前置詞なし）",
+            "同義の自動詞＋前置詞",
+            "名詞形にしたときの前置詞"
+          ],
+          "rows": [
+            [
+              "discuss O",
+              "talk about O",
+              "a discussion about / on O"
+            ],
+            [
+              "attend O",
+              "participate in O",
+              "attendance at O"
+            ],
+            [
+              "approach O",
+              "come close to O",
+              "an approach to O"
+            ],
+            [
+              "contact O",
+              "get in touch with O",
+              "contact with O"
+            ],
+            [
+              "answer O",
+              "reply / respond to O",
+              "an answer to O"
+            ],
+            [
+              "lack O",
+              "be lacking in O",
+              "a lack of O"
+            ]
+          ]
+        },
+        "examples": [
+          {
+            "en": "The quality assurance team addressed the solder bridging issue immediately.",
+            "ja": "品質保証チームは、はんだブリッジの問題に直ちに対処した。",
+            "note": "address は「（課題・問題）に取り組む・対処する」という意味の他動詞。to は不要です。",
+            "glossary": [
+              {
+                "w": "quality assurance",
+                "m": "品質保証（QA）"
+              },
+              {
+                "w": "address",
+                "m": "〜に対処する、取り組む（他動詞）"
+              },
+              {
+                "w": "solder bridging",
+                "m": "はんだブリッジ（基板上の短絡不良）"
+              }
+            ]
+          },
+          {
+            "en": "She suggested that we conduct an additional thermal shock test before shipping.",
+            "ja": "彼女は、出荷前に追加の熱衝撃試験を実施することを提案した。",
+            "note": "suggest us to conduct はNG。suggest that S (should) 原形 の形をとります。",
+            "glossary": [
+              {
+                "w": "conduct",
+                "m": "（試験・調査などを）実施する"
+              },
+              {
+                "w": "thermal shock test",
+                "m": "熱衝撃試験"
+              }
+            ]
+          },
+          {
+            "en": "Only a few components survived the extreme voltage surge.",
+            "ja": "極端な電圧サージに耐え抜いた部品はほんの数個だった。",
+            "note": "survive O は「O（災害・事故・過酷な条件）を生き延びる・耐え抜く」という他動詞。from は不要です。",
+            "glossary": [
+              {
+                "w": "survive",
+                "m": "〜を生き延びる、〜に耐え抜く（他動詞）"
+              },
+              {
+                "w": "voltage surge",
+                "m": "電圧サージ（急激な電圧上昇）"
+              }
+            ]
+          }
+        ],
+        "pitfalls": [
+          {
+            "ng": "He suggested me to revise the schedule.",
+            "ok": "He suggested that I revise the schedule. / He suggested revising the schedule.",
+            "exp": "suggest は「人＋to do」をとれない最頻出動詞です。propose や recommend（名詞・動名詞・that節が基本）も同様に注意が必要です。"
+          },
+          {
+            "ng": "The committee comprises of five senior engineers.",
+            "ok": "The committee comprises five senior engineers. / The committee is comprised of five senior engineers.",
+            "exp": "能動態の comprise は他動詞なので of は不要です（全体 comprise 部分）。consist of と混同しやすい超頻出ポイントです。"
+          }
+        ],
+        "tips": "【動詞→名詞の前置詞シフトを制する】\nTOEICでは「動詞なら前置詞なし、名詞なら前置詞あり」の対比が頻出します。特に lack（動詞：lack experience / 名詞：a lack of experience）と demand（動詞：demand an apology / 名詞：a demand for an apology）は鉄板です。"
+      },
+      {
+        "id": "ch1-4",
+        "title": "1-4. 第4文型（SVOO）：授与動詞の体系と受動態・語順の制約",
+        "core": "第4文型（SVO1O2）は「O1（受け手）が O2（モノ・情報・時間）を手にする・失う」という移転・授与の構文です。書き換えの前置詞（to / for / of）の理屈に加え、第4文型を受動態にしたときの制約や、代名詞の語順ルールまで押さえることで完璧になります。",
+        "svg": "<svg viewBox=\"0 0 720 175\" xmlns=\"http://www.w3.org/2000/svg\" font-family=\"sans-serif\">\n  <rect x=\"12\" y=\"14\" width=\"696\" height=\"68\" rx=\"10\" fill=\"var(--surface)\" stroke=\"var(--border)\" stroke-width=\"1.5\"/>\n  <text x=\"28\" y=\"38\" font-size=\"13\" font-weight=\"bold\" fill=\"var(--primary)\">第4文型（SVOO）：授与の流れ（O1 ≠ O2）</text>\n  <rect x=\"28\" y=\"48\" width=\"110\" height=\"24\" rx=\"5\" fill=\"var(--primary-light)\"/>\n  <text x=\"83\" y=\"65\" text-anchor=\"middle\" font-size=\"12.5\" font-weight=\"bold\" fill=\"var(--primary)\">He made (SV)</text>\n  <text x=\"152\" y=\"65\" font-size=\"14\" fill=\"var(--text-muted)\">→</text>\n  <rect x=\"170\" y=\"48\" width=\"90\" height=\"24\" rx=\"5\" fill=\"var(--accent-light)\"/>\n  <text x=\"215\" y=\"65\" text-anchor=\"middle\" font-size=\"12.5\" font-weight=\"bold\" fill=\"var(--accent)\">me (O1:人)</text>\n  <text x=\"275\" y=\"65\" font-size=\"14\" font-weight=\"bold\" fill=\"var(--danger)\">≠</text>\n  <rect x=\"295\" y=\"48\" width=\"120\" height=\"24\" rx=\"5\" fill=\"var(--warn-light)\"/>\n  <text x=\"355\" y=\"65\" text-anchor=\"middle\" font-size=\"12.5\" font-weight=\"bold\" fill=\"var(--warn)\">a cake (O2:モノ)</text>\n  <text x=\"430\" y=\"65\" font-size=\"12.5\" fill=\"var(--text-muted)\">「私にケーキを作ってくれた」</text>\n\n  <rect x=\"12\" y=\"96\" width=\"696\" height=\"68\" rx=\"10\" fill=\"var(--surface)\" stroke=\"var(--border)\" stroke-width=\"1.5\"/>\n  <text x=\"28\" y=\"120\" font-size=\"13\" font-weight=\"bold\" fill=\"var(--purple)\">第5文型（SVOC）：主語・述語の関係（O ＝ C）</text>\n  <rect x=\"28\" y=\"130\" width=\"110\" height=\"24\" rx=\"5\" fill=\"var(--primary-light)\"/>\n  <text x=\"83\" y=\"147\" text-anchor=\"middle\" font-size=\"12.5\" font-weight=\"bold\" fill=\"var(--primary)\">He made (SV)</text>\n  <text x=\"152\" y=\"147\" font-size=\"14\" fill=\"var(--text-muted)\">→</text>\n  <rect x=\"170\" y=\"130\" width=\"90\" height=\"24\" rx=\"5\" fill=\"var(--accent-light)\"/>\n  <text x=\"215\" y=\"147\" text-anchor=\"middle\" font-size=\"12.5\" font-weight=\"bold\" fill=\"var(--accent)\">me (O)</text>\n  <text x=\"275\" y=\"147\" font-size=\"14\" font-weight=\"bold\" fill=\"var(--success)\">＝</text>\n  <rect x=\"295\" y=\"130\" width=\"120\" height=\"24\" rx=\"5\" fill=\"var(--purple-light)\"/>\n  <text x=\"355\" y=\"147\" text-anchor=\"middle\" font-size=\"12.5\" font-weight=\"bold\" fill=\"var(--purple)\">a leader (C)</text>\n  <text x=\"430\" y=\"147\" font-size=\"12.5\" fill=\"var(--text-muted)\">「私をリーダーにした」</text>\n</svg>",
+        "svgCaption": "名詞が2つ並んだらイコール確認：O1 ≠ O2 なら第4文型（授与）、O ＝ C なら第5文型（主述関係）です。",
+        "details": [
+          {
+            "heading": "to型・for型・of型の本質的な分類基準",
+            "body": "① to型（到達点：相手がいないと動作が成立しない）\n   give, send, show, tell, teach, lend, offer, grant, hand, pass, owe, pay, award, assign, read, write, bring\n② for型（受益者：相手がいなくても1人で完了でき、好意で〜してあげる）\n   buy, make, cook, find, get, choose, order, reserve, book, leave, build, sing, spare\n③ of型（出所：相手から引き出す・求める）\n   ask, require, demand, beg（例：May I ask a favor of you?）"
+          },
+          {
+            "heading": "「奪う・コストを課す・省く」を表すマイナス授与の第4文型（書き換え不可）",
+            "body": "cost（費用・損害をかける）, save（時間・手間を省く）, charge（料金を請求する）, envy（うらやむ）, forgive（許す）, deny（拒否する）は第4文型をとりますが、通常 to/for を使った第3文型には書き換えません。\n・The recall cost the manufacturer $2 million.（リコールはメーカーに200万ドルの損害を与えた）\n・They charged us $50 for the express delivery.（彼らは速達代として私たちに50ドル請求した）"
+          },
+          {
+            "heading": "第4文型の受動態（2通り作れる動詞 vs 「モノ主語」しか作れない動詞）",
+            "body": "・give / offer / tell / teach / award などの「to型」は、原則として「人主語」と「モノ主語」の2通りの受動態が作れます（実務では人主語が圧倒的に自然）。\n  ○ We were offered a discount. / ○ A discount was offered to us.\n・一方、buy / make / write / read / pass / send（モノ重視）や「for型」は、**「人」を主語にした受動態にできない（または不自然）**ものが多くあります。\n  ✕ I was bought a new laptop by my company.\n  ○ A new laptop was bought for me by my company."
+          }
+        ],
+        "scenes": [
+          {
+            "label": "SVOO と SVO to 人 の使い分け（焦点と長さのルール）",
+            "items": [
+              {
+                "tag": "SVOO (モノが焦点)",
+                "en": "The director gave me a challenging assignment.",
+                "ja": "部長は私にやりがいのある任務を与えた。"
+              },
+              {
+                "tag": "SVO to (人が焦点・長い)",
+                "en": "The director gave the assignment to the engineer who joined last week.",
+                "ja": "部長はその任務を、先週入社したエンジニアに与えた。"
+              }
+            ],
+            "point": "英語は文末に焦点（新情報）と長い語句を置きます。受け手（人）が長かったり対比の焦点だったりする場合、またモノが代名詞 it / them の場合は必ず SVO to 人 にします。"
+          },
+          {
+            "label": "offer（SVOO可） vs provide（SVOO不可・with必須）",
+            "items": [
+              {
+                "tag": "offer (第4文型)",
+                "en": "The vendor offered us a two-year warranty.",
+                "ja": "その業者は私たちに2年保証を提示した。"
+              },
+              {
+                "tag": "provide (第3文型)",
+                "en": "The vendor provided us with a two-year warranty.",
+                "ja": "その業者は私たちに2年保証を提供した。"
+              }
+            ],
+            "point": "日本語ではどちらも「〜に…を提供する」ですが、provide / supply / furnish / equip は SVOO をとれず、必ず「人 with モノ」または「モノ for/to 人」の形にします。"
+          }
+        ],
+        "table": {
+          "headers": [
+            "分類",
+            "代表動詞",
+            "第3文型への書き換え",
+            "人主語の受動態"
+          ],
+          "rows": [
+            [
+              "to型（授与）",
+              "give, offer, award, teach, tell, show",
+              "V + モノ + to + 人",
+              "○（自然・頻出）"
+            ],
+            [
+              "for型（好意）",
+              "buy, make, cook, book, find, choose",
+              "V + モノ + for + 人",
+              "✕（モノ主語にする）"
+            ],
+            [
+              "書き換え不可型",
+              "cost, save, charge, envy, forgive",
+              "原則書き換えない",
+              "charge/forgiveは人主語○、costは受動態×"
+            ]
+          ]
+        },
+        "examples": [
+          {
+            "en": "The oversight cost our division both credibility and a major contract.",
+            "ja": "その見落としにより、当事業部は信頼と大型契約の両方を失う羽目になった。",
+            "note": "cost + 人/組織 + 失ったもの（金・時間・信頼・命）。受動態にはできない点も重要です。",
+            "glossary": [
+              {
+                "w": "oversight",
+                "m": "見落とし、手抜かり"
+              },
+              {
+                "w": "division",
+                "m": "事業部、部門"
+              },
+              {
+                "w": "credibility",
+                "m": "信頼性、信用"
+              }
+            ]
+          },
+          {
+            "en": "We have been granted exclusive distribution rights in the Asia-Pacific region.",
+            "ja": "当社はアジア太平洋地域における独占販売権を付与された。",
+            "note": "grant + 人 + 権利（SVOO）の人主語・現在完了受動態。ビジネス契約の定番表現です。",
+            "glossary": [
+              {
+                "w": "grant",
+                "m": "（権利・許可・助成金などを）公式に付与する"
+              },
+              {
+                "w": "exclusive",
+                "m": "独占的な、排他的な"
+              },
+              {
+                "w": "distribution right",
+                "m": "販売権、流通権"
+              }
+            ]
+          }
+        ],
+        "pitfalls": [
+          {
+            "ng": "He was bought a new smartphone by his father.",
+            "ok": "A new smartphone was bought for him by his father.",
+            "exp": "buy や make などの for型授与動詞は、「人」を主語にした受動態にすると「彼が買われた（人身売買）」という意味になってしまいます。"
+          },
+          {
+            "ng": "Could you send me it as soon as possible?",
+            "ok": "Could you send it to me as soon as possible?",
+            "exp": "直接目的語（モノ）が代名詞 it / them の場合、SVOOの語順（send me it）は英語のリズム上NGです。必ず send it to me にします。"
+          }
+        ],
+        "tips": "【日本語の「〜に」に騙されない「通知・説得」動詞】\ninform / notify / remind / convince / assure / warn はすべて「V + 人 + of + 事（または that節）」の第3文型です。inform me the result（×）→ inform me of the result（○）と必ず of を挟みます。"
+      },
+      {
+        "id": "ch1-5",
+        "title": "1-5. 第5文型（SVOC）：O=Cの論理、使役・知覚・認識動詞と受動態化",
+        "core": "第5文型（SVOC）の本質は、OとCの間に「OがCである／OがCする（ネクサス＝主述関係）」を埋め込むことで、2つの文を1文に圧縮する高度な構造です。Cに入る品詞（名詞・形容詞・原形・to不定詞・現在分詞・過去分詞）の選び方と、受動態にしたときの『toの復活』まで完全に体系化します。",
+        "details": [
+          {
+            "heading": "Cのタイプ別：第5文型をとる動詞の完全分類",
+            "body": "① 形容詞・名詞をCにとる：make, keep, leave, find, think, consider, believe, call, name, appoint, elect, render（〜の状態にする：硬め）\n② to不定詞をCにとる（未来志向・働きかけ）：want, ask, tell, advise, allow, permit, enable, encourage, force, compel, persuade, require, expect, cause, lead, get\n③ 原形不定詞をCにとる（使役・知覚）：\n   ・使役動詞：make（強制）, have（依頼・手配）, let（許可）※help は原形・to不定詞どちらも可\n   ・知覚動詞：see, watch, observe, notice, hear, listen to, feel\n④ 分詞（-ing / p.p.）をCにとる：\n   ・Oが「〜している最中（能動・進行）」→ 現在分詞（-ing）：keep O waiting / catch O stealing / see O crossing\n   ・Oが「〜される（受動・完了）」→ 過去分詞（p.p.）：have O repaired / keep O informed / make oneself understood / leave O unfinished"
+          },
+          {
+            "heading": "【超重要】使役・知覚動詞を受動態にすると「消えていた to が復活する」！",
+            "body": "能動態では原形不定詞をとる make / see / hear などを受動態（Oを主語）にすると、動詞の直後に原形が並ぶのを避けるため、**必ず to が復活**します。\n・能動：The manager made us rewrite the report.\n・受動：We were made **to rewrite** the report by the manager.\n・能動：Someone saw him enter the server room.\n・受動：He was seen **to enter** the server room.（※進行中なら entering のまま）\n※なお、let は原則として受動態にせず、be allowed to do に言い換えます。"
+          },
+          {
+            "heading": "SVOC における「as」の要否（consider vs regard）",
+            "body": "「OをCとみなす」系でも、動詞によって as が不要か必須かが厳密に決まっています。\n・as 不要（純粋なSVOC）：consider O (to be) C / think O (to be) C / deem O C / find O C（※consider O as C も現代では見られるが試験・規範文法では as なしが鉄則）\n・as 必須：regard O as C / view O as C / see O as C / treat O as C / define O as C / refer to O as C / think of O as C"
+          }
+        ],
+        "scenes": [
+          {
+            "label": "have O + 過去分詞の3つの意味（手配・被害・完了）",
+            "items": [
+              {
+                "tag": "手配・依頼",
+                "en": "We had the connectors tested by an independent lab.",
+                "ja": "私たちは第三者機関にコネクタを試験してもらった。"
+              },
+              {
+                "tag": "被害・経験",
+                "en": "He had his passport stolen at the airport.",
+                "ja": "彼は空港でパスポートを盗まれた。"
+              },
+              {
+                "tag": "完了・達成",
+                "en": "I'll have the final report finished by 5 p.m.",
+                "ja": "午後5時までには最終報告書を仕上げておきます。"
+              }
+            ],
+            "point": "have O + p.p. は「Oが〜された状態を持つ」がコア。意図的なら「手配・完了」、不本意なら「被害」になります。get O + p.p. はより口語的で「苦労して・なんとか〜する」響きが加わります。"
+          },
+          {
+            "label": "知覚動詞：原形（最初から最後まで） vs -ing（進行中の瞬間）",
+            "items": [
+              {
+                "tag": "原形 (一部始終)",
+                "en": "I watched him assemble the entire prototype.",
+                "ja": "彼が試作品全体を組み立てるのを最初から最後まで見た。"
+              },
+              {
+                "tag": "-ing (その瞬間)",
+                "en": "I saw him assembling the prototype when I passed the lab.",
+                "ja": "実験室を通りかかったとき、彼が試作品を組み立てているのを見かけた。"
+              }
+            ],
+            "point": "原形は「動作の完結（全体）」、-ing は「スナップショットのように動作の途中を目撃した」というアスペクトの違いです。"
+          }
+        ],
+        "table": {
+          "headers": [
+            "使役動詞",
+            "ニュアンス",
+            "能動のC（Oがする）",
+            "受動のC（Oがされる）",
+            "受動態化"
+          ],
+          "rows": [
+            [
+              "make",
+              "強制・必然",
+              "原形",
+              "過去分詞（限定的）",
+              "be made to do"
+            ],
+            [
+              "have",
+              "依頼・手配・当然の職務",
+              "原形（進行は-ing）",
+              "過去分詞（頻出）",
+              "原則不可"
+            ],
+            [
+              "let",
+              "許可・放任",
+              "原形",
+              "be + 過去分詞",
+              "be allowed to do に置換"
+            ],
+            [
+              "get",
+              "説得・苦労して手配",
+              "to不定詞（進行は-ing）",
+              "過去分詞（頻出）",
+              "be gotten to do（稀）"
+            ]
+          ]
+        },
+        "examples": [
+          {
+            "en": "The unexpected power outage left hundreds of servers completely inoperable.",
+            "ja": "予期せぬ停電により、何百台ものサーバーが完全に稼働不能な状態になった。",
+            "note": "leave O C（OをCの状態のままにする・結果的にCの状態にする）は無生物主語と組んで非常によく使われます。",
+            "glossary": [
+              {
+                "w": "power outage",
+                "m": "停電"
+              },
+              {
+                "w": "leave O C",
+                "m": "OをCの状態にしておく・にする"
+              },
+              {
+                "w": "inoperable",
+                "m": "稼働不能な、操作できない"
+              }
+            ]
+          },
+          {
+            "en": "All suppliers were made to comply with the revised environmental regulations.",
+            "ja": "すべてのサプライヤーは、改訂された環境規制に従わされた。",
+            "note": "使役動詞 make の受動態なので、原形ではなく to comply と to が復活しています。",
+            "glossary": [
+              {
+                "w": "comply with ~",
+                "m": "（規則・法律など）に従う、遵守する"
+              },
+              {
+                "w": "revised",
+                "m": "改訂された"
+              }
+            ]
+          },
+          {
+            "en": "Most industry analysts consider this interconnect standard essential for next-generation AI clusters.",
+            "ja": "ほとんどの業界アナリストは、このインターコネクト規格を次世代AIクラスターに不可欠だとみなしている。",
+            "note": "consider + O + C（形容詞 essential）。as は挟まず直接つなぐのが最も洗練された形です。",
+            "glossary": [
+              {
+                "w": "interconnect",
+                "m": "相互接続、インターコネクト"
+              },
+              {
+                "w": "essential",
+                "m": "不可欠な"
+              }
+            ]
+          }
+        ],
+        "pitfalls": [
+          {
+            "ng": "I want that you check the drawing by tomorrow.",
+            "ok": "I want you to check the drawing by tomorrow.",
+            "exp": "want, ask, expect, advise などは後ろに that節をとれません（want that ×）。必ず「V + O + to do」のSVOCにします。"
+          },
+          {
+            "ng": "I couldn't make myself understand in English.",
+            "ok": "I couldn't make myself understood in English.",
+            "exp": "「自分自身（myself）が相手に理解される（受動）」関係なので、原形 understand ではなく過去分詞 understood にします。"
+          }
+        ],
+        "tips": "【hope と expect の構造の違い（超頻出）】\n・hope は「hope that S V」はOKですが、「hope O to do」は絶対NG！\n・expect は「expect O to do」も「expect that S V」も両方OK。\n「あなたに来てほしい」は I expect you to come. または I hope (that) you will come. と使い分けます。"
+      },
+      {
+        "id": "ch1-6",
+        "title": "1-6. 混同しやすい自動詞・他動詞ペア＆「目的語＋前置詞」重要語法完全版",
+        "core": "英文法の上級者と中級者を分ける最大の壁が「動詞の語法」です。形がそっくりな自動詞・他動詞ペアの活用変化と、前置詞とセットで意味が決まる「V + A + 前置詞 + B」型動詞を体系的に完全制覇します。",
+        "svg": "<svg viewBox=\"0 0 720 175\" xmlns=\"http://www.w3.org/2000/svg\" font-family=\"sans-serif\">\n  <rect x=\"16\" y=\"18\" width=\"330\" height=\"140\" rx=\"10\" fill=\"var(--primary-light)\" stroke=\"var(--primary)\" stroke-width=\"1.5\"/>\n  <text x=\"181\" y=\"44\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"var(--primary)\">自動詞（Vi）：自分でそうなる</text>\n  <circle cx=\"110\" cy=\"96\" r=\"28\" fill=\"var(--surface)\" stroke=\"var(--primary)\" stroke-width=\"2\"/>\n  <text x=\"110\" y=\"101\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"bold\" fill=\"var(--primary)\">S 自身</text>\n  <path d=\"M 110 64 Q 145 45 145 85\" fill=\"none\" stroke=\"var(--primary)\" stroke-width=\"2\" marker-end=\"url(#arrow)\"/>\n  <text x=\"235\" y=\"84\" text-anchor=\"middle\" font-size=\"12.5\" font-weight=\"bold\" fill=\"var(--text)\">rise（上がる）</text>\n  <text x=\"235\" y=\"104\" text-anchor=\"middle\" font-size=\"12.5\" font-weight=\"bold\" fill=\"var(--text)\">lie（横たわる）</text>\n  <text x=\"235\" y=\"124\" text-anchor=\"middle\" font-size=\"12.5\" font-weight=\"bold\" fill=\"var(--text)\">sit（座る）</text>\n  <text x=\"181\" y=\"148\" text-anchor=\"middle\" font-size=\"11.5\" fill=\"var(--text-muted)\">※受動態（be + p.p.）にできない！</text>\n\n  <rect x=\"374\" y=\"18\" width=\"330\" height=\"140\" rx=\"10\" fill=\"var(--warn-light)\" stroke=\"var(--warn)\" stroke-width=\"1.5\"/>\n  <text x=\"539\" y=\"44\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"var(--warn)\">他動詞（Vt）：他（O）に働きかける</text>\n  <rect x=\"394\" y=\"76\" width=\"56\" height=\"36\" rx=\"8\" fill=\"var(--surface)\" stroke=\"var(--warn)\" stroke-width=\"2\"/>\n  <text x=\"422\" y=\"99\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"bold\" fill=\"var(--warn)\">S</text>\n  <line x1=\"454\" y1=\"94\" x2=\"508\" y2=\"94\" stroke=\"var(--warn)\" stroke-width=\"3\"/>\n  <polygon points=\"514,94 502,88 502,100\" fill=\"var(--warn)\"/>\n  <rect x=\"518\" y=\"76\" width=\"56\" height=\"36\" rx=\"8\" fill=\"var(--surface)\" stroke=\"var(--warn)\" stroke-width=\"2\"/>\n  <text x=\"546\" y=\"99\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"bold\" fill=\"var(--warn)\">O</text>\n  <text x=\"640\" y=\"84\" text-anchor=\"middle\" font-size=\"12.5\" font-weight=\"bold\" fill=\"var(--text)\">raise（上げる）</text>\n  <text x=\"640\" y=\"104\" text-anchor=\"middle\" font-size=\"12.5\" font-weight=\"bold\" fill=\"var(--text)\">lay（横たえる）</text>\n  <text x=\"640\" y=\"124\" text-anchor=\"middle\" font-size=\"12.5\" font-weight=\"bold\" fill=\"var(--text)\">seat（座らせる）</text>\n  <text x=\"539\" y=\"148\" text-anchor=\"middle\" font-size=\"11.5\" fill=\"var(--text-muted)\">※必ずOを伴う／受動態にできる！</text>\n</svg>",
+        "svgCaption": "自動詞は「主語自身が変化する（受動態不可）」、他動詞は「外の対象Oにエネルギーを及ぼす（受動態可）」という明確な境界線があります。",
+        "details": [
+          {
+            "heading": "最頻出！混同しやすい自動詞・他動詞ペア完全対照",
+            "body": "① lie（横たわる・ある：自動詞）lie - lay - lain - lying\n   lay（〜を横たえる・置く・卵を産む：他動詞）lay - laid - laid - laying\n   ※なお「嘘をつく」の lie（自動詞）は規則変化：lie - lied - lied - lying\n② rise（上がる・昇る・起きる：自動詞）rise - rose - risen\n   raise（〜を上げる・育てる・資金を集める・疑問を提起する：他動詞）raise - raised - raised\n   arise（（問題・機会が）生じる：自動詞）arise - arose - arisen\n   arouse（（感情・興味・疑念を）呼び起こす：他動詞）arouse - aroused - aroused\n③ sit（座る：自動詞）sit - sat - sat\n   seat（〜を座らせる・収容する：他動詞）seat - seated - seated（座っている＝be seated / seat oneself）\n④ fall（落ちる・倒れる：自動詞）fall - fell - fallen\n   fell（（木を）切り倒す：他動詞）fell - felled - felled\n⑤ find（見つける：他動詞）find - found - found\n   found（設立する・創設する：他動詞）found - founded - founded"
+          },
+          {
+            "heading": "「V + A + of + B」型（奪う・除去・通知・確信）",
+            "body": "前置詞 of は「分離・所有・関連」のコアを持ちます。\n・分離・剥奪（AからBを奪う・取り除く）：rob A of B（人・場所AからBを奪う）※steal は steal モノ from 人！／ deprive A of B（AからBを奪う）／ relieve A of B（Aから苦痛・負担Bを取り除く）／ cure A of B（Aの病気Bを治す）／ clear A of B（AからBを一掃する）\n・通知・確信（AにBを知らせる・確信させる）：inform A of B / notify A of B / remind A of B / convince A of B / assure A of B / warn A of B / accuse A of B（AをBの罪で非難・告訴する）"
+          },
+          {
+            "heading": "「V + A + from + -ing」（妨害）＆「V + A + with + B」（供給・非難）",
+            "body": "・妨害（Aが〜するのを妨げる）：prevent / stop / keep / prohibit / forbid / discourage / deter + A + from + -ing\n  ※keep は from 省略不可！（keep A -ing だと「Aに〜させ続ける」と逆の意味になるため）\n・供給（AにBを供給する）：provide / supply / furnish / equip / present + A + with + B\n・非難・称賛（for＝理由）：blame A for B（＝blame B on A）／ praise A for B / thank A for B / scold A for B / criticize A for B\n・区別（from）：distinguish / tell / differentiate + A + from + B（または between A and B）"
+          }
+        ],
+        "scenes": [
+          {
+            "label": "rob（人・場所がO） vs steal（盗まれたモノがO）",
+            "items": [
+              {
+                "tag": "rob (場所・人)",
+                "en": "Hackers robbed the firm of confidential design data.",
+                "ja": "ハッカーはその会社から機密設計データを奪った。"
+              },
+              {
+                "tag": "steal (モノ)",
+                "en": "Hackers stole confidential design data from the firm.",
+                "ja": "ハッカーはその会社から機密設計データを盗んだ。"
+              }
+            ],
+            "point": "rob の直後は「被害を受けた人・場所」、steal の直後は「盗まれたモノそのもの」が来ます。rob the data は誤用です。"
+          },
+          {
+            "label": "arise（問題が生じる：自動詞） vs raise（問題を提起する：他動詞）",
+            "items": [
+              {
+                "tag": "arise (自動詞)",
+                "en": "An unexpected plating defect arose during mass production.",
+                "ja": "量産中に予期せぬめっき不良が発生した。"
+              },
+              {
+                "tag": "raise (他動詞)",
+                "en": "The client raised a serious concern about contact resistance.",
+                "ja": "顧客は接触抵抗について深刻な懸念を提起した。"
+              }
+            ],
+            "point": "arise は自動詞なので受動態（was arisen）は絶対に作れません。問題が「自然と湧き上がる」のが arise、誰かが意図的に「持ち上げる・提起する」のが raise です。"
+          }
+        ],
+        "table": {
+          "headers": [
+            "型（語法パターン）",
+            "代表動詞",
+            "意味・注意点"
+          ],
+          "rows": [
+            [
+              "V + A + of + B",
+              "rob, deprive, cure, relieve, inform, remind, convince, accuse",
+              "A（人）からBを奪う／AにBを知らせる・確信させる"
+            ],
+            [
+              "V + A + with + B",
+              "provide, supply, equip, replace, compare, charge",
+              "AにBを供給する／AをBと取り替える・比較する"
+            ],
+            [
+              "V + A + from + -ing",
+              "prevent, stop, keep, prohibit, discourage",
+              "Aが〜するのを妨げる（keepはfrom省略不可）"
+            ],
+            [
+              "V + A + into + B",
+              "translate, divide, turn, convert, persuade",
+              "AをBに変化・翻訳・分割・説得する"
+            ],
+            [
+              "V + A + for + B",
+              "blame, praise, thank, forgive, mistake, substitute",
+              "AをBのことで非難・感謝する／AをBと間違える"
+            ]
+          ]
+        },
+        "examples": [
+          {
+            "en": "The strict humidity control prevented the resin from absorbing moisture.",
+            "ja": "厳格な湿度管理により、樹脂が湿気を吸収するのを防いだ。",
+            "note": "prevent A from -ing（Aが〜するのを防ぐ）。無生物主語と組み合わせると非常に自然な技術・ビジネス英文になります。",
+            "glossary": [
+              {
+                "w": "humidity control",
+                "m": "湿度管理"
+              },
+              {
+                "w": "resin",
+                "m": "樹脂"
+              },
+              {
+                "w": "absorb moisture",
+                "m": "湿気を吸収する"
+              }
+            ]
+          },
+          {
+            "en": "The new auditorium can seat up to five hundred attendees comfortably.",
+            "ja": "新しい講堂は最大500名の出席者をゆったりと収容できる。",
+            "note": "seat は他動詞で「〜を座らせる・収容する」。sit は自動詞なので sit 500 people とは言えません。",
+            "glossary": [
+              {
+                "w": "auditorium",
+                "m": "講堂、大ホール"
+              },
+              {
+                "w": "seat",
+                "m": "〜を収容する、着席させる（他動詞）"
+              },
+              {
+                "w": "attendee",
+                "m": "出席者"
+              }
+            ]
+          },
+          {
+            "en": "Please remain seated until the aircraft has come to a complete stop.",
+            "ja": "航空機が完全に停止するまで、着席したままでお待ちください。",
+            "note": "他動詞 seat の過去分詞 seated を補語にした第2文型（remain seated＝着席したままでいる）。",
+            "glossary": [
+              {
+                "w": "remain seated",
+                "m": "着席したままでいる"
+              },
+              {
+                "w": "come to a complete stop",
+                "m": "完全に停止する"
+              }
+            ]
+          }
+        ],
+        "pitfalls": [
+          {
+            "ng": "A new problem was arisen after the firmware update.",
+            "ok": "A new problem arose after the firmware update.",
+            "exp": "arise（生じる）は自動詞なので受動態（be arisen）にできません。happen, occur, exist, disappear も同様に受動態不可の自動詞です。"
+          },
+          {
+            "ng": "The document was laying on the desk all morning.",
+            "ok": "The document was lying on the desk all morning.",
+            "exp": "「（モノが）置いてある・横たわっている」は自動詞 lie なので現在分詞は lying です。laying は他動詞 lay（〜を置く）の進行形です。"
+          }
+        ],
+        "tips": "【substitute A for B と replace A with B の罠（超上級ポイント）】\n・replace A with B ＝ Aを（取り除いて）Bに置き換える（新しく残るのは B）\n・substitute A for B ＝ Bの代わりにAを使う（新しく残るのは A！）\n※AとBの新旧が逆転するため、契約書や仕様書で最も誤読しやすいペアです。"
+      },
+      {
+        "id": "ch1-7",
+        "title": "1-7. 形式主語・形式目的語 it と「There / Here」構文・情報構造",
+        "core": "英語には「旧情報（聞き手が知っていること）を文頭に、重くて長い新情報（伝えたい核心）を文末に置く」という情報構造の大原則（エンド・ウェイトの法則）があります。形式主語 it、形式目的語 it、There is 構文はすべて、この原則を守るために生まれた仕組みです。",
+        "svg": "<svg viewBox=\"0 0 720 175\" xmlns=\"http://www.w3.org/2000/svg\" font-family=\"sans-serif\">\n  <text x=\"360\" y=\"22\" text-anchor=\"middle\" font-size=\"13.5\" font-weight=\"bold\" fill=\"var(--text)\">英語の情報構造：エンド・ウェイト（頭を軽く、重い新情報を文末へ）</text>\n  <rect x=\"20\" y=\"42\" width=\"130\" height=\"48\" rx=\"8\" fill=\"var(--primary-light)\" stroke=\"var(--primary)\" stroke-width=\"1.5\"/>\n  <text x=\"85\" y=\"64\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"bold\" fill=\"var(--primary)\">軽い仮の箱</text>\n  <text x=\"85\" y=\"81\" text-anchor=\"middle\" font-size=\"12\" fill=\"var(--text)\">It / There</text>\n  <text x=\"166\" y=\"71\" font-size=\"16\" font-weight=\"bold\" fill=\"var(--text-muted)\">→</text>\n  <rect x=\"184\" y=\"42\" width=\"150\" height=\"48\" rx=\"8\" fill=\"var(--surface-2)\" stroke=\"var(--border)\" stroke-width=\"1.5\"/>\n  <text x=\"259\" y=\"64\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"bold\" fill=\"var(--text)\">短い動詞・評価</text>\n  <text x=\"259\" y=\"81\" text-anchor=\"middle\" font-size=\"12\" fill=\"var(--text-muted)\">is essential / seems</text>\n  <text x=\"350\" y=\"71\" font-size=\"16\" font-weight=\"bold\" fill=\"var(--text-muted)\">→</text>\n  <rect x=\"368\" y=\"42\" width=\"332\" height=\"48\" rx=\"8\" fill=\"var(--accent-light)\" stroke=\"var(--accent)\" stroke-width=\"1.5\"/>\n  <text x=\"534\" y=\"64\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"bold\" fill=\"var(--accent)\">重くて長い「新情報・核心」を文末へ</text>\n  <text x=\"534\" y=\"81\" text-anchor=\"middle\" font-size=\"12\" fill=\"var(--text)\">to verify the contact resistance before mass production.</text>\n\n  <rect x=\"20\" y=\"108\" width=\"680\" height=\"52\" rx=\"8\" fill=\"var(--warn-light)\" stroke=\"var(--warn)\" stroke-width=\"1.2\"/>\n  <text x=\"360\" y=\"130\" text-anchor=\"middle\" font-size=\"12.5\" font-weight=\"bold\" fill=\"var(--warn)\">There is A（新情報・不特定名詞 a/an/some/many） vs The book is on the desk（旧情報・特定名詞 the）</text>\n  <text x=\"360\" y=\"149\" text-anchor=\"middle\" font-size=\"12\" fill=\"var(--text)\">✕ There is the book on the desk.（原則NG：聞き手がすでに知っている特定名詞は文頭主語にする）</text>\n</svg>",
+        "svgCaption": "頭を軽く（It / There）、重要な新情報を後ろへ送るのが英語の自然な流れです。",
+        "details": [
+          {
+            "heading": "形式主語 It の構文と「of 人 vs for 人」の使い分け",
+            "body": "主語が to不定詞・that節・whether節・動名詞（特定表現）で長いとき、文頭に仮主語 It を置きます。\n・It is + 形容詞 + for 人 + to do（一般的評価：difficult, easy, important, necessary, possible, essential）\n・It is + 形容詞 + **of 人** + to do（人の性質・人格の評価：kind, nice, generous, polite, rude, wise, foolish, careless, thoughtful）\n  例：It was very thoughtful **of you** to send the summary in advance.\n・動名詞を真主語にする定番表現：It is no use -ing（〜しても無駄だ）／ It is worth -ing（〜する価値がある）"
+          },
+          {
+            "heading": "形式目的語 It（SV it C to do / that節）をとる重要動詞",
+            "body": "make, find, think, consider, believe, feel, take（take it for granted that ~＝〜を当然のことと思う）, owe（owe it to A that ~＝〜なのはAのおかげだ）などが代表です。\n※さらに、see to it that ~（〜するよう取り計らう）、depend on it that ~（きっと〜だと当てにする）のように「前置詞 + it + that節」の形をとる重要表現もあります。"
+          },
+          {
+            "heading": "There 構文の深層ルール（不定名詞の原則・派生動詞・動名詞）",
+            "body": "① There is/are の後ろ（真主語）には、原則として「不特定の新情報（a/an, some, many, no, 数詞, 複数無冠詞）」が来ます。定冠詞 the や所有格・固有名詞（There is the manager）は原則NGです（列挙・想起の例外を除く）。\n② be動詞以外の動詞も使える：There seems/appears to be ~（〜があるようだ）、There used to be ~（かつて〜があった）、There remains/exists/lives ~（〜が残っている・存在する）。\n③ 否定＋動名詞の定番：There is no -ing（〜することはできない：There is no telling what will happen.＝何が起こるかわからない）。\n④ Here / There の倒置ルール：主語が普通名詞なら倒置（Here comes the bus.）、**主語が代名詞（it, he, she, we, they）なら倒置しない**（Here it comes. / Here you are.）。"
+          }
+        ],
+        "scenes": [
+          {
+            "label": "There is ~（新情報の導入） vs The ~ is ...（旧情報の位置説明）",
+            "items": [
+              {
+                "tag": "新情報 (There)",
+                "en": "There is a testing lab on the third floor.",
+                "ja": "3階に試験室が1つあります（聞き手はまだ存在を知らない）。"
+              },
+              {
+                "tag": "旧情報 (The)",
+                "en": "The testing lab is on the third floor.",
+                "ja": "その試験室は3階にあります（聞き手は試験室を探している）。"
+              }
+            ],
+            "point": "「初めて話題に出すモノ」は There is a ~、「お互いにすでに話題になっているモノ」は The ~ is ... と使い分けます。"
+          },
+          {
+            "label": "Here / There の語順：普通名詞（倒置） vs 代名詞（非倒置）",
+            "items": [
+              {
+                "tag": "普通名詞 (倒置)",
+                "en": "Here comes the express bus to Shenzhen Bay.",
+                "ja": "ほら、深セン湾行きの急行バスが来たよ。"
+              },
+              {
+                "tag": "代名詞 (非倒置)",
+                "en": "Here it comes!",
+                "ja": "ほら、来たよ！（✕ Here comes it. はNG）"
+              }
+            ],
+            "point": "代名詞（it, he, they）はすでに話題に出た「軽い旧情報」なので、文末に置かず動詞の前に収めるのがエンド・ウェイトの法則通りです。"
+          }
+        ],
+        "table": {
+          "headers": [
+            "構文",
+            "構造",
+            "代表的な例文"
+          ],
+          "rows": [
+            [
+              "形式主語 (for)",
+              "It is 形容詞 for 人 to do",
+              "It is essential for engineers to verify the data."
+            ],
+            [
+              "形式主語 (of)",
+              "It is 性質形容詞 of 人 to do",
+              "It was careless of me to overlook the typo."
+            ],
+            [
+              "形式目的語",
+              "make / find / take + it + C + to do / that",
+              "I make it a rule to review my notes daily."
+            ],
+            [
+              "There + 助/派生V",
+              "There seems / used to be + 新情報",
+              "There appears to be a minor discrepancy in the invoice."
+            ],
+            [
+              "There is no -ing",
+              "There is no + 動名詞（〜できない）",
+              "There is no denying that AI is transforming our work."
+            ]
+          ]
+        },
+        "examples": [
+          {
+            "en": "I take it for granted that all test samples have passed the initial screening.",
+            "ja": "すべての試験サンプルが初期スクリーニングを通過しているのは当然のことだと思っている。",
+            "note": "take it for granted that ~（〜を当然視する）は形式目的語 it の最重要イディオムです。",
+            "glossary": [
+              {
+                "w": "take it for granted that ~",
+                "m": "〜を当然のことと思う"
+              },
+              {
+                "w": "initial screening",
+                "m": "初期選別、一次検査"
+              }
+            ]
+          },
+          {
+            "en": "There remains a slight possibility that the shipment will be delayed due to the typhoon.",
+            "ja": "台風の影響で出荷が遅れるわずかな可能性が依然として残っている。",
+            "note": "There + remain（自動詞）+ 真主語（a slight possibility）。be動詞を remain に変えることで「まだ残っている」ニュアンスを出せます。",
+            "glossary": [
+              {
+                "w": "slight possibility",
+                "m": "わずかな可能性"
+              },
+              {
+                "w": "due to ~",
+                "m": "〜が原因で"
+              }
+            ]
+          },
+          {
+            "en": "Please see to it that the revised contract is signed before Friday.",
+            "ja": "改訂された契約書が金曜日までに署名されるよう、確実に取り計らってください。",
+            "note": "see to it that ~（〜するように手配する・気をつける）。前置詞 to の直後に that節を置けないため、緩衝材として it を挟みます。",
+            "glossary": [
+              {
+                "w": "see to it that ~",
+                "m": "〜するよう取り計らう、確実にする"
+              }
+            ]
+          }
+        ],
+        "pitfalls": [
+          {
+            "ng": "I think necessary to double-check the plating thickness.",
+            "ok": "I think it necessary to double-check the plating thickness.",
+            "exp": "形式目的語 it は絶対に省略できません。find / think / make / consider の直後に形容詞＋to不定詞が続くときは必ず it を挟みます。"
+          },
+          {
+            "ng": "There is a lot of people waiting in the lobby.",
+            "ok": "There are a lot of people waiting in the lobby.",
+            "exp": "There 構文の動詞の単数・複数は、後ろに来る「真の主語（a lot of people＝複数）」に一致させます（※口語では There's と縮約することも多いですが、書き言葉・試験では厳密に are にします）。"
+          }
+        ],
+        "tips": "【make it a rule to do の応用】\n「〜することにしている（習慣）」は I make it a rule to ~。また、前置詞＋that節がNGなため it を挟む表現（see to it that ~ / depend on it that ~ / answer for it that ~）は難関試験・実務読解で差がつく上級知識です。"
+      }
+    ]
+  },
+  {
+    "id": "ch2",
+    "number": 2,
+    "title": "時制とアスペクト（時間の認知と完全体系）",
+    "summary": "英語の時制（Tense）は過去・現在・未来の位置を示し、アスペクト（Aspect）は進行中か完了してつながっているかを示します。ネイティブの認知イメージから英米差、時制の一致の例外までを完全網羅します。",
+    "topics": [
+      {
+        "id": "ch2-1",
+        "title": "2-1. 現在形と現在進行形の核心（広い現在・状態動詞の例外・感情の進行形）",
+        "core": "現在形の本質は「今この瞬間」ではなく、過去・現在・未来にまたがる「恒常的な事実・習慣・性質（広い現在）」です。対して現在進行形（be + -ing）は「今を中心にした一時的な途中経過・変化の躍動感」を表します。",
+        "svg": "<svg viewBox=\"0 0 720 190\" xmlns=\"http://www.w3.org/2000/svg\" font-family=\"sans-serif\">\n  <line x1=\"40\" y1=\"68\" x2=\"680\" y2=\"68\" stroke=\"var(--border)\" stroke-width=\"2\"/>\n  <polygon points=\"680,68 670,63 670,73\" fill=\"var(--border)\"/>\n  <line x1=\"360\" y1=\"22\" x2=\"360\" y2=\"175\" stroke=\"var(--danger)\" stroke-width=\"1.5\" stroke-dasharray=\"4,4\"/>\n  <text x=\"360\" y=\"16\" text-anchor=\"middle\" font-size=\"12\" font-weight=\"bold\" fill=\"var(--danger)\">NOW（今）</text>\n  <text x=\"70\" y=\"16\" font-size=\"12\" fill=\"var(--text-muted)\">PAST（過去）</text>\n  <text x=\"610\" y=\"16\" font-size=\"12\" fill=\"var(--text-muted)\">FUTURE（未来）</text>\n\n  <rect x=\"115\" y=\"45\" width=\"490\" height=\"20\" rx=\"10\" fill=\"var(--primary-light)\" stroke=\"var(--primary)\" stroke-width=\"1.5\"/>\n  <text x=\"360\" y=\"59\" text-anchor=\"middle\" font-size=\"12\" font-weight=\"bold\" fill=\"var(--primary)\">現在形（I work / I live）：過去・現在・未来にまたがる習慣・真理・恒常状態</text>\n\n  <line x1=\"40\" y1=\"142\" x2=\"680\" y2=\"142\" stroke=\"var(--border)\" stroke-width=\"2\"/>\n  <polygon points=\"680,142 670,137 670,147\" fill=\"var(--border)\"/>\n  <path d=\"M 270 132 Q 285 118 300 132 T 330 132 T 360 132 T 390 132 T 420 132 T 450 132\" fill=\"none\" stroke=\"var(--accent)\" stroke-width=\"3\"/>\n  <circle cx=\"360\" cy=\"132\" r=\"5\" fill=\"var(--accent)\"/>\n  <text x=\"360\" y=\"166\" text-anchor=\"middle\" font-size=\"12\" font-weight=\"bold\" fill=\"var(--accent)\">現在進行形（I am working）：今の周辺で一時的に進行中・変化中（まだ途中）</text>\n</svg>",
+        "svgCaption": "現在形は時間幅の広い「恒常性」、現在進行形は今をまたぐ一時的な「途中・躍動」です。",
+        "details": [
+          {
+            "heading": "現在形の7つの守備範囲（基本4つ＋上級3つ）",
+            "body": "① 現在の習慣・反復（I review production logs every morning.）\n② 不変の真理・科学法則（Copper conducts electricity well.）\n③ 現在の恒常的状態（She works in Hong Kong.）\n④ 公的時刻表・確定スケジュール（The flight departs at 9:00 tomorrow.）\n⑤【上級】スポーツ実況・実演（He smashes the shuttlecock down the line!）\n⑥【上級】新聞の見出し（Central Bank Raises Interest Rates. ※過去の出来事でも臨場感を出すため現在形）\n⑦【上級】物語・映画のあらすじ紹介（In the final scene, the hero discovers the truth.）"
+          },
+          {
+            "heading": "状態動詞の分類と、あえて進行形にする「例外の認知ルール」",
+            "body": "原則として進行形にしない状態動詞：\n・所有・構成：have（所有）, own, possess, belong to, contain, consist of, include\n・認識・思考：know, understand, realize, recognize, believe, remember, forget, suppose, mean\n・感情・欲求：like, love, hate, prefer, want, need, wish, desire\n・知覚・印象：see, hear, smell, taste, seem, appear, resemble, cost, weigh\n\n★【例外】以下の意図があるときは状態動詞でも進行形にします：\n① 一時的な振る舞い（be being + 形容詞）：He is being unusually quiet today.（普段は違うのに今日に限って意図的に静かだ）\n② 進行中の感情・強調（口語）：I'm loving this new setup!（今まさにすごく気に入っている！）\n③ 状態から「動作」への意味シフト：I'm thinking about relocating.（検討中）／ I'm seeing a specialist tomorrow.（会う予定）／ She is tasting the wine.（味見中）"
+          },
+          {
+            "heading": "always / constantly / forever ＋ 進行形（感情の込め方）",
+            "body": "通常 always は現在形と組みますが、現在進行形と組むと「しょっちゅう〜ばかりして困る・呆れる」という話者の強い感情（主に不満・苛立ち、まれに感嘆）を表します。\n例：He is always complaining about minor issues.（彼ったら些細なことに文句ばかり言っている！）"
+          }
+        ],
+        "scenes": [
+          {
+            "label": "恒常的性格（be）と一時的振る舞い（be being）の対比",
+            "items": [
+              {
+                "tag": "本来の性格",
+                "en": "He is selfish.",
+                "ja": "彼は（普段から）自己中心的な人間だ。"
+              },
+              {
+                "tag": "今だけの態度",
+                "en": "He is being selfish today.",
+                "ja": "彼は今日（に限って）わがままな振る舞いをしている。"
+              }
+            ],
+            "point": "「is being + 形容詞」は本人がコントロールできる一時的な行動・態度（selfish, polite, rude, careful など）にのみ使えます。is being tall や is being tired は不可です。"
+          },
+          {
+            "label": "定住（現在形）と期間限定の滞在（現在進行形）",
+            "items": [
+              {
+                "tag": "生活拠点",
+                "en": "I live in Shenzhen.",
+                "ja": "私は深センに住んでいる（定住・拠点）。"
+              },
+              {
+                "tag": "一時的滞在",
+                "en": "I am living in Shenzhen for a six-month assignment.",
+                "ja": "6ヶ月間の赴任で一時的に深センに住んでいる。"
+              }
+            ],
+            "point": "work, live, stay などの動詞は、進行形にすることで「一時的・期間限定（いずれ終わる）」というニュアンスを明確に打ち出せます。"
+          }
+        ],
+        "table": {
+          "headers": [
+            "動詞",
+            "状態動詞（進行形×）",
+            "動作動詞にシフト（進行形○）"
+          ],
+          "rows": [
+            [
+              "have",
+              "所有している（I have two monitors.）",
+              "食事・体験・開催（We're having a meeting.）"
+            ],
+            [
+              "think",
+              "意見・見解（I think it's feasible.）",
+              "熟考・検討中（I'm thinking of upgrading.）"
+            ],
+            [
+              "see",
+              "自然に目に入る・理解する（I see what you mean.）",
+              "面会予定・交際（I'm seeing the client at 2.）"
+            ],
+            [
+              "smell / taste",
+              "〜の匂い・味がする（It smells strange.）",
+              "匂いを嗅ぐ・味見する（He's smelling the sample.）"
+            ],
+            [
+              "weigh / measure",
+              "重さ・寸法が〜ある（It weighs 50g.）",
+              "重さ・寸法を測る（She's weighing the box.）"
+            ]
+          ]
+        },
+        "examples": [
+          {
+            "en": "Raw material costs are steadily rising due to global supply constraints.",
+            "ja": "世界的な供給制約により、原材料費は着実に上昇し続けている。",
+            "note": "現在進行中の「変化・トレンド（get, become, grow, rise, increase, fall, change）」は現在進行形が最も自然です。",
+            "glossary": [
+              {
+                "w": "steadily",
+                "m": "着実に、絶えず"
+              },
+              {
+                "w": "supply constraint",
+                "m": "供給制約"
+              }
+            ]
+          },
+          {
+            "en": "This high-density connector consists of a copper alloy contact and a heat-resistant housing.",
+            "ja": "この高密度コネクタは、銅合金のコンタクトと耐熱ハウジングで構成されている。",
+            "note": "consist of（〜から成る）は典型的な状態動詞のため、is consisting of にも受動態（is consisted of）にもなりません。",
+            "glossary": [
+              {
+                "w": "consist of ~",
+                "m": "〜から構成される（自動詞・状態動詞）"
+              },
+              {
+                "w": "copper alloy",
+                "m": "銅合金"
+              },
+              {
+                "w": "heat-resistant",
+                "m": "耐熱性の"
+              }
+            ]
+          },
+          {
+            "en": "You are being overly cautious; the test results already confirm full compliance.",
+            "ja": "今は過度に慎重になりすぎているよ。試験結果はすでに完全適合を裏付けている。",
+            "note": "are being + cautious（一時的な態度）の実戦例。",
+            "glossary": [
+              {
+                "w": "overly cautious",
+                "m": "過度に慎重な"
+              },
+              {
+                "w": "compliance",
+                "m": "適合、法令遵守"
+              }
+            ]
+          }
+        ],
+        "pitfalls": [
+          {
+            "ng": "The package is weighing exactly 1.2 kilograms.",
+            "ok": "The package weighs exactly 1.2 kilograms.",
+            "exp": "「重さが〜ある」は状態なので現在形 weighs にします。is weighing は「誰かが秤で重さを量っている最中」という動作になります。"
+          },
+          {
+            "ng": "This team is consisted of ten engineers.",
+            "ok": "This team consists of ten engineers.",
+            "exp": "consist of は自動詞かつ状態動詞です。受動態（is consisted of）も進行形（is consisting of）も絶対に作れません。"
+          }
+        ],
+        "tips": "【実務メールで使える進行形の現在完了との違い】\n・I work for Yamaichi Electronics.（所属という恒常的事実）\n・I am currently working on the 224G evaluation project.（今担当している一時的プロジェクト）\n自己紹介ではこの2文を連続させると非常に洗練された英語になります。"
+      },
+      {
+        "id": "ch2-2",
+        "title": "2-2. 過去形と現在完了形（have + p.p.）の決定的な違い・英米差・時間枠",
+        "core": "過去形は「現在とは切り離された過去の点」、現在完了形（have + p.p.）は「過去の出来事が現在にどうつながっているか（今の状態・実績・最新情報）」を表す『現在時制』の一種です。さらに時間枠の開閉、英米差、速報から詳細への時制切替まで押さえると完璧です。",
+        "svg": "<svg viewBox=\"0 0 720 190\" xmlns=\"http://www.w3.org/2000/svg\" font-family=\"sans-serif\">\n  <line x1=\"40\" y1=\"62\" x2=\"680\" y2=\"62\" stroke=\"var(--border)\" stroke-width=\"2\"/>\n  <line x1=\"500\" y1=\"18\" x2=\"500\" y2=\"176\" stroke=\"var(--danger)\" stroke-width=\"1.5\" stroke-dasharray=\"4,4\"/>\n  <text x=\"500\" y=\"14\" text-anchor=\"middle\" font-size=\"12\" font-weight=\"bold\" fill=\"var(--danger)\">NOW（今）</text>\n\n  <circle cx=\"220\" cy=\"62\" r=\"9\" fill=\"var(--warn)\"/>\n  <text x=\"220\" y=\"44\" text-anchor=\"middle\" font-size=\"12\" font-weight=\"bold\" fill=\"var(--warn)\">過去形（I lost my key）</text>\n  <text x=\"355\" y=\"54\" text-anchor=\"middle\" font-size=\"12\" fill=\"var(--text-muted)\">✕ 今とは断絶（今見つかっているかは不明）</text>\n\n  <line x1=\"40\" y1=\"138\" x2=\"680\" y2=\"138\" stroke=\"var(--border)\" stroke-width=\"2\"/>\n  <circle cx=\"220\" cy=\"138\" r=\"7\" fill=\"var(--primary)\"/>\n  <line x1=\"227\" y1=\"138\" x2=\"492\" y2=\"138\" stroke=\"var(--primary)\" stroke-width=\"4\"/>\n  <polygon points=\"498,138 486,131 486,145\" fill=\"var(--primary)\"/>\n  <circle cx=\"500\" cy=\"138\" r=\"7\" fill=\"var(--danger)\"/>\n  <text x=\"360\" y=\"122\" text-anchor=\"middle\" font-size=\"12.5\" font-weight=\"bold\" fill=\"var(--primary)\">現在完了（I have lost my key）＝ 過去から今へつながる矢印</text>\n  <text x=\"360\" y=\"164\" text-anchor=\"middle\" font-size=\"12\" fill=\"var(--text)\">「なくした状態・結果・実績が『今』ここにある」</text>\n</svg>",
+        "svgCaption": "過去形は今と断絶した「点」、現在完了は過去から今へ伸びてくる「矢印」です。",
+        "details": [
+          {
+            "heading": "時間枠（Time Frame）が開いているか閉じているか",
+            "body": "「today / this morning / this week / this year / in my life」のような期間を表す語は、話している時点でその期間が**まだ終わっていなければ現在完了**、**すでに終わっていれば過去形**を使います。\n・午前10時の発言：I have drunk two cups of coffee this morning.（今朝はまだ続いている）\n・午後3時の発言：I drank two cups of coffee this morning.（今朝はすでに終わった過去）"
+          },
+          {
+            "heading": "談話の流れ：速報は「現在完了」→ 詳細は「過去形」へ切り替え",
+            "body": "ニュースやビジネス報告では、まず新しい出来事（現在の状況）を現在完了で切り出し、その直後に「いつ・誰が・どうやって」という詳細を語るときに過去形へ切り替えます。\n例：We **have resolved** the server outage. The engineering team **identified** the root cause at 2 a.m. and **replaced** the faulty module."
+          },
+          {
+            "heading": "知っておくべき「英米差」と「This is the first time ~」構文",
+            "body": "① **英米差**：just / already / yet を伴う文では、イギリス英語は厳格に現在完了（Have you finished yet? / I've just arrived.）を使いますが、アメリカ英語の口語では過去形（Did you finish yet? / I just arrived.）も普通に許容されます（※ただしTOEICや国際試験では現在完了を選ぶのが鉄則です）。\n② **This / It is the first (second / best) time + 現在完了**：\n   「〜するのは初めてだ／これまでで最高だ」は、過去から今に至る経験の集計なので必ず現在完了にします。\n   例：This is the first time I **have visited** Hanoi.（※visited や visit は試験では誤り）"
+          }
+        ],
+        "scenes": [
+          {
+            "label": "時間枠の開閉：まだ午前中 vs すでに午後",
+            "items": [
+              {
+                "tag": "午前10時 (継続中)",
+                "en": "I haven't received any emails from the client this morning.",
+                "ja": "今朝はまだ顧客からメールを受け取っていない（午前中はまだ終わっていない）。"
+              },
+              {
+                "tag": "午後3時 (終了済)",
+                "en": "I didn't receive any emails from the client this morning.",
+                "ja": "今朝は顧客からメールを受け取らなかった（午前中はすでに終わった）。"
+              }
+            ],
+            "point": "同じ「this morning」でも、発話時点でその時間枠の中にいるか外に出たかで、ネイティブは無意識に現在完了と過去形を切り替えます。"
+          },
+          {
+            "label": "故人・過去の業績（過去形） vs 存命・継続中の実績（現在完了）",
+            "items": [
+              {
+                "tag": "故人 (過去形)",
+                "en": "Shakespeare wrote thirty-seven plays.",
+                "ja": "シェイクスピアは37編の戯曲を書いた（もう増えない）。"
+              },
+              {
+                "tag": "現役 (現在完了)",
+                "en": "Our R&D team has filed thirty-seven patents so far.",
+                "ja": "当社の研究開発チームはこれまでに37件の特許を出願している（今後も増える）。"
+              }
+            ],
+            "point": "動作の主体がすでに亡くなっていたり、会社が解散していたりする場合は「現在とのつながり」が切れているため、原則として過去形を使います。"
+          }
+        ],
+        "table": {
+          "headers": [
+            "判断基準",
+            "過去形",
+            "現在完了形 (have + p.p.)"
+          ],
+          "rows": [
+            [
+              "時間軸",
+              "過去の1点（今と断絶）",
+              "過去→現在のつながり（今の状態）"
+            ],
+            [
+              "共起する副詞",
+              "yesterday, ago, last ~, in 2020, just now, then",
+              "since, for, already, yet, recently, lately, so far, up to now, over the past ~"
+            ],
+            [
+              "疑問詞 When",
+              "○（When did it happen?）",
+              "✕（過去の1点を聞くため原則不可）"
+            ],
+            [
+              "This is the first time",
+              "✕（過去なら It was the first time + had p.p.）",
+              "○（This is the first time I have seen it.）"
+            ]
+          ]
+        },
+        "examples": [
+          {
+            "en": "Over the past decade, data center interconnect speeds have increased dramatically.",
+            "ja": "過去10年間で、データセンターのインターコネクト速度は飛躍的に向上してきた。",
+            "note": "Over the past / last + 期間（ここ〜年間で）は「過去から今まで」を表すため、現在完了形の最強シグナルです。",
+            "glossary": [
+              {
+                "w": "over the past decade",
+                "m": "過去10年間にわたって"
+              },
+              {
+                "w": "dramatically",
+                "m": "劇的に、飛躍的に"
+              }
+            ]
+          },
+          {
+            "en": "This is the most comprehensive quality report I have ever reviewed.",
+            "ja": "これは私がこれまで精査した中で最も包括的な品質報告書だ。",
+            "note": "最上級 + (that) S + have ever + p.p.（これまでで最も〜した）は現在完了の定番構文です。",
+            "glossary": [
+              {
+                "w": "comprehensive",
+                "m": "包括的な、網羅的な"
+              }
+            ]
+          },
+          {
+            "en": "I spoke with the plant manager just now, and he confirmed the new delivery schedule.",
+            "ja": "つい先ほど工場長と話したところ、新しい納期スケジュールを確認してくれた。",
+            "note": "just now（ついさっき）は「過去の1点」扱いなので過去形と組ませます（現在完了の just とは別物！）。",
+            "glossary": [
+              {
+                "w": "just now",
+                "m": "ついさっき（過去形と共起）"
+              },
+              {
+                "w": "plant manager",
+                "m": "工場長"
+              }
+            ]
+          }
+        ],
+        "pitfalls": [
+          {
+            "ng": "I have sent the revised quotation just now.",
+            "ok": "I sent the revised quotation just now. / I have just sent the revised quotation.",
+            "exp": "just（ちょうど〜したところだ）は現在完了と使いますが、文末の just now（ついさっき＝a moment ago）は明確な過去を表すため過去形にします。"
+          },
+          {
+            "ng": "This is the first time I operate this inspection equipment.",
+            "ok": "This is the first time I have operated this inspection equipment.",
+            "exp": "「〜するのは初めてだ」は日本語につられて現在形にしがちですが、英語では現在完了形を使います。"
+          }
+        ],
+        "tips": "【ago と before の違い】\n・three days ago（今から3日前＝過去の1点）→ 必ず「過去形」\n・before（以前に＝時期不特定）→ 「現在完了形」（I have seen this error before.）\n・three days before（過去のある基準点から3日前）→ 「過去完了形」"
+      },
+      {
+        "id": "ch2-3",
+        "title": "2-3. 現在完了の4用法と現在完了進行形（結果・量 vs 動作・痕跡）",
+        "core": "現在完了（have + p.p.）は「完了した事実・結果・達成量（How much/many）」に焦点を当て、現在完了進行形（have been -ing）は「動作そのものの継続・所要時間（How long）・直前までしていた動作の痕跡」に焦点を当てます。",
+        "details": [
+          {
+            "heading": "have been to / have gone to / have been in の3択完全整理",
+            "body": "・have been to A：① Aに行ったことがある（経験：ever / never / twice などと共起） ② Aに行ってきたところだ（完了：just などと共起、今ここにいる）\n・have gone to A：Aに行ってしまった（結果：今ここにはいない）。※自分が目の前にいるのに I / you を主語にはできません。\n・have been in A：ずっとAに滞在している・住んでいる（継続：for / since と共起）。\n  ✕ I have been to Shenzhen for 5 years. → ○ I have been in Shenzhen for 5 years."
+          },
+          {
+            "heading": "現在完了 vs 現在完了進行形：5つの判断基準",
+            "body": "① **動作の継続か、完了した結果か**：\n   ・I have been reading the spec sheet.（まだ読んでいる途中・読む行為に焦点）\n   ・I have read the spec sheet.（読み終えた・完了に焦点）\n② **回数・数量（How many / How much）があるか**：\n   数量・回数を明示するときは「完了した成果」なので、進行形にせず現在完了を使います（I have tested 50 samples today.）。\n③ **直前までしていた動作の痕跡（今の様子）**：\n   「息が切れている」「服が汚れている」「目が赤い」などの原因を述べるときは、たとえ動作が今止まっていても現在完了進行形を使います（It has been raining. 地面が濡れている）。\n④ **状態動詞は進行形不可**：\n   know / own / belong / believe などは継続でも現在完了（How long have you known him?）。\n⑤ **always + 継続は現在完了**：\n   「ずっと昔から（恒久的に）」は現在完了（I have always lived here.）、一時的な継続は現在完了進行形が自然です。"
+          }
+        ],
+        "scenes": [
+          {
+            "label": "動作の痕跡（現在完了進行形） vs 完了した結果（現在完了）",
+            "items": [
+              {
+                "tag": "動作・痕跡",
+                "en": "My hands are covered in grease. I have been repairing the conveyor.",
+                "ja": "手がグリスだらけだ。ずっとコンベアを修理していたんだ（活動そのもの・まだ途中かも）。"
+              },
+              {
+                "tag": "完了・結果",
+                "en": "The conveyor is working again. I have repaired it.",
+                "ja": "コンベアがまた動いているよ。修理を終えたんだ（完了した結果）。"
+              }
+            ],
+            "point": "「何の作業をしていたか（活動・痕跡）」なら have been -ing、「作業が終わってどうなったか（結果）」なら have + p.p. を使います。"
+          },
+          {
+            "label": "How long（期間・動作） vs How many（回数・完了量）",
+            "items": [
+              {
+                "tag": "期間 (進行形)",
+                "en": "How long have you been writing this QA report?",
+                "ja": "どのくらいの間、その品質保証報告書を書き続けているのですか？"
+              },
+              {
+                "tag": "数量 (完了形)",
+                "en": "How many pages have you written so far?",
+                "ja": "これまでに何ページ書き終えましたか？"
+              }
+            ],
+            "point": "同じ「書く」という動詞でも、How long（時間）には現在完了進行形、How many / How much（達成量）には通常の現在完了が対応します。"
+          }
+        ],
+        "table": {
+          "headers": [
+            "表現",
+            "意味・ニュアンス",
+            "今ここにいるか",
+            "共起しやすい語"
+          ],
+          "rows": [
+            [
+              "have been to A",
+              "Aに行ったことがある／行ってきた",
+              "いる",
+              "ever, never, twice, just"
+            ],
+            [
+              "have gone to A",
+              "Aに行ってしまった（不在）",
+              "いない",
+              "already（主語は3人称のみ）"
+            ],
+            [
+              "have been in A",
+              "Aにずっといる・滞在している",
+              "Aにいる",
+              "for 3 years, since 2021"
+            ]
+          ]
+        },
+        "examples": [
+          {
+            "en": "We have been negotiating the unit price with the distributor for nearly three months.",
+            "ja": "私たちは約3ヶ月間、代理店と単価交渉をずっと続けている。",
+            "note": "現在も進行中で終わっていない交渉の継続感を、現在完了進行形が的確に表しています。",
+            "glossary": [
+              {
+                "w": "negotiate",
+                "m": "〜を交渉する"
+              },
+              {
+                "w": "unit price",
+                "m": "単価"
+              },
+              {
+                "w": "distributor",
+                "m": "代理店、販売業者"
+              }
+            ]
+          },
+          {
+            "en": "Mr. Sato has gone to the Hong Kong office and won't be back until Thursday.",
+            "ja": "佐藤さんは香港オフィスへ行っており、木曜日まで戻りません。",
+            "note": "has gone to ＝「行ってしまって今ここにいない（不在）」という結果を伝えます。",
+            "glossary": [
+              {
+                "w": "be back",
+                "m": "戻る"
+              }
+            ]
+          }
+        ],
+        "pitfalls": [
+          {
+            "ng": "I have been to China for eight years.",
+            "ok": "I have been in China for eight years.",
+            "exp": "「〜年間ずっと滞在している（継続）」は to ではなく in を使います。have been to は経験（行ったことがある）専用です。"
+          },
+          {
+            "ng": "She has been sending ten quotations since this morning.",
+            "ok": "She has sent ten quotations since this morning.",
+            "exp": "「10通（ten quotations）」のように達成した数量が明示されている場合は、現在完了進行形ではなく通常の現在完了にします。"
+          }
+        ],
+        "tips": "【for と during の決定的な違い】\n・for ＋ 長さ・数字（for three weeks / for a long time）→ 現在完了と相性抜群\n・during ＋ 特定の期間名（during the summer / during the meeting）→ 「〜の間のどこかで」を表すため、通常は過去形や現在形と使います。"
+      },
+      {
+        "id": "ch2-4",
+        "title": "2-4. 過去完了（大過去）と未来完了（by vs until・hardly/no sooner構文）",
+        "core": "過去完了（had + p.p.）は「過去の基準点よりさらに前の出来事（大過去）」や「過去のある時点までの継続・完了」を表します。未来完了（will have + p.p.）は「未来の基準点までに完了していること」を表し、期限の by と継続の until の使い分けが生命線です。",
+        "svg": "<svg viewBox=\"0 0 720 195\" xmlns=\"http://www.w3.org/2000/svg\" font-family=\"sans-serif\">\n  <line x1=\"35\" y1=\"60\" x2=\"685\" y2=\"60\" stroke=\"var(--border)\" stroke-width=\"2\"/>\n  <circle cx=\"150\" cy=\"60\" r=\"8\" fill=\"var(--purple)\"/>\n  <text x=\"150\" y=\"42\" text-anchor=\"middle\" font-size=\"12\" font-weight=\"bold\" fill=\"var(--purple)\">① 大過去 (had + p.p.)</text>\n  <line x1=\"158\" y1=\"60\" x2=\"322\" y2=\"60\" stroke=\"var(--purple)\" stroke-width=\"3\"/>\n  <circle cx=\"330\" cy=\"60\" r=\"8\" fill=\"var(--warn)\"/>\n  <text x=\"330\" y=\"42\" text-anchor=\"middle\" font-size=\"12\" font-weight=\"bold\" fill=\"var(--warn)\">② 過去の基準点 (過去形)</text>\n  <circle cx=\"510\" cy=\"60\" r=\"6\" fill=\"var(--danger)\"/>\n  <text x=\"510\" y=\"42\" text-anchor=\"middle\" font-size=\"12\" font-weight=\"bold\" fill=\"var(--danger)\">NOW</text>\n  <text x=\"240\" y=\"84\" text-anchor=\"middle\" font-size=\"12\" fill=\"var(--text-muted)\">「確認した(②)時には、すでに承認されていた(①)」</text>\n\n  <line x1=\"35\" y1=\"145\" x2=\"685\" y2=\"145\" stroke=\"var(--border)\" stroke-width=\"2\"/>\n  <rect x=\"55\" y=\"118\" width=\"285\" height=\"50\" rx=\"8\" fill=\"var(--accent-light)\" stroke=\"var(--accent)\" stroke-width=\"1.5\"/>\n  <text x=\"197\" y=\"138\" text-anchor=\"middle\" font-size=\"12.5\" font-weight=\"bold\" fill=\"var(--accent)\">by Friday（金曜日までに＝期限・完了）</text>\n  <text x=\"197\" y=\"157\" text-anchor=\"middle\" font-size=\"11.5\" fill=\"var(--text)\">金曜日より前のどこか1点で完了すればOK</text>\n\n  <rect x=\"365\" y=\"118\" width=\"300\" height=\"50\" rx=\"8\" fill=\"var(--primary-light)\" stroke=\"var(--primary)\" stroke-width=\"1.5\"/>\n  <text x=\"515\" y=\"138\" text-anchor=\"middle\" font-size=\"12.5\" font-weight=\"bold\" fill=\"var(--primary)\">until Friday（金曜日までずっと＝継続）</text>\n  <text x=\"515\" y=\"157\" text-anchor=\"middle\" font-size=\"11.5\" fill=\"var(--text)\">金曜日になるまで途切れず状態が続く</text>\n</svg>",
+        "svgCaption": "過去完了は「過去より前の過去」。未来完了は「未来の期限（by）までに完了している」イメージです。",
+        "details": [
+          {
+            "heading": "過去完了（had + p.p.）が必須になる場面 vs 過去形で済む場面",
+            "body": "・**必須**：2つの過去の出来事を「時間順と逆」に語る場合、または when の時点で「すでに完了していた（already / never / just）」ことを明示する場合。\n  例：When I reached the gate, the flight **had already departed**.\n・**過去形でもOK**：before や after が入っていて、接続詞自体が前後関係を明確に示している場合は、両方過去形でも文法的に正しいです（過去完了にすると前後関係をより強調できます）。"
+          },
+          {
+            "heading": "「〜するやいなや…した」の過去完了セット構文（超重要）",
+            "body": "過去の2つの出来事が立て続けに起きたことを表す硬めの構文では、先に起きた動作に過去完了を使います。\n・S had **hardly / scarcely** + p.p. **when / before** S + 過去形\n・S had **no sooner** + p.p. **than** S + 過去形\n※否定語を文頭に出すと倒置が起きます：\n  **Hardly had** I opened the file **when** the system crashed.\n  **No sooner had** we shipped the lot **than** the client requested a change.\n（口語・通常文では As soon as + 過去形, 過去形 で十分です）"
+          },
+          {
+            "heading": "未来完了（will have + p.p.）と未来完了進行形（will have been -ing）",
+            "body": "・未来完了：By next Friday, we **will have finalized** the design.（来週金曜までに設計を確定し終えているだろう＝完了）\n・未来完了進行形：By the end of this year, I **will have been working** here for twenty years.（今年末でここで20年間働き続けていることになる＝動作の継続）\n※by the time + S + 現在形（〜する時までには）とセットで出題されるのがTOEIC・大学受験の王道パターンです。"
+          }
+        ],
+        "scenes": [
+          {
+            "label": "過去形（間に合った） vs 過去完了（すでに終わっていた）",
+            "items": [
+              {
+                "tag": "間に合った (過去形)",
+                "en": "When I entered the room, the presentation started.",
+                "ja": "私が部屋に入ると、プレゼンが始まった（入ってから開始）。"
+              },
+              {
+                "tag": "遅刻した (過去完了)",
+                "en": "When I entered the room, the presentation had already started.",
+                "ja": "私が部屋に入ったとき、プレゼンはすでに始まっていた。"
+              }
+            ],
+            "point": "過去形を並べると「出来事の起きた順番通り」、過去完了にすると「時間の巻き戻し（それより前に完了）」になります。"
+          },
+          {
+            "label": "by（期限・完了） vs until（継続）の厳密な使い分け",
+            "items": [
+              {
+                "tag": "期限 (by)",
+                "en": "We will have completed the reliability test by next Wednesday.",
+                "ja": "来週水曜日までには信頼性試験を完了しているだろう。"
+              },
+              {
+                "tag": "継続 (until)",
+                "en": "The testing chamber will remain occupied until next Wednesday.",
+                "ja": "試験槽は来週水曜日までずっと使用中のままだろう。"
+              }
+            ],
+            "point": "完了・提出・到着など「1点で終わる動作」には by、滞在・稼働・待機など「ずっと続く状態」には until を使います。"
+          }
+        ],
+        "table": {
+          "headers": [
+            "構文・表現",
+            "組み合わせる時制",
+            "注意点"
+          ],
+          "rows": [
+            [
+              "by + 未来の時",
+              "未来完了 (will have p.p.) / 未来形",
+              "「〜までに（期限）」。until との混同に注意"
+            ],
+            [
+              "by the time + S + 現在形",
+              "主節：未来完了 (will have p.p.)",
+              "by the time 節の中に will は入れない"
+            ],
+            [
+              "by the time + S + 過去形",
+              "主節：過去完了 (had p.p.)",
+              "過去の基準点までに完了していた"
+            ],
+            [
+              "No sooner had S p.p. than ...",
+              "過去完了 ＋ 過去形",
+              "when ではなく必ず than と組む"
+            ],
+            [
+              "Hardly had S p.p. when ...",
+              "過去完了 ＋ 過去形",
+              "than ではなく when / before と組む"
+            ]
+          ]
+        },
+        "examples": [
+          {
+            "en": "No sooner had we resolved the plating issue than another supplier reported a shortage.",
+            "ja": "私たちがめっきの問題を解決するやいなや、別のサプライヤーが部品不足を報告してきた。",
+            "note": "No sooner had + S + p.p. + than + S + 過去形。倒置を伴う格調高い表現です。",
+            "glossary": [
+              {
+                "w": "no sooner ... than ~",
+                "m": "…するやいなや〜する"
+              },
+              {
+                "w": "shortage",
+                "m": "不足、欠乏"
+              }
+            ]
+          },
+          {
+            "en": "By the time the audit team arrives next Monday, we will have organized all test records.",
+            "ja": "来週月曜日に監査チームが到着するまでには、すべての試験記録を整理し終えているだろう。",
+            "note": "By the time 節内は現在形（arrives）、主節は未来完了（will have organized）の黄金ペアです。",
+            "glossary": [
+              {
+                "w": "audit team",
+                "m": "監査チーム"
+              },
+              {
+                "w": "organize",
+                "m": "〜を整理する、体系化する"
+              }
+            ]
+          }
+        ],
+        "pitfalls": [
+          {
+            "ng": "No sooner had he arrived when the phone rang.",
+            "ok": "No sooner had he arrived than the phone rang.",
+            "exp": "sooner は比較級（-er）なので、後ろの接続詞は必ず than になります。when を使うのは hardly / scarcely のときです。"
+          },
+          {
+            "ng": "I thought that I met him somewhere before.",
+            "ok": "I thought that I had met him somewhere before.",
+            "exp": "「思った（過去）」よりもさらに前に「会った（大過去）」ので、時制の前後関係を明確にするため had met にします。"
+          }
+        ],
+        "tips": "【「〜するつもりだったが実現しなかった」の過去完了】\nI had hoped / intended / planned / meant to visit you, but I couldn't. のように、hope / intend / plan を過去完了にすると「〜するつもりだったのに（結局できなかった）」という未実現のニュアンスを上品に表せます。"
+      },
+      {
+        "id": "ch2-5",
+        "title": "2-5. 未来表現の徹底比較（will / be going to / 進行形 / 現在形 / be to不定詞）",
+        "core": "英語は未来を「話者の決定タイミング・準備の確実度・公的拘束力」の度合いで表現し分けます。基本4表現に加え、ニュースやビジネス文書で頻出する『be to 不定詞（5用法）』や『be about to / be on the verge of』まで完全網羅します。",
+        "svg": "<svg viewBox=\"0 0 720 175\" xmlns=\"http://www.w3.org/2000/svg\" font-family=\"sans-serif\">\n  <text x=\"360\" y=\"20\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"bold\" fill=\"var(--text)\">未来表現の「決定タイミング・確実度」スケール</text>\n  <rect x=\"20\" y=\"38\" width=\"158\" height=\"118\" rx=\"10\" fill=\"var(--warn-light)\" stroke=\"var(--warn)\" stroke-width=\"1.5\"/>\n  <text x=\"99\" y=\"62\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"var(--warn)\">will</text>\n  <text x=\"99\" y=\"84\" text-anchor=\"middle\" font-size=\"12\" fill=\"var(--text)\">今この場で即決</text>\n  <text x=\"99\" y=\"104\" text-anchor=\"middle\" font-size=\"11.5\" fill=\"var(--text-muted)\">申し出・約束・単純予測</text>\n  <text x=\"99\" y=\"132\" text-anchor=\"middle\" font-size=\"11.5\" font-weight=\"bold\" fill=\"var(--text)\">I'll check it now!</text>\n\n  <rect x=\"194\" y=\"38\" width=\"158\" height=\"118\" rx=\"10\" fill=\"var(--primary-light)\" stroke=\"var(--primary)\" stroke-width=\"1.5\"/>\n  <text x=\"273\" y=\"62\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"var(--primary)\">be going to</text>\n  <text x=\"273\" y=\"84\" text-anchor=\"middle\" font-size=\"12\" fill=\"var(--text)\">話す前に計画済み</text>\n  <text x=\"273\" y=\"104\" text-anchor=\"middle\" font-size=\"11.5\" fill=\"var(--text-muted)\">個人の意図・根拠ある予測</text>\n  <text x=\"273\" y=\"132\" text-anchor=\"middle\" font-size=\"11.5\" font-weight=\"bold\" fill=\"var(--text)\">I'm going to buy it.</text>\n\n  <rect x=\"368\" y=\"38\" width=\"158\" height=\"118\" rx=\"10\" fill=\"var(--accent-light)\" stroke=\"var(--accent)\" stroke-width=\"1.5\"/>\n  <text x=\"447\" y=\"62\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"var(--accent)\">be + -ing</text>\n  <text x=\"447\" y=\"84\" text-anchor=\"middle\" font-size=\"12\" fill=\"var(--text)\">日時・相手まで手配済</text>\n  <text x=\"447\" y=\"104\" text-anchor=\"middle\" font-size=\"11.5\" fill=\"var(--text-muted)\">手帳に書いた確定予定</text>\n  <text x=\"447\" y=\"132\" text-anchor=\"middle\" font-size=\"11.5\" font-weight=\"bold\" fill=\"var(--text)\">We're meeting at 3.</text>\n\n  <rect x=\"542\" y=\"38\" width=\"158\" height=\"118\" rx=\"10\" fill=\"var(--purple-light)\" stroke=\"var(--purple)\" stroke-width=\"1.5\"/>\n  <text x=\"621\" y=\"62\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"var(--purple)\">現在形 / be to</text>\n  <text x=\"621\" y=\"84\" text-anchor=\"middle\" font-size=\"12\" fill=\"var(--text)\">公的時刻表・公式予定</text>\n  <text x=\"621\" y=\"104\" text-anchor=\"middle\" font-size=\"11.5\" fill=\"var(--text-muted)\">個人では変えられない</text>\n  <text x=\"621\" y=\"132\" text-anchor=\"middle\" font-size=\"11.5\" font-weight=\"bold\" fill=\"var(--text)\">The train leaves at 9.</text>\n</svg>",
+        "svgCaption": "左（will：即決）から右（現在形・be to：公的確定）へ行くほど、事前の手配度・拘束力が高くなります。",
+        "details": [
+          {
+            "heading": "基本4表現の決定的な使い分け基準",
+            "body": "① **will**：話しているその瞬間の「即決（意志・申し出）」、または話者の頭の中の「単純予測（I think it will succeed.）」。\n② **be going to**：話す前から決めていた「意図・計画」、または目の前の明確な兆候に基づく「根拠ある予測（Look at the cracks; it's going to break.）」。\n③ **現在進行形（be + -ing）**：相手・日時・場所まで手配済みの「確定した個人的予定（カレンダー記載レベル）」。※天気や故障など人が手配できないことには使えません（✕ It is raining tomorrow.）。\n④ **現在形**：時刻表・フライト・イベント開始・契約満了日など「個人の意思で動かせない公的スケジュール」。"
+          },
+          {
+            "heading": "【上級必須】be to 不定詞の5用法（予定・義務・可能・運命・意図）",
+            "body": "書き言葉・ニュース・契約書・公式通知で頻出する「be + to do」は、文脈によって5つの意味を持ちます。\n① **予定（公式スケジュール）**：The new factory **is to open** in October.（10月に開所予定だ）\n② **義務・命令（規則・指示）**：All employees **are to wear** safety goggles.（安全ゴーグル着用のこと）\n③ **可能（受動態で否定・疑問が多い）**：No trace of corrosion **was to be found**.（腐食の痕跡は全く見当たらなかった）\n④ **運命（〜する運命だった）**：He **was never to see** his hometown again.（二度と故郷を見ない運命だった）\n⑤ **意図（if節の中で「もし〜するつもりなら」）**：**If** you **are to succeed**, you must prepare thoroughly."
+          },
+          {
+            "heading": "直近未来を表す熟語（be about to / be on the point [verge] of -ing）",
+            "body": "・**be about to do**：まさに今〜しようとしている（※tomorrow などの具体的な未来時を表す副詞とは原則一緒に使いません）。\n・**be on the verge / brink / point of -ing**：今にも〜しかけている（危機・転換点のニュアンスが強い）。\n・**be due to do**：（時刻表・契約上）〜する予定である（The flight is due to land at 14:30.）。"
+          }
+        ],
+        "scenes": [
+          {
+            "label": "その場の即決（will） vs 事前の計画（be going to）",
+            "items": [
+              {
+                "tag": "即決 (will)",
+                "en": "Oh, the shipment is delayed? I'll email the client right away.",
+                "ja": "えっ、出荷が遅れてるの？今すぐ顧客にメールするよ（今決めた）。"
+              },
+              {
+                "tag": "事前計画 (going to)",
+                "en": "Yes, I know. I'm going to email the client after lunch.",
+                "ja": "うん、知ってるよ。昼食後に顧客にメールするつもりなんだ（前から決めていた）。"
+              }
+            ],
+            "point": "「いつ決めたか」の一点だけで will と be going to が完全に分かれます。知っていたのに I'll と言うと「今思い出した」ように聞こえます。"
+          },
+          {
+            "label": "be going to（兆候ある予測） vs will（主観・単純予測）",
+            "items": [
+              {
+                "tag": "根拠・兆候",
+                "en": "Look at the temperature gauge! The engine is going to overheat.",
+                "ja": "温度計を見ろ！エンジンが今にもオーバーヒートするぞ（目の前の兆候）。"
+              },
+              {
+                "tag": "主観的意見",
+                "en": "I believe this new connector will dominate the market within three years.",
+                "ja": "この新型コネクタは3年以内に市場を席巻すると思う（信念・推量）。"
+              }
+            ],
+            "point": "I think / I believe / I'm sure / probably と一緒に使う予測には will が圧倒的に自然です。"
+          }
+        ],
+        "table": {
+          "headers": [
+            "表現",
+            "コアイメージ・ニュアンス",
+            "使用レジスター"
+          ],
+          "rows": [
+            [
+              "will",
+              "即決の意志・申し出・単純予測",
+              "日常〜ビジネス全般"
+            ],
+            [
+              "be going to",
+              "事前計画・目の前の兆候からの予測",
+              "日常〜ビジネス全般"
+            ],
+            [
+              "be + -ing",
+              "相手・日時まで手配済みの確定予定",
+              "日常〜ビジネス（個人の予定）"
+            ],
+            [
+              "現在形",
+              "時刻表・公的日程（変更不可）",
+              "公式案内・時刻表"
+            ],
+            [
+              "be to do",
+              "公式予定・規則上の義務・可能・運命・意図",
+              "ニュース・契約書・公式文書"
+            ],
+            [
+              "be due to do",
+              "予定時刻・納期として定められている",
+              "交通案内・ビジネス納期"
+            ]
+          ]
+        },
+        "examples": [
+          {
+            "en": "The revised safety guidelines are to take effect on April 1.",
+            "ja": "改訂された安全ガイドラインは4月1日に発効する予定である。",
+            "note": "be to do の「公式予定」用法。新聞・プレスリリース・社内通達で極めて頻出します。",
+            "glossary": [
+              {
+                "w": "take effect",
+                "m": "発効する、効力を生じる"
+              },
+              {
+                "w": "guideline",
+                "m": "指針、ガイドライン"
+              }
+            ]
+          },
+          {
+            "en": "The two companies were on the verge of canceling the joint venture when a compromise was reached.",
+            "ja": "妥協点に達したとき、両社は合弁事業を中止する寸前だった。",
+            "note": "be on the verge of -ing（今にも〜しかけている）。切迫した状況を描写します。",
+            "glossary": [
+              {
+                "w": "on the verge of -ing",
+                "m": "〜する寸前で、〜しかけて"
+              },
+              {
+                "w": "joint venture",
+                "m": "合弁事業"
+              },
+              {
+                "w": "compromise",
+                "m": "妥協、折衷案"
+              }
+            ]
+          },
+          {
+            "en": "The replacement batch is due to arrive at the Shenzhen warehouse by noon.",
+            "ja": "交換用ロットは正午までに深セン倉庫へ到着する予定になっている。",
+            "note": "be due to do はスケジュール・納期に基づく到着・提出予定を表すビジネス必須表現です。",
+            "glossary": [
+              {
+                "w": "be due to do",
+                "m": "〜する予定である（時刻・期限）"
+              },
+              {
+                "w": "batch",
+                "m": "（製造の）1ロット、ひとまとまり"
+              }
+            ]
+          }
+        ],
+        "pitfalls": [
+          {
+            "ng": "I am about to fly to Tokyo next Tuesday.",
+            "ok": "I am flying to Tokyo next Tuesday. / I am about to board the plane.",
+            "exp": "be about to は「今まさに数秒〜数分以内に〜する」という直近未来専用なので、next Tuesday のような先の時間とは原則併用しません。"
+          },
+          {
+            "ng": "It is raining heavily tomorrow according to the forecast.",
+            "ok": "It is going to rain heavily tomorrow. / It will rain heavily tomorrow.",
+            "exp": "現在進行形の未来用法は「人間が事前に手配・予約した予定」に使うため、天気などの自然現象には使いません。"
+          }
+        ],
+        "tips": "【will の隠れた性質・拒絶用法】\n・習性（どうしても〜するものだ）：Accidents will happen.（事故は起こるものだ）\n・無生物の拒絶（won't）：This lid won't open.（この蓋がどうしても開かない）\nこれらは未来ではなく「現在の強い傾向・抵抗」を表します。"
+      },
+      {
+        "id": "ch2-6",
+        "title": "2-6. 時・条件の副詞節と名詞節の時制ルール（if/whenの罠と「例外のwill」）",
+        "core": "「時・条件を表す副詞節」では未来のことでも現在形（完了なら現在完了形）にします。一方、「名詞節」や「形容詞節」では未来は素直に will を使います。さらに最上級ポイントとして『if節の中に will を入れてよい2つの例外』まで押さえます。",
+        "details": [
+          {
+            "heading": "「副詞節（現在形）」 vs 「名詞節・形容詞節（will可）」の完全判別",
+            "body": "① **時・条件の副詞節（will × → 現在形／現在完了形）**：\n   when, before, after, until, till, as soon as, by the time, the moment, once, if, unless, as long as, provided (that), in case\n   ※「〜し終えたら」と完了を強調するときは、未来完了ではなく「現在完了形」にします。\n   例：I will forward the file as soon as I **have checked** the numbers.\n② **名詞節（will ○）**：動詞の目的語Oや主語Sになる「いつ〜か（when）」「〜かどうか（if / whether）」。\n   例：I don't know [when the shipment **will arrive**].\n③ **形容詞節＝関係副詞 when（will ○）**：名詞（the day / the time）を修飾する関係副詞節では未来は will を使います。\n   例：The day [when AI **will replace** routine inspection] is coming soon."
+          },
+          {
+            "heading": "【超上級】if 節（条件節）の中に will を入れてよい2つの例外",
+            "body": "原則として条件の if 節に will は入れませんが、以下の2ケースでは**単純未来ではなく「意志」を表す助動詞 will** としてあえて使います。\n① **丁寧な依頼（「よろしければ〜していただければ」）**：\n   If you **will wait** a moment, I will check the inventory.（少々お待ちいただけましたら、在庫を確認いたします）\n② **相手の強い意志・頑固さ（「どうしても〜すると言うなら」）**：\n   If you **will insist** on cutting corners, the product will fail.（どうしても手抜きをすると言い張るなら、製品は失敗するぞ）\n   ※また「If it **will help** you, I can join the call.（それがもしお役に立つのであれば）」のように、「現在の決断が未来の結果をもたらす」場合にも使われます。"
+          }
+        ],
+        "scenes": [
+          {
+            "label": "副詞節の when（「〜するとき」→ 現在形） vs 名詞節の when（「いつ〜か」→ will）",
+            "items": [
+              {
+                "tag": "副詞節 (現在形)",
+                "en": "Please call me when the test sample arrives.",
+                "ja": "試験サンプルが到着したら電話してください。"
+              },
+              {
+                "tag": "名詞節 (will)",
+                "en": "Please tell me when the test sample will arrive.",
+                "ja": "試験サンプルがいつ到着するのか教えてください。"
+              }
+            ],
+            "point": "「到着したら（時の副詞節）」は arrives、「いつ到着するか（tellの目的語＝名詞節）」は will arrive になります。"
+          },
+          {
+            "label": "条件の if 節で「丁寧な依頼の will」を使う上級ビジネス表現",
+            "items": [
+              {
+                "tag": "通常の条件",
+                "en": "If you sign here, we can proceed immediately.",
+                "ja": "ここに署名していただければ、すぐに進められます。"
+              },
+              {
+                "tag": "極めて丁寧な依頼",
+                "en": "If you will kindly sign here, we can proceed immediately.",
+                "ja": "よろしければこちらにご署名いただけますでしょうか。そうすれば直ちに進められます。"
+              }
+            ],
+            "point": "If you will / If you would は「相手の好意・意志」に訴えるフォーマルで非常に丁寧なビジネス表現です。"
+          }
+        ],
+        "table": {
+          "headers": [
+            "節のタイプ",
+            "見分け方",
+            "未来の表し方",
+            "例文"
+          ],
+          "rows": [
+            [
+              "時・条件の副詞節",
+              "消しても主節が文として成立",
+              "現在形 / 現在完了形",
+              "We'll start once the data is ready."
+            ],
+            [
+              "名詞節 (if/when)",
+              "動詞の目的語O・主語Sになる",
+              "will を使う",
+              "I wonder if he will approve the budget."
+            ],
+            [
+              "形容詞節 (関係詞)",
+              "直前の名詞（the time等）を修飾",
+              "will を使う",
+              "There will come a time when you will understand."
+            ],
+            [
+              "条件節の例外 will",
+              "丁寧な依頼・頑固な意志",
+              "will を使う（意志）",
+              "If you will excuse me, I have another call."
+            ]
+          ]
+        },
+        "examples": [
+          {
+            "en": "Let's review the final layout after the engineering team has completed the simulation.",
+            "ja": "技術チームがシミュレーションを完了した後で、最終レイアウトを確認しよう。",
+            "note": "after 節（時の副詞節）の中で「完了」を表すため、will have completed ではなく現在完了 has completed を使っています。",
+            "glossary": [
+              {
+                "w": "layout",
+                "m": "配置、レイアウト"
+              },
+              {
+                "w": "simulation",
+                "m": "シミュレーション、模擬実験"
+              }
+            ]
+          },
+          {
+            "en": "We have prepared backup components in case the primary supplier fails to deliver on time.",
+            "ja": "主要サプライヤーが期日通りに納入できない場合に備えて、予備部品を用意してある。",
+            "note": "in case（〜する場合に備えて）も条件の副詞節を作るため、未来のことでも現在形 fails（または should fail）にします。",
+            "glossary": [
+              {
+                "w": "in case ~",
+                "m": "〜する場合に備えて"
+              },
+              {
+                "w": "primary supplier",
+                "m": "主要サプライヤー"
+              }
+            ]
+          }
+        ],
+        "pitfalls": [
+          {
+            "ng": "I will let you know as soon as I will receive the test report.",
+            "ok": "I will let you know as soon as I receive (または have received) the test report.",
+            "exp": "as soon as ~ は時を表す副詞節なので will は入れません。"
+          },
+          {
+            "ng": "Do you know when does the next train leave?",
+            "ok": "Do you know when the next train leaves / will leave?",
+            "exp": "名詞節（間接疑問文）では「疑問詞 + S + V」の肯定文語順になります（does は不要）。"
+          }
+        ],
+        "tips": "【譲歩の副詞節（whatever / no matter what / even if）も現在形！】\nNo matter what happens tomorrow, we will stick to the schedule.（明日何が起ころうとも）のように、譲歩を表す副詞節でも未来のことを現在形で表します。"
+      },
+      {
+        "id": "ch2-7",
+        "title": "2-7. 過去進行形・過去完了進行形・未来進行形の高度な使い分け",
+        "core": "進行形（be + -ing）に過去や未来の時制が組み合わさると、単なる「〜していた」を超えて、英語特有の『背景描写』『時間的距離＝心理的距離による最上級の丁寧打診』『自然な予定確認』という高度なコミュニケーション機能が生まれます。",
+        "svg": "<svg viewBox=\"0 0 720 165\" xmlns=\"http://www.w3.org/2000/svg\" font-family=\"sans-serif\">\n  <text x=\"360\" y=\"22\" text-anchor=\"middle\" font-size=\"13.5\" font-weight=\"bold\" fill=\"var(--text)\">英語の「時間的距離 ＝ 心理的距離（丁寧さ）」の法則</text>\n  <rect x=\"20\" y=\"42\" width=\"205\" height=\"98\" rx=\"10\" fill=\"var(--warn-light)\" stroke=\"var(--warn)\" stroke-width=\"1.5\"/>\n  <text x=\"122\" y=\"66\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"bold\" fill=\"var(--warn)\">現在形（距離ゼロ＝直接的）</text>\n  <text x=\"122\" y=\"90\" text-anchor=\"middle\" font-size=\"12.5\" font-weight=\"bold\" fill=\"var(--text)\">I wonder if you can help.</text>\n  <text x=\"122\" y=\"114\" text-anchor=\"middle\" font-size=\"11.5\" fill=\"var(--text-muted)\">ややストレート・事務的</text>\n\n  <text x=\"242\" y=\"96\" font-size=\"18\" font-weight=\"bold\" fill=\"var(--text-muted)\">→</text>\n\n  <rect x=\"262\" y=\"42\" width=\"205\" height=\"98\" rx=\"10\" fill=\"var(--primary-light)\" stroke=\"var(--primary)\" stroke-width=\"1.5\"/>\n  <text x=\"364\" y=\"66\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"bold\" fill=\"var(--primary)\">過去形（一歩引く＝丁寧）</text>\n  <text x=\"364\" y=\"90\" text-anchor=\"middle\" font-size=\"12.5\" font-weight=\"bold\" fill=\"var(--text)\">I wondered if you could...</text>\n  <text x=\"364\" y=\"114\" text-anchor=\"middle\" font-size=\"11.5\" fill=\"var(--text-muted)\">控えめ・丁寧な打診</text>\n\n  <text x=\"484\" y=\"96\" font-size=\"18\" font-weight=\"bold\" fill=\"var(--text-muted)\">→</text>\n\n  <rect x=\"504\" y=\"42\" width=\"196\" height=\"98\" rx=\"10\" fill=\"var(--accent-light)\" stroke=\"var(--accent)\" stroke-width=\"1.5\"/>\n  <text x=\"602\" y=\"66\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"bold\" fill=\"var(--accent)\">過去進行形（極めて丁寧）</text>\n  <text x=\"602\" y=\"90\" text-anchor=\"middle\" font-size=\"12.5\" font-weight=\"bold\" fill=\"var(--text)\">I was wondering if...</text>\n  <text x=\"602\" y=\"114\" text-anchor=\"middle\" font-size=\"11.5\" fill=\"var(--text-muted)\">「一時的に思案中」のソフトさ</text>\n</svg>",
+        "svgCaption": "現在形 → 過去形 → 過去進行形 と距離をとるほど、相手への圧迫感が消えて洗練された丁寧表現になります。",
+        "details": [
+          {
+            "heading": "過去進行形（was / were + -ing）の3つの重要機能",
+            "body": "① **背景描写（過去の瞬間を切り取る）**：\n   「長い背景（過去進行形）」の最中に「短い出来事（過去形）」が割り込む構造。\n   例：We **were running** a stress test when the voltage suddenly **dropped**.\n② **【ビジネス最重要】心理的距離による控えめな打診・依頼**：\n   「I was wondering if ...（〜していただけないかと思っていたのですが）」「I was hoping you could ...（〜していただければと期待していたのですが）」「Were you looking for ...?（何かお探しでしたか？）」\n   現在形（I wonder）より過去形（I wondered）が一歩引き、さらに進行形（I was wondering）にすると「今ちょっと頭の中で思案している途中（押し付ける気はない）」という極めて丁寧で洗練された響きになります。\n③ **過去の未実現の予定**：\n   I **was going to** call you, but I got stuck in a meeting.（電話するつもりだったのに…）"
+          },
+          {
+            "heading": "過去完了進行形（had been + -ing）の核心",
+            "body": "過去のある時点まで「ずっと動作を続けていた（継続期間）」や「直前までしていた動作の痕跡」を表します。\n・過去完了（had + p.p.）：その時点で完了した「回数・結果」\n・過去完了進行形（had been + -ing）：その時点までの「動作の継続・疲労感・痕跡」\n例：He was exhausted because he **had been troubleshooting** the network for six hours."
+          },
+          {
+            "heading": "未来進行形（will be + -ing）の2つの重要機能",
+            "body": "① **未来の特定時点での進行中**：\n   This time next week, we **will be exhibiting** our new products in Tokyo.\n② **【ビジネス必須】自然な成り行き・丁寧な予定確認**：\n   ・Will you **be attending** the dinner tonight?（今夜の夕食会にはご出席予定でしょうか？）\n   ※Will you attend ~? と聞くと「出席してくださいませんか？（勧誘・依頼）」に聞こえることがありますが、Will you be attending ~? にすると「純粋に相手の予定を尋ねる」スマートな質問になります。"
+          }
+        ],
+        "scenes": [
+          {
+            "label": "ビジネス依頼の丁寧度：直接的 vs 過去進行形による控えめな打診",
+            "items": [
+              {
+                "tag": "やや直接的",
+                "en": "Can you extend the deadline by two days?",
+                "ja": "締め切りを2日延ばしてもらえますか？"
+              },
+              {
+                "tag": "最上級の丁寧打診",
+                "en": "I was wondering if you could possibly extend the deadline by two days.",
+                "ja": "もしよろしければ、締め切りを2日ほど延ばしていただけないかと思っていたのですが。"
+              }
+            ],
+            "point": "「I was wondering if + S + could ...」は、上司や重要な顧客への無理なお願い・調整依頼でネイティブが最も多用する黄金フレーズです。"
+          },
+          {
+            "label": "Will you ~?（依頼・勧誘） vs Will you be -ing?（純粋な予定確認）",
+            "items": [
+              {
+                "tag": "依頼・勧誘",
+                "en": "Will you use the meeting room this afternoon?",
+                "ja": "今日の午後、会議室を使いますか？（または使ってくれますか？）"
+              },
+              {
+                "tag": "スマートな予定確認",
+                "en": "Will you be using the meeting room this afternoon?",
+                "ja": "今日の午後、会議室はお使いになる予定でしょうか？（空いていれば借りたい）"
+              }
+            ],
+            "point": "「もし使わないなら自分が借りたい」「ついでに頼み事がある」といった前提で相手の予定をそっと確認するとき、未来進行形が大活躍します。"
+          }
+        ],
+        "table": {
+          "headers": [
+            "時制・アスペクト",
+            "基本の意味",
+            "上級・ビジネスでの実践用途"
+          ],
+          "rows": [
+            [
+              "過去進行形 (was -ing)",
+              "過去の特定時点で進行中",
+              "I was wondering / hoping if ...（極めて丁寧な打診）"
+            ],
+            [
+              "過去完了進行形 (had been -ing)",
+              "過去の基準点までの継続・痕跡",
+              "原因・疲労の背景説明（had been working for 5 hours）"
+            ],
+            [
+              "未来進行形 (will be -ing)",
+              "未来の特定時点で進行中",
+              "Will you be ~ing?（押し付け感のない予定確認）"
+            ]
+          ]
+        },
+        "examples": [
+          {
+            "en": "I was hoping we could discuss the updated pricing structure before the end of the week.",
+            "ja": "今週中に、改訂された価格体系についてご相談できればと思っていたのですが。",
+            "note": "I was hoping + (that) S + could ~ は、交渉やアポイント打診で相手を圧迫しない上品な表現です。",
+            "glossary": [
+              {
+                "w": "pricing structure",
+                "m": "価格体系"
+              }
+            ]
+          },
+          {
+            "en": "The factory had been operating at full capacity for months before the new production line opened.",
+            "ja": "新しい生産ラインが稼働する前、その工場は何ヶ月もの間フル稼働を続けていた。",
+            "note": "過去の基準点（before ~ opened）までずっと続いていた動作の継続なので、過去完了進行形 had been operating が最適です。",
+            "glossary": [
+              {
+                "w": "at full capacity",
+                "m": "フル稼働で、最大能力で"
+              },
+              {
+                "w": "production line",
+                "m": "生産ライン"
+              }
+            ]
+          },
+          {
+            "en": "Will you be passing by the post office on your way back to the office?",
+            "ja": "オフィスへ戻る途中、郵便局の前を通られる予定はありますか？",
+            "note": "未来進行形で相手の自然な予定を確認する典型例（ついでに投函を頼みたいときなど）。",
+            "glossary": [
+              {
+                "w": "pass by ~",
+                "m": "〜のそばを通る"
+              }
+            ]
+          }
+        ],
+        "pitfalls": [
+          {
+            "ng": "I was wondering if you will send me the datasheet.",
+            "ok": "I was wondering if you could send me the datasheet.",
+            "exp": "I was wondering if の後ろは、時制の一致と丁寧さのバランスから、will / can よりも **could / would** を使うのが圧倒的に自然です。"
+          }
+        ],
+        "tips": "【未来進行形の「当然の成り行き」ニュアンス】\nI'll be seeing Mr. Tanaka tomorrow anyway.（どうせ明日田中さんに会うことになっているから）のように、「意図的に手配した」というより「通常の流れ・予定としてそうなる」という自然な響きを出したいときにも will be -ing が使われます。"
+      },
+      {
+        "id": "ch2-8",
+        "title": "2-8. 時制の一致と「一致の例外5パターン」＆特殊な時制構文",
+        "core": "主節の動詞が過去形になると、従属節（that節など）の動詞も原則として1段階過去へシフトします（時制の一致）。しかし、真の上級者が必ず押さえるべきなのは『時制の一致を受けない5大例外』と、現在のことなのに過去形を使う特殊構文（It is high time など）です。",
+        "svg": "<svg viewBox=\"0 0 720 175\" xmlns=\"http://www.w3.org/2000/svg\" font-family=\"sans-serif\">\n  <text x=\"360\" y=\"20\" text-anchor=\"middle\" font-size=\"13.5\" font-weight=\"bold\" fill=\"var(--text)\">時制の一致（主節が過去形になると、従属節の時制も1段階後ろへシフト）</text>\n  <rect x=\"24\" y=\"38\" width=\"315\" height=\"122\" rx=\"10\" fill=\"var(--surface)\" stroke=\"var(--primary)\" stroke-width=\"1.5\"/>\n  <text x=\"181\" y=\"60\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"bold\" fill=\"var(--primary)\">原則：1段階過去へシフト</text>\n  <text x=\"42\" y=\"84\" font-size=\"12.5\" fill=\"var(--text)\">・現在形（is） ──→ 過去形（was）</text>\n  <text x=\"42\" y=\"106\" font-size=\"12.5\" fill=\"var(--text)\">・過去形 / 現在完了 ──→ 過去完了（had p.p.）</text>\n  <text x=\"42\" y=\"128\" font-size=\"12.5\" fill=\"var(--text)\">・will / can / may ──→ would / could / might</text>\n  <text x=\"42\" y=\"150\" font-size=\"11.5\" fill=\"var(--text-muted)\">例: He said that he had finished the test.</text>\n\n  <rect x=\"366\" y=\"38\" width=\"330\" height=\"122\" rx=\"10\" fill=\"var(--warn-light)\" stroke=\"var(--warn)\" stroke-width=\"1.5\"/>\n  <text x=\"531\" y=\"60\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"bold\" fill=\"var(--warn)\">例外：シフトしない5大パターン</text>\n  <text x=\"382\" y=\"83\" font-size=\"12.5\" fill=\"var(--text)\">① 不変の真理・科学法則（現在形のまま）</text>\n  <text x=\"382\" y=\"103\" font-size=\"12.5\" fill=\"var(--text)\">② 歴史上の事実（過去形のまま）</text>\n  <text x=\"382\" y=\"123\" font-size=\"12.5\" fill=\"var(--text)\">③ 今も続く習慣・事実（現在形も可）</text>\n  <text x=\"382\" y=\"143\" font-size=\"12.5\" fill=\"var(--text)\">④ 仮定法・must/should / ⑤ 比較節</text>\n</svg>",
+        "svgCaption": "主節が過去形になると従属節も過去方向へ引き寄せられますが、「普遍性・歴史的事実・仮定法」などは引き寄せられません。",
+        "details": [
+          {
+            "heading": "時制の一致の基本ルール（バックシフト）",
+            "body": "主節が現在形なら従属節は自由ですが、主節が過去形（He said / I thought / She knew）になると：\n・現在形 → 過去形（is → was）\n・過去形 / 現在完了形 → 過去完了形（went / has gone → had gone）\n・will / can / may → would / could / might"
+          },
+          {
+            "heading": "【完全網羅】時制の一致を受けない5大例外",
+            "body": "① **不変の真理・科学法則・ことわざ**（現在形のまま）：\n   The teacher explained that water **boils** at 100 degrees Celsius.\n② **歴史上の事実**（過去形のまま ※過去完了にしない！）：\n   We learned in school that World War II **ended** in 1945.（✕ had ended）\n③ **現在も続いている習慣・事実**（話者が今も真実だと強調したい場合は現在形も可）：\n   She told me that she **lives** in Hong Kong.（今も住んでいる事実を強調。※lived も可）\n④ **仮定法、および過去形を持たない助動詞（must / should / ought to / had better / used to）**：\n   ・仮定法はそのまま：He said that if he **were** rich, he **would buy** an island.\n   ・must（義務・推量）や should はそのまま：She said I **must** submit it by noon.（※must は had to に変えることも可）\n⑤ **比較節（than / as 以下）**：\n   主節が過去でも、比較対象が「今の状態」なら現在形にします。\n   例：He was taller at 15 than he **is** now. / She worked harder than I **do**."
+          },
+          {
+            "heading": "特殊な時制表現（It is high time / It has been ~ since）",
+            "body": "① **It is (high / about) time + S + 過去形**（もう〜してもよい頃だ／とっくに〜すべき時だ）：\n   「本来もうしているはずなのに、まだしていない」という現実とのギャップ（仮定法的ニュアンス）があるため、現在の話でも**過去形**を使います。\n   例：It is high time we **upgraded** our legacy system.\n② **It is / has been + 期間 + since + S + 過去形**（〜してから…になる）：\n   since の後ろは過去の起点（過去形）、主節は現在完了（または現在形）。\n   例：It has been three years since we **launched** this product line."
+          }
+        ],
+        "scenes": [
+          {
+            "label": "今も続く事実（現在形） vs 当時の状況（過去形）",
+            "items": [
+              {
+                "tag": "今も真実 (現在形)",
+                "en": "He told me that the factory operates 24 hours a day.",
+                "ja": "彼はその工場が24時間稼働していると私に言った（今も24時間稼働している）。"
+              },
+              {
+                "tag": "当時の話 (過去形)",
+                "en": "He told me that the factory operated 24 hours a day.",
+                "ja": "彼はその工場が（当時）24時間稼働していると私に言った（今もそうかは言及しない）。"
+              }
+            ],
+            "point": "話者が「その内容は今も変わらず事実だ」と確信しているときは、時制の一致をあえて適用せず現在形のままにすることがネイティブの間で非常に一般的です。"
+          },
+          {
+            "label": "歴史的事実の罠：過去形のまま（大過去にしない）",
+            "items": [
+              {
+                "tag": "歴史的事実 (過去形)",
+                "en": "Our professor mentioned that the transistor was invented in 1947.",
+                "ja": "教授はトランジスタが1947年に発明されたことに言及した。"
+              },
+              {
+                "tag": "個人的過去 (過去完了)",
+                "en": "Our professor mentioned that he had visited Bell Labs in 1995.",
+                "ja": "教授は1995年にベル研究所を訪れたことがあると言及した。"
+              }
+            ],
+            "point": "歴史上の公的な出来事（年号付きの歴史的事実）は、主節が過去形でも過去完了（had been invented）にはせず、そのまま過去形（was invented）を保ちます。"
+          }
+        ],
+        "table": {
+          "headers": [
+            "例外パターン",
+            "従属節の時制",
+            "代表例"
+          ],
+          "rows": [
+            [
+              "① 不変の真理・法則",
+              "現在形のまま",
+              "Galileo proved that the earth moves around the sun."
+            ],
+            [
+              "② 歴史上の事実",
+              "過去形のまま",
+              "He said that the company was founded in 1956."
+            ],
+            [
+              "③ 今も続く習慣・事実",
+              "現在形（または過去形）",
+              "She mentioned that she runs every morning."
+            ],
+            [
+              "④ 仮定法・must/should",
+              "形を変えない",
+              "He said that we should review the contract."
+            ],
+            [
+              "⑤ 比較節 (than / as)",
+              "実際の時間軸に合わせる",
+              "The traffic was much heavier than it is today."
+            ]
+          ]
+        },
+        "examples": [
+          {
+            "en": "It is high time we reconsidered our single-supplier dependency to mitigate supply risks.",
+            "ja": "供給リスクを軽減するために、単一サプライヤーへの依存をそろそろ本気で見直すべき時だ。",
+            "note": "It is high time + S + 過去形（reconsidered）。「もうとっくにすべきなのに」という緊急性・危機感がこもります。",
+            "glossary": [
+              {
+                "w": "It is high time S + 過去形",
+                "m": "もうとっくにSが〜すべき時だ"
+              },
+              {
+                "w": "dependency",
+                "m": "依存"
+              },
+              {
+                "w": "mitigate",
+                "m": "（リスク・被害を）軽減する、緩和する"
+              }
+            ]
+          },
+          {
+            "en": "The engineer explained that gold plating prevents oxidation at the contact interface.",
+            "ja": "そのエンジニアは、金めっきが接触界面の酸化を防ぐと説明した。",
+            "note": "「金めっきは酸化を防ぐ」という科学的事実・不変の性質なので、主節が explained（過去）でも prevents（現在形）のままにします。",
+            "glossary": [
+              {
+                "w": "oxidation",
+                "m": "酸化"
+              },
+              {
+                "w": "contact interface",
+                "m": "接触界面"
+              }
+            ]
+          }
+        ],
+        "pitfalls": [
+          {
+            "ng": "I learned that the Berlin Wall had fallen in 1989.",
+            "ok": "I learned that the Berlin Wall fell in 1989.",
+            "exp": "歴史的事実は時制の一致を受けず、過去形のまま（fell）にします。"
+          },
+          {
+            "ng": "It is high time we start the final inspection.",
+            "ok": "It is high time we started the final inspection.",
+            "exp": "It is (high / about) time の後ろに S + V が続くときは、現在形ではなく過去形（started）にします（※to不定詞なら It is time for us to start ~ でOK）。"
+          }
+        ],
+        "tips": "【話法転換での「時・場所」のシフト】\n間接話法で時制の一致が起きるとき、副詞も視点に合わせて変化します。\n・today → that day / yesterday → the day before / tomorrow → the next (following) day\n・now → then / here → there / ago → before（two days ago → two days before）"
+      }
+    ]
+  }
+];
+
+/* =========================================================
+   状態管理 (v3: AI履歴・保存テスト・弱点履歴・音声設定を永続化)
+========================================================= */
+const STORAGE_KEYS = {
+  EXTRA_CHAPTERS: "grammarflow_extra_chapters_v1",
+  PROGRESS: "grammarflow_progress_v1",
+  MEMOS: "grammarflow_memos_v1",
+  SETTINGS: "grammarflow_settings_v1",
+  TOKENS: "grammarflow_tokens_v1",
+  THEME: "grammarflow_theme_v1",
+  AI_HISTORY: "grammarflow_ai_history_v3",
+  SAVED_QUIZZES: "grammarflow_saved_quizzes_v3",
+  WEAKNESSES: "grammarflow_weaknesses_v3"
+};
+
+let allChapters = [];
+let progressMap = {};
+let memoMap = {};
+let aiHistoryMap = {};      // { topicId: [ { role, text, time } ] }
+let savedQuizzes = [];      // [ { id, chapterId, topicId, title, level, createdAt, questions } ]
+let weaknesses = [];        // [ { id, chapterId, topicId, topicTitle, question, options, answerIndex, userWrongIndex, translation, explanation, glossary, missedAt, resolved } ]
+let settings = {
+  apiKey: "",
+  model: "gemini-3.5-flash",
+  customModel: "",
+  voiceLang: "en-US",
+  voiceRate: "1.0"
+};
+let tokenStats = { input: 0, output: 0 };
+let currentChapterId = "ch1";
+let currentTopicId = "ch1-1";
+let currentFilter = "all";
+let currentQuizTab = "new";
+let currentWeakScope = "all";
+let activeQuizSet = null; // 現在画面に開いているクイズデータ
+
+function safeParse(key, fallback) {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+function loadAllData() {
+  progressMap = safeParse(STORAGE_KEYS.PROGRESS, {});
+  memoMap = safeParse(STORAGE_KEYS.MEMOS, {});
+  aiHistoryMap = safeParse(STORAGE_KEYS.AI_HISTORY, {});
+  savedQuizzes = safeParse(STORAGE_KEYS.SAVED_QUIZZES, []);
+  weaknesses = safeParse(STORAGE_KEYS.WEAKNESSES, []);
+  settings = Object.assign(settings, safeParse(STORAGE_KEYS.SETTINGS, {}));
+  tokenStats = Object.assign(tokenStats, safeParse(STORAGE_KEYS.TOKENS, {}));
+
+  const theme = localStorage.getItem(STORAGE_KEYS.THEME) || "light";
+  document.documentElement.setAttribute("data-theme", theme);
+  document.getElementById("themeBtn").textContent = theme === "dark" ? "☀️" : "🌙";
+
+  const extra = safeParse(STORAGE_KEYS.EXTRA_CHAPTERS, []);
+  const map = new Map();
+  BUILTIN_CHAPTERS.forEach(ch => map.set(ch.id, ch));
+  extra.forEach(ch => map.set(ch.id, ch));
+  allChapters = Array.from(map.values()).sort((a, b) => (a.number || 999) - (b.number || 999));
+
+  // Settings UI sync
+  document.getElementById("apiKeyInput").value = settings.apiKey || "";
+  document.getElementById("modelSelect").value = settings.model || "gemini-3.5-flash";
+  document.getElementById("customModelInput").value = settings.customModel || "";
+  document.getElementById("voiceLangSelect").value = settings.voiceLang || "en-US";
+  document.getElementById("voiceRateSelect").value = settings.voiceRate || "1.0";
+  toggleCustomModelInput();
+  updateTokenUI();
+  updateGlobalBadges();
+}
+
+function updateGlobalBadges() {
+  const activeWeak = weaknesses.filter(w => !w.resolved).length;
+  const hb = document.getElementById("headerWeakBadge");
+  if (hb) hb.textContent = activeWeak;
+  const wq = document.getElementById("weakQuizCount");
+  if (wq) wq.textContent = activeWeak;
+  const sq = document.getElementById("savedQuizCount");
+  if (sq) sq.textContent = savedQuizzes.length;
+}
+
+function getAllTopicsFlat() {
+  const list = [];
+  allChapters.forEach(ch => (ch.topics || []).forEach(t => list.push({ chapter: ch, topic: t })));
+  return list;
+}
+
+function getCurrentContext() {
+  const ch = allChapters.find(c => c.id === currentChapterId) || allChapters[0];
+  const t = (ch?.topics || []).find(x => x.id === currentTopicId) || ch?.topics?.[0];
+  return { ch, t };
+}
+
+/* =========================================================
+   音声読み上げ（Web Speech API・トークン消費ゼロ）
+========================================================= */
+let currentSpeakBtn = null;
+
+function speakEnglish(text, btnEl) {
+  if (!("speechSynthesis" in window)) {
+    alert("お使いのブラウザは音声読み上げに対応していません。");
+    return;
+  }
+  const cleanText = String(text || "").replace(/_{2,}/g, " blank ");
+  if (window.speechSynthesis.speaking && currentSpeakBtn === btnEl) {
+    window.speechSynthesis.cancel();
+    if (currentSpeakBtn) {
+      currentSpeakBtn.classList.remove("speaking");
+      currentSpeakBtn.textContent = "🔊 再生";
+    }
+    currentSpeakBtn = null;
+    return;
+  }
+
+  window.speechSynthesis.cancel();
+  if (currentSpeakBtn) {
+    currentSpeakBtn.classList.remove("speaking");
+    currentSpeakBtn.textContent = "🔊 再生";
+  }
+
+  const utter = new SpeechSynthesisUtterance(cleanText);
+  utter.lang = settings.voiceLang || "en-US";
+  utter.rate = parseFloat(settings.voiceRate || "1.0");
+
+  const voices = window.speechSynthesis.getVoices();
+  const preferred = voices.find(v => v.lang === utter.lang) || voices.find(v => v.lang.startsWith("en"));
+  if (preferred) utter.voice = preferred;
+
+  if (btnEl) {
+    currentSpeakBtn = btnEl;
+    btnEl.classList.add("speaking");
+    btnEl.textContent = "⏹ 停止";
+  }
+
+  utter.onend = utter.onerror = () => {
+    if (btnEl) {
+      btnEl.classList.remove("speaking");
+      btnEl.textContent = "🔊 再生";
+    }
+    if (currentSpeakBtn === btnEl) currentSpeakBtn = null;
+  };
+  window.speechSynthesis.speak(utter);
+}
+
+function updateQuickAudioSetting(key, val) {
+  settings[key] = val;
+  localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(settings));
+  if (key === "voiceLang") document.getElementById("voiceLangSelect").value = val;
+  if (key === "voiceRate") document.getElementById("voiceRateSelect").value = val;
+}
+
+/* =========================================================
+   UI描画：サイドバー & メイン
+========================================================= */
+function renderSidebar() {
+  const q = document.getElementById("searchInput").value.trim().toLowerCase();
+  const toc = document.getElementById("tocList");
+  toc.innerHTML = "";
+
+  let totalCount = 0;
+  let doneCount = 0;
+
+  allChapters.forEach(ch => {
+    const topics = ch.topics || [];
+    totalCount += topics.length;
+    const chDone = topics.filter(t => progressMap[t.id]).length;
+    doneCount += chDone;
+
+    const filteredTopics = topics.filter(t => {
+      if (currentFilter === "todo" && progressMap[t.id]) return false;
+      if (!q) return true;
+      const blob = (JSON.stringify(t) + " " + ch.title + " " + (memoMap[t.id] || "")).toLowerCase();
+      return blob.includes(q);
+    });
+
+    if (filteredTopics.length === 0 && q) return;
+
+    const group = document.createElement("div");
+    group.className = "chapter-group";
+    group.innerHTML = `<div class="chapter-header"><span>第${ch.number}章 ${escapeHtml(ch.title)}</span><span class="chapter-badge">${chDone}/${topics.length}</span></div>`;
+
+    const itemsWrap = document.createElement("div");
+    itemsWrap.className = "topic-items";
+
+    filteredTopics.forEach(t => {
+      const item = document.createElement("div");
+      item.className = "topic-item" + (t.id === currentTopicId ? " active" : "");
+      item.onclick = () => selectTopic(ch.id, t.id);
+      const isDone = !!progressMap[t.id];
+      const hasChat = (aiHistoryMap[t.id] || []).length > 0;
+      const weakCnt = weaknesses.filter(w => !w.resolved && w.topicId === t.id).length;
+
+      let badges = "";
+      if (hasChat) badges += `<span title="AI質問履歴あり">💬</span>`;
+      if (weakCnt > 0) badges += `<span style="color:var(--danger);font-weight:700;" title="未克服の弱点">🎯${weakCnt}</span>`;
+
+      item.innerHTML = `
+        <div class="topic-item-left">
+          <span>${isDone ? "✅" : "⬜"}</span>
+          <span>${escapeHtml(t.title)}</span>
+        </div>
+        <div class="topic-mini-badges">${badges}</div>
+      `;
+      itemsWrap.appendChild(item);
+    });
+
+    group.appendChild(itemsWrap);
+    toc.appendChild(group);
+  });
+
+  const pct = totalCount ? Math.round((doneCount / totalCount) * 100) : 0;
+  document.getElementById("progressText").textContent = `${doneCount} / ${totalCount} (${pct}%)`;
+  document.getElementById("progressFill").style.width = pct + "%";
+}
+
+function selectTopic(chapterId, topicId) {
+  currentChapterId = chapterId;
+  currentTopicId = topicId;
+  renderSidebar();
+  renderMain();
+  document.getElementById("mainArea").scrollTop = 0;
+  toggleSidebar(false);
+}
+
+function renderMain() {
+  const { ch, t } = getCurrentContext();
+  const wrap = document.getElementById("contentWrap");
+  if (!ch || !t) {
+    wrap.innerHTML = "<p>表示する単元がありません。</p>";
+    return;
+  }
+
+  const isDone = !!progressMap[t.id];
+  const flat = getAllTopicsFlat();
+  const idx = flat.findIndex(x => x.topic.id === t.id);
+  const prev = idx > 0 ? flat[idx - 1] : null;
+  const next = idx < flat.length - 1 ? flat[idx + 1] : null;
+  const chatCount = Math.floor((aiHistoryMap[t.id] || []).length / 2);
+  const topicWeakCount = weaknesses.filter(w => !w.resolved && w.topicId === t.id).length;
+
+  let html = `
+    <div class="topic-meta">
+      <div class="breadcrumb">第${ch.number}章：${escapeHtml(ch.title)}</div>
+    </div>
+    <h1 class="topic-title">${escapeHtml(t.title)}</h1>
+
+    <div class="action-bar">
+      <button class="btn ${isDone ? 'done' : ''}" onclick="toggleDone('${t.id}')">
+        ${isDone ? '✅ 学習完了済み' : '⬜ 学習完了にする'}
+      </button>
+      <button class="btn ai-btn" onclick="openAIModal()">
+        🤖 AIに使い分けを質問 ${chatCount > 0 ? `(${chatCount}件保存)` : ''}
+      </button>
+      <button class="btn quiz-btn" onclick="openQuizModal('new')">
+        📝 類題テスト ${topicWeakCount > 0 ? `(弱点${topicWeakCount})` : ''}
+      </button>
+    </div>
+
+    <div class="card core-card">
+      <div class="card-title"><span>💡 核心ルール</span></div>
+      <div class="detail-body">${escapeHtml(t.core)}</div>
+    </div>
+  `;
+
+  // SVG図解
+  if (t.svg) {
+    html += `
+      <div class="card">
+        <div class="card-title"><span>📊 図解イメージ</span></div>
+        <div class="diagram-wrap">
+          ${t.svg}
+          ${t.svgCaption ? `<div class="diagram-caption">${escapeHtml(t.svgCaption)}</div>` : ""}
+        </div>
+      </div>
+    `;
+  }
+
+  // 詳細解説
+  if (t.details && t.details.length) {
+    html += `<div class="card"><div class="card-title"><span>📖 詳細解説</span></div>`;
+    t.details.forEach(d => {
+      html += `
+        <div class="detail-section">
+          <div class="detail-heading">${escapeHtml(d.heading)}</div>
+          <div class="detail-body">${escapeHtml(d.body)}</div>
+        </div>
+      `;
+    });
+    if (t.table) {
+      html += `<div class="table-wrap"><table><thead><tr>`;
+      t.table.headers.forEach(h => html += `<th>${escapeHtml(h)}</th>`);
+      html += `</tr></thead><tbody>`;
+      t.table.rows.forEach(r => {
+        html += `<tr>`;
+        r.forEach(c => html += `<td style="white-space:pre-line;">${escapeHtml(c)}</td>`);
+        html += `</tr>`;
+      });
+      html += `</tbody></table></div>`;
+    }
+    html += `</div>`;
+  }
+
+  // ネイティブの場面比較（例文を2行以上に分離＋個別音声ボタン）
+  if (t.scenes && t.scenes.length) {
+    html += `<div class="card"><div class="card-title"><span>🗣️ ネイティブの場面比較</span></div><div class="scene-grid">`;
+    t.scenes.forEach(sc => {
+      let itemsHtml = "";
+      if (Array.isArray(sc.items) && sc.items.length) {
+        itemsHtml = sc.items.map(it => `
+          <div class="scene-item">
+            <div class="scene-en-row">
+              <div class="scene-en">${it.tag ? `<span class="scene-tag">${escapeHtml(it.tag)}</span>` : ""}${escapeHtml(it.en)}</div>
+              <button class="speak-btn" onclick="speakEnglish('${escapeJs(it.en)}', this)">🔊 再生</button>
+            </div>
+            <div class="scene-ja">${escapeHtml(it.ja)}</div>
+          </div>
+        `).join("");
+      } else if (sc.en) {
+        itemsHtml = `
+          <div class="scene-item">
+            <div class="scene-en-row">
+              <div class="scene-en">${escapeHtml(sc.en)}</div>
+              <button class="speak-btn" onclick="speakEnglish('${escapeJs(sc.en)}', this)">🔊 再生</button>
+            </div>
+            <div class="scene-ja">${escapeHtml(sc.ja || "")}</div>
+          </div>
+        `;
+      }
+      html += `
+        <div class="scene-box">
+          <div class="scene-label"><span>${escapeHtml(sc.label)}</span></div>
+          ${itemsHtml}
+          <div class="scene-point">${escapeHtml(sc.point)}</div>
+        </div>
+      `;
+    });
+    html += `</div></div>`;
+  }
+
+  // 実践例文（音声ボタン＆速度切替付き）
+  if (t.examples && t.examples.length) {
+    html += `
+      <div class="card">
+        <div class="card-title">
+          <span>💬 実践例文（発音・和訳・語釈）</span>
+          <div class="audio-bar">
+            <select onchange="updateQuickAudioSetting('voiceLang', this.value)" title="英語アクセント">
+              <option value="en-US" ${settings.voiceLang === 'en-US' ? 'selected' : ''}>🇺🇸 米国</option>
+              <option value="en-GB" ${settings.voiceLang === 'en-GB' ? 'selected' : ''}>🇬🇧 英国</option>
+            </select>
+            <select onchange="updateQuickAudioSetting('voiceRate', this.value)" title="再生速度">
+              <option value="1.0" ${settings.voiceRate === '1.0' ? 'selected' : ''}>1.0x 標準</option>
+              <option value="0.85" ${settings.voiceRate === '0.85' ? 'selected' : ''}>0.85x</option>
+              <option value="0.72" ${settings.voiceRate === '0.72' ? 'selected' : ''}>0.72x ゆっくり</option>
+              <option value="1.15" ${settings.voiceRate === '1.15' ? 'selected' : ''}>1.15x 速め</option>
+            </select>
+          </div>
+        </div>
+    `;
+    t.examples.forEach(ex => {
+      html += `
+        <div class="example-box">
+          <div class="ex-en-row">
+            <div class="ex-en">${escapeHtml(ex.en)}</div>
+            <button class="speak-btn" onclick="speakEnglish('${escapeJs(ex.en)}', this)">🔊 再生</button>
+          </div>
+          <div class="ex-ja">${escapeHtml(ex.ja)}</div>
+          ${ex.note ? `<div class="ex-note">${escapeHtml(ex.note)}</div>` : ""}
+          ${ex.glossary && ex.glossary.length ? `
+            <div class="glossary-list">
+              ${ex.glossary.map(g => `<span class="glossary-tag"><b>${escapeHtml(g.w)}</b>：${escapeHtml(g.m)}</span>`).join("")}
+            </div>
+          ` : ""}
+        </div>
+      `;
+    });
+    html += `</div>`;
+  }
+
+  // よくある誤用
+  if (t.pitfalls && t.pitfalls.length) {
+    html += `<div class="card"><div class="card-title"><span>⚠️ よくある誤用（NG vs OK）</span></div>`;
+    t.pitfalls.forEach(p => {
+      html += `
+        <div class="pitfall-item">
+          <div class="ng-line">✕ ${escapeHtml(p.ng)}</div>
+          <div class="ok-line">○ ${escapeHtml(p.ok)}</div>
+          <div class="pitfall-exp">${escapeHtml(p.exp)}</div>
+        </div>
+      `;
+    });
+    html += `</div>`;
+  }
+
+  // 使い分け・TOEICポイント
+  if (t.tips) {
+    html += `
+      <div class="card">
+        <div class="card-title"><span>🎯 使い分け＆実戦ポイント</span></div>
+        <div class="tip-box">${escapeHtml(t.tips)}</div>
+      </div>
+    `;
+  }
+
+  // 自分用メモ（AI要約追記先）
+  html += `
+    <div class="card" id="memoCard">
+      <div class="card-title">
+        <span>📝 マイメモ（自動保存・AI要約の追記先）</span>
+      </div>
+      <textarea id="currentMemoArea" class="memo-area" placeholder="この単元の気づきや、AI質問の要点まとめがここに保存されます..." oninput="saveMemo('${t.id}', this.value)">${escapeHtml(memoMap[t.id] || "")}</textarea>
+    </div>
+  `;
+
+  html += `
+    <div class="nav-footer">
+      <div>${prev ? `<button class="btn" onclick="selectTopic('${prev.chapter.id}','${prev.topic.id}')">← ${escapeHtml(prev.topic.title)}</button>` : ""}</div>
+      <div>${next ? `<button class="btn" onclick="selectTopic('${next.chapter.id}','${next.topic.id}')">${escapeHtml(next.topic.title)} →</button>` : ""}</div>
+    </div>
+  `;
+
+  wrap.innerHTML = html;
+}
+
+function toggleDone(topicId) {
+  progressMap[topicId] = !progressMap[topicId];
+  localStorage.setItem(STORAGE_KEYS.PROGRESS, JSON.stringify(progressMap));
+  renderSidebar();
+  renderMain();
+}
+
+function saveMemo(topicId, val) {
+  memoMap[topicId] = val;
+  localStorage.setItem(STORAGE_KEYS.MEMOS, JSON.stringify(memoMap));
+}
+
+function appendToCurrentMemo(blockText) {
+  const { t } = getCurrentContext();
+  if (!t) return;
+  const cur = (memoMap[t.id] || "").trim();
+  const stamp = new Date().toLocaleDateString("ja-JP");
+  const next = (cur ? cur + "\n\n" : "") + `【${stamp} AIメモ】\n` + blockText.trim();
+  saveMemo(t.id, next);
+  const ta = document.getElementById("currentMemoArea");
+  if (ta) ta.value = next;
+}
+
+function setFilter(f) {
+  currentFilter = f;
+  document.getElementById("filterAll").classList.toggle("active", f === "all");
+  document.getElementById("filterTodo").classList.toggle("active", f === "todo");
+  renderSidebar();
+}
+
+function toggleSidebar(force) {
+  const sb = document.getElementById("sidebar");
+  const bd = document.getElementById("sidebarBackdrop");
+  const open = typeof force === "boolean" ? force : !sb.classList.contains("open");
+  sb.classList.toggle("open", open);
+  bd.classList.toggle("open", open);
+}
+
+function toggleTheme() {
+  const cur = document.documentElement.getAttribute("data-theme");
+  const next = cur === "dark" ? "light" : "dark";
+  document.documentElement.setAttribute("data-theme", next);
+  localStorage.setItem(STORAGE_KEYS.THEME, next);
+  document.getElementById("themeBtn").textContent = next === "dark" ? "☀️" : "🌙";
+}
+
+function openModal(id) { document.getElementById(id).classList.add("open"); }
+function closeModal(id) { document.getElementById(id).classList.remove("open"); }
+
+/* =========================================================
+   Gemini API 呼び出し
+========================================================= */
+function getActiveModel() {
+  return settings.model === "custom" ? (settings.customModel || "gemini-3.5-flash") : (settings.model || "gemini-3.5-flash");
+}
+
+async function callGemini(contents, systemInstruction, responseMimeType = null) {
+  if (!settings.apiKey) {
+    openModal("settingsModal");
+    throw new Error("Gemini APIキーが設定されていません。設定画面から入力してください。");
+  }
+  const model = getActiveModel();
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(settings.apiKey)}`;
+
+  const payload = {
+    contents,
+    systemInstruction: { parts: [{ text: systemInstruction }] }
+  };
+  if (responseMimeType) {
+    payload.generationConfig = { responseMimeType };
+  }
+
+  let res;
+  try {
+    res = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+  } catch (netErr) {
+    throw new Error(`通信エラー（Failed to fetch）：Google APIサーバーに到達できません。プロキシ/VPNやSmart Routing設定を確認してください。(${netErr.message})`);
+  }
+
+  let data = {};
+  try { data = await res.json(); } catch { throw new Error(`応答の解析に失敗 (HTTP ${res.status})`); }
+  if (!res.ok) {
+    const rawMsg = data.error?.message || `APIエラー (${res.status})`;
+    if (res.status === 400 && /API key not valid/i.test(rawMsg)) throw new Error(`APIキーが無効です。詳細: ${rawMsg}`);
+    if (res.status === 429) throw new Error(`利用上限（Quota）に達しました。gemini-3.5-flash-lite への切替もお試しください。詳細: ${rawMsg}`);
+    if (res.status === 403) throw new Error(`アクセス拒否 (403)：地域制限またはキー権限を確認してください。詳細: ${rawMsg}`);
+    if (res.status === 404) throw new Error(`モデル（${model}）が見つかりません。設定画面で別モデルを選択してください。詳細: ${rawMsg}`);
+    throw new Error(`APIエラー (${res.status}): ${rawMsg}`);
+  }
+
+  if (data.usageMetadata) {
+    tokenStats.input += data.usageMetadata.promptTokenCount || 0;
+    tokenStats.output += data.usageMetadata.candidatesTokenCount || 0;
+    localStorage.setItem(STORAGE_KEYS.TOKENS, JSON.stringify(tokenStats));
+    updateTokenUI();
+  }
+
+  return data.candidates?.[0]?.content?.parts?.[0]?.text || "";
+}
+
+/* =========================================================
+   AI使い分け質問機能（リサイズ・履歴永続化・マイメモ要約追記）
+========================================================= */
+function openAIModal() {
+  const { ch, t } = getCurrentContext();
+  document.getElementById("aiContextLabel").textContent = `第${ch.number}章 / ${t.title}`;
+  renderChatLog();
+  openModal("aiModal");
+}
+
+function toggleAIMaximize() {
+  const box = document.getElementById("aiModalBox");
+  const btn = document.getElementById("aiMaxBtn");
+  const isMax = box.classList.toggle("maximized");
+  btn.textContent = isMax ? "🗗 標準サイズ" : "⛶ 拡大";
+}
+
+function getTopicHistory() {
+  const { t } = getCurrentContext();
+  if (!t) return [];
+  if (!aiHistoryMap[t.id]) aiHistoryMap[t.id] = [];
+  return aiHistoryMap[t.id];
+}
+
+function saveAIHistory() {
+  localStorage.setItem(STORAGE_KEYS.AI_HISTORY, JSON.stringify(aiHistoryMap));
+  renderSidebar();
+  renderMain();
+}
+
+function clearCurrentAIHistory() {
+  const { t } = getCurrentContext();
+  if (!t) return;
+  if (!confirm("この単元のAI質問履歴を削除しますか？（マイメモは残ります）")) return;
+  aiHistoryMap[t.id] = [];
+  saveAIHistory();
+  renderChatLog();
+}
+
+function renderChatLog() {
+  const log = document.getElementById("chatLog");
+  const hist = getTopicHistory();
+  if (hist.length === 0) {
+    log.innerHTML = `<div style="color:var(--text-muted); font-size:13.5px; text-align:center; margin-top:36px;">
+      この単元の内容をもとに、文法の使い分け・ニュアンス・例文作成などを質問できます。<br>質問と回答は単元ごとに自動保存されるため、次回はトークンを使わずに見返せます。
+    </div>`;
+    return;
+  }
+
+  log.innerHTML = hist.map((m, idx) => {
+    if (m.role === "user") {
+      return `<div class="chat-msg user">${escapeHtml(m.text)}</div>`;
+    }
+    return `
+      <div class="chat-msg ai">
+        <div>${escapeHtml(m.text)}</div>
+        <div class="msg-actions">
+          <button class="btn sm ai-btn" onclick="summarizeToMemo(${idx}, this)">✨ AI要約してマイメモ追記</button>
+          <button class="btn sm" onclick="copyDirectToMemo(${idx}, this)">📋 そのままマイメモ追記 (0トークン)</button>
+        </div>
+      </div>
+    `;
+  }).join("");
+  log.scrollTop = log.scrollHeight;
+}
+
+function sendQuickAI(text) {
+  document.getElementById("aiInput").value = text;
+  sendAI();
+}
+
+async function sendAI() {
+  const input = document.getElementById("aiInput");
+  const text = input.value.trim();
+  if (!text) return;
+
+  const { ch, t } = getCurrentContext();
+  const hist = getTopicHistory();
+  hist.push({ role: "user", text, time: new Date().toISOString() });
+  input.value = "";
+  saveAIHistory();
+  renderChatLog();
+
+  const btn = document.getElementById("aiSendBtn");
+  btn.disabled = true;
+  btn.textContent = "思考中...";
+
+  try {
+    const sys = `あなたは日本人学習者向けの優秀な英文法講師です。場面とネイティブの認知イメージ、さらに語法や例外まで踏み込んで、すべて日本語で分かりやすく解説してください。英語の例文を出す場合は必ず「日本語訳」と「重要語の語釈」を付けてください。
+現在ユーザーが学習している単元情報：
+章：第${ch.number}章 ${ch.title}
+項目：${t.title}
+核心：${t.core}
+詳細：${JSON.stringify(t.details || [])}
+誤用：${JSON.stringify(t.pitfalls || [])}`;
+
+    // トークン節約のため直近6件のやり取りを文脈として送信
+    const recent = hist.slice(-6).map(m => ({
+      role: m.role === "user" ? "user" : "model",
+      parts: [{ text: m.text }]
+    }));
+
+    const reply = await callGemini(recent, sys);
+    hist.push({ role: "model", text: reply, time: new Date().toISOString() });
+  } catch (err) {
+    hist.push({ role: "model", text: `⚠️ エラー: ${err.message}`, time: new Date().toISOString() });
+  } finally {
+    saveAIHistory();
+    btn.disabled = false;
+    btn.textContent = "送信";
+    renderChatLog();
+  }
+}
+
+async function summarizeToMemo(msgIdx, btnEl) {
+  const hist = getTopicHistory();
+  const aiMsg = hist[msgIdx];
+  const prevUser = msgIdx > 0 && hist[msgIdx - 1]?.role === "user" ? hist[msgIdx - 1].text : "";
+  if (!aiMsg) return;
+
+  const origLabel = btnEl.textContent;
+  btnEl.disabled = true;
+  btnEl.textContent = "要約中...";
+
+  try {
+    const sys = "あなたは学習ノートの要約アシスタントです。与えられた英文法のQ&Aから、復習時にパッと見返せる要点だけを日本語の箇条書き3〜4行（合計200文字以内、重要例文1つ含む）に凝縮して出力してください。前置き不要。";
+    const prompt = `【質問】${prevUser}\n【回答】${aiMsg.text}`;
+    const summary = await callGemini([{ role: "user", parts: [{ text: prompt }] }], sys);
+    appendToCurrentMemo(summary);
+    btnEl.textContent = "✅ マイメモに追記済み";
+  } catch (err) {
+    alert("要約エラー：" + err.message);
+    btnEl.textContent = origLabel;
+    btnEl.disabled = false;
+  }
+}
+
+function copyDirectToMemo(msgIdx, btnEl) {
+  const hist = getTopicHistory();
+  const aiMsg = hist[msgIdx];
+  if (!aiMsg) return;
+  appendToCurrentMemo(aiMsg.text);
+  btnEl.textContent = "✅ 追記済み";
+  btnEl.disabled = true;
+}
+
+/* =========================================================
+   AI類題演習・保存済みテスト・弱点記憶＆復習
+========================================================= */
+function openQuizModal(tab = "new") {
+  updateGlobalBadges();
+  switchQuizTab(tab);
+  openModal("quizModal");
+}
+
+function switchQuizTab(tab) {
+  currentQuizTab = tab;
+  ["new", "saved", "weak"].forEach(k => {
+    document.getElementById(`qtab-${k}`).classList.toggle("active", k === tab);
+    document.getElementById(`quizPanel-${k}`).style.display = k === tab ? "block" : "none";
+  });
+  if (tab === "saved") renderSavedQuizList();
+  if (tab === "weak") renderWeaknessList();
+}
+
+async function generateQuiz() {
+  const { ch, t } = getCurrentContext();
+  const scope = document.getElementById("quizScope").value;
+  const level = document.getElementById("quizLevel").value;
+  const useWeak = document.getElementById("useWeaknessCheck").checked;
+  const btn = document.getElementById("genQuizBtn");
+  const box = document.getElementById("quizContainer");
+
+  btn.disabled = true;
+  btn.textContent = "生成中...";
+  box.innerHTML = `<div style="text-align:center; padding:30px;">🤖 オリジナル類題を5問作成しています...</div>`;
+
+  const contextData = scope === "chapter"
+    ? `第${ch.number}章「${ch.title}」の全項目：${ch.topics.map(x => x.title + " (" + x.core + ")").join(" / ")}`
+    : `項目「${t.title}」：${t.core} / 誤用ポイント：${JSON.stringify(t.pitfalls || [])}`;
+
+  // 弱点データの抽出
+  let weakPrompt = "";
+  if (useWeak) {
+    const relevantWeak = weaknesses.filter(w =>
+      !w.resolved && (scope === "chapter" ? w.chapterId === ch.id : w.topicId === t.id)
+    ).slice(0, 5);
+    if (relevantWeak.length > 0) {
+      weakPrompt = `\n【ユーザーの過去の弱点（これらと同系統のミスを克服できる新しい類題を2〜3問含めること）】\n` +
+        relevantWeak.map((w, i) => `${i + 1}. 問題: ${w.question} / 解説要点: ${w.explanation.slice(0, 90)}`).join("\n");
+    }
+  }
+
+  const sys = `あなたは英語試験問題の作成者です。指定された文法範囲とレベルに基づき、4択の穴埋め問題（または使い分け問題）を5問作成し、必ず指定のJSON配列のみを返してください。
+解説はすべて日本語で、なぜ正解なのか・他の選択肢がなぜダメなのかを丁寧に説明し、問題文の日本語訳と重要語釈も必ず含めてください。`;
+
+  const prompt = `以下の条件で5問のJSON配列を生成してください。
+【出題範囲】${contextData}
+【レベル・形式】${level}${weakPrompt}
+【出力JSONフォーマット】
+[
+  {
+    "question": "英文の問題文（空欄は ______ にする）",
+    "options": ["(A) ...", "(B) ...", "(C) ...", "(D) ..."],
+    "answerIndex": 0,
+    "translation": "正解を入れた完成文の日本語訳",
+    "explanation": "詳しい日本語解説（正解の理由と誤答選択肢の解説）",
+    "glossary": "重要語釈（例：approve: 承認する / quotation: 見積書）"
+  }
+]`;
+
+  try {
+    const raw = await callGemini([{ role: "user", parts: [{ text: prompt }] }], sys, "application/json");
+    const cleaned = raw.replace(/^```json\s*/i, "").replace(/```$/i, "").trim();
+    const questions = JSON.parse(cleaned);
+
+    // 作成したテストを自動保存（トークン節約）
+    const quizRecord = {
+      id: "qz_" + Date.now(),
+      chapterId: ch.id,
+      topicId: t.id,
+      title: scope === "chapter" ? `第${ch.number}章 総合テスト` : t.title,
+      level,
+      createdAt: new Date().toLocaleString("ja-JP"),
+      questions
+    };
+    savedQuizzes.unshift(quizRecord);
+    localStorage.setItem(STORAGE_KEYS.SAVED_QUIZZES, JSON.stringify(savedQuizzes));
+    updateGlobalBadges();
+
+    activeQuizSet = quizRecord;
+    renderQuizCards(quizRecord, box, "new");
+  } catch (err) {
+    box.innerHTML = `<div style="color:var(--danger); padding:16px;">⚠️ 類題の生成に失敗しました：${escapeHtml(err.message)}</div>`;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "類題を5問作成＆保存";
+  }
+}
+
+function renderQuizCards(quizRecord, containerEl, prefix) {
+  containerEl.innerHTML = `<div style="font-size:12.5px; color:var(--text-muted); margin-bottom:10px;">
+    📌 <b>${escapeHtml(quizRecord.title)}</b>（${escapeHtml(quizRecord.level)} / 作成: ${escapeHtml(quizRecord.createdAt)}）
+  </div>`;
+
+  quizRecord.questions.forEach((q, qi) => {
+    const card = document.createElement("div");
+    card.className = "quiz-q-card";
+    const uid = `${prefix}-${qi}`;
+    card.innerHTML = `
+      <div class="quiz-q-header">
+        <div class="quiz-q-text">Q${qi + 1}. ${escapeHtml(q.question)}</div>
+        <button class="speak-btn" onclick="speakEnglish('${escapeJs(q.question)}', this)">🔊 再生</button>
+      </div>
+      <div class="quiz-options" id="qopts-${uid}">
+        ${q.options.map((opt, oi) => `<button class="quiz-opt" onclick="handleQuizAnswer('${prefix}', ${qi}, ${oi})">${escapeHtml(opt)}</button>`).join("")}
+      </div>
+      <div class="quiz-exp" id="qexp-${uid}">
+        <div><b>和訳：</b>${escapeHtml(q.translation)}</div>
+        <div style="margin-top:6px;"><b>解説：</b>${escapeHtml(q.explanation)}</div>
+        ${q.glossary ? `<div style="margin-top:6px; color:var(--text-muted); font-size:12.5px;"><b>語釈：</b>${escapeHtml(q.glossary)}</div>` : ""}
+      </div>
+    `;
+    containerEl.appendChild(card);
+  });
+}
+
+function handleQuizAnswer(prefix, qi, selectedIdx) {
+  if (!activeQuizSet) return;
+  const q = activeQuizSet.questions[qi];
+  const uid = `${prefix}-${qi}`;
+  const opts = document.querySelectorAll(`#qopts-${uid} .quiz-opt`);
+  opts.forEach((btn, i) => {
+    btn.disabled = true;
+    if (i === q.answerIndex) btn.classList.add("correct");
+    else if (i === selectedIdx) btn.classList.add("wrong");
+  });
+  document.getElementById(`qexp-${uid}`).classList.add("show");
+
+  // 間違えたら弱点リストへ自動記録
+  if (selectedIdx !== q.answerIndex) {
+    const exists = weaknesses.find(w => !w.resolved && w.question === q.question);
+    if (!exists) {
+      weaknesses.unshift({
+        id: "wk_" + Date.now() + "_" + qi,
+        chapterId: activeQuizSet.chapterId,
+        topicId: activeQuizSet.topicId,
+        topicTitle: activeQuizSet.title,
+        question: q.question,
+        options: q.options,
+        answerIndex: q.answerIndex,
+        userWrongIndex: selectedIdx,
+        translation: q.translation,
+        explanation: q.explanation,
+        glossary: q.glossary || "",
+        missedAt: new Date().toLocaleDateString("ja-JP"),
+        resolved: false
+      });
+      localStorage.setItem(STORAGE_KEYS.WEAKNESSES, JSON.stringify(weaknesses));
+      updateGlobalBadges();
+      renderSidebar();
+    }
+  }
+}
+
+/* 保存済みテスト一覧 */
+function renderSavedQuizList() {
+  const listEl = document.getElementById("savedQuizList");
+  const playEl = document.getElementById("savedQuizPlayArea");
+  playEl.innerHTML = "";
+
+  if (savedQuizzes.length === 0) {
+    listEl.innerHTML = `<div style="text-align:center; padding:28px; color:var(--text-muted); font-size:14px;">
+      保存されたテストはまだありません。「新規類題を作成」タブでテストを作成すると自動でここに保存されます。
+    </div>`;
+    return;
+  }
+
+  listEl.innerHTML = savedQuizzes.map((qz, idx) => `
+    <div class="saved-quiz-item">
+      <div>
+        <div style="font-weight:700; font-size:14px;">${escapeHtml(qz.title)}</div>
+        <div style="font-size:12px; color:var(--text-muted);">${escapeHtml(qz.level)} ／ ${escapeHtml(qz.createdAt)}（${qz.questions.length}問）</div>
+      </div>
+      <div style="display:flex; gap:6px;">
+        <button class="btn sm quiz-btn" onclick="playSavedQuiz(${idx})">▶ 解き直す (0トークン)</button>
+        <button class="btn sm danger-btn" onclick="deleteSavedQuiz(${idx})">削除</button>
+      </div>
+    </div>
+  `).join("");
+}
+
+function playSavedQuiz(idx) {
+  const qz = savedQuizzes[idx];
+  if (!qz) return;
+  activeQuizSet = qz;
+  const playEl = document.getElementById("savedQuizPlayArea");
+  renderQuizCards(qz, playEl, "saved");
+  playEl.scrollIntoView({ behavior: "smooth" });
+}
+
+function deleteSavedQuiz(idx) {
+  if (!confirm("この保存済みテストを削除しますか？")) return;
+  savedQuizzes.splice(idx, 1);
+  localStorage.setItem(STORAGE_KEYS.SAVED_QUIZZES, JSON.stringify(savedQuizzes));
+  updateGlobalBadges();
+  renderSavedQuizList();
+}
+
+/* 弱点復習モード */
+function setWeakScope(scope) {
+  currentWeakScope = scope;
+  document.getElementById("weakScopeTopic").classList.toggle("ai-btn", scope === "topic");
+  document.getElementById("weakScopeAll").classList.toggle("ai-btn", scope === "all");
+  renderWeaknessList();
+}
+
+function renderWeaknessList() {
+  const area = document.getElementById("weaknessListArea");
+  const { t } = getCurrentContext();
+  const list = weaknesses.filter(w => !w.resolved && (currentWeakScope === "all" || w.topicId === t?.id));
+
+  if (list.length === 0) {
+    area.innerHTML = `<div style="text-align:center; padding:28px; color:var(--text-muted); font-size:14px;">
+      未克服の弱点問題はありません！テストで間違えた問題が自動的にここへ蓄積されます。
+    </div>`;
+    return;
+  }
+
+  area.innerHTML = "";
+  list.forEach((w, idx) => {
+    const card = document.createElement("div");
+    card.className = "quiz-q-card";
+    card.innerHTML = `
+      <div style="font-size:12px; color:var(--primary); font-weight:700; margin-bottom:6px; display:flex; justify-content:space-between; flex-wrap:wrap;">
+        <span>📌 ${escapeHtml(w.topicTitle)}（誤答日: ${escapeHtml(w.missedAt)}）</span>
+        <button class="btn sm done" onclick="resolveWeakness('${w.id}')">✅ 克服済みにする</button>
+      </div>
+      <div class="quiz-q-header">
+        <div class="quiz-q-text">${escapeHtml(w.question)}</div>
+        <button class="speak-btn" onclick="speakEnglish('${escapeJs(w.question)}', this)">🔊 再生</button>
+      </div>
+      <div class="quiz-options" id="wopts-${w.id}">
+        ${w.options.map((opt, oi) => `<button class="quiz-opt" onclick="answerWeakness('${w.id}', ${oi}, ${w.answerIndex})">${escapeHtml(opt)}</button>`).join("")}
+      </div>
+      <div class="quiz-exp" id="wexp-${w.id}">
+        <div><b>和訳：</b>${escapeHtml(w.translation)}</div>
+        <div style="margin-top:6px;"><b>解説：</b>${escapeHtml(w.explanation)}</div>
+        ${w.glossary ? `<div style="margin-top:6px; color:var(--text-muted); font-size:12.5px;"><b>語釈：</b>${escapeHtml(w.glossary)}</div>` : ""}
+      </div>
+    `;
+    area.appendChild(card);
+  });
+}
+
+function answerWeakness(wid, selectedIdx, correctIdx) {
+  const opts = document.querySelectorAll(`#wopts-${wid} .quiz-opt`);
+  opts.forEach((btn, i) => {
+    btn.disabled = true;
+    if (i === correctIdx) btn.classList.add("correct");
+    else if (i === selectedIdx) btn.classList.add("wrong");
+  });
+  document.getElementById(`wexp-${wid}`).classList.add("show");
+}
+
+function resolveWeakness(wid) {
+  const target = weaknesses.find(w => w.id === wid);
+  if (target) target.resolved = true;
+  localStorage.setItem(STORAGE_KEYS.WEAKNESSES, JSON.stringify(weaknesses));
+  updateGlobalBadges();
+  renderSidebar();
+  renderMain();
+  renderWeaknessList();
+}
+
+/* =========================================================
+   単元データ追加（JSONマージ）＆全データバックアップ
+========================================================= */
+function mergeChaptersFromText() {
+  const txt = document.getElementById("importJsonArea").value.trim();
+  if (!txt) return alert("JSONデータを貼り付けてください。");
+  try {
+    const parsed = JSON.parse(txt);
+    const incoming = Array.isArray(parsed) ? parsed : [parsed];
+    mergeChapters(incoming);
+    document.getElementById("importJsonArea").value = "";
+    alert(`${incoming.length}件の単元データを取り込みました！`);
+    closeModal("importModal");
+  } catch (e) {
+    alert("JSONの形式が正しくありません：" + e.message);
+  }
+}
+
+function importJsonFile(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const parsed = JSON.parse(reader.result);
+      const incoming = Array.isArray(parsed) ? parsed : [parsed];
+      mergeChapters(incoming);
+      alert(`${incoming.length}件の単元データを取り込みました！`);
+      closeModal("importModal");
+    } catch (err) {
+      alert("読み込みエラー：" + err.message);
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = "";
+}
+
+function mergeChapters(incoming) {
+  const extra = safeParse(STORAGE_KEYS.EXTRA_CHAPTERS, []);
+  const map = new Map();
+  extra.forEach(c => map.set(c.id, c));
+  incoming.forEach(c => {
+    if (!c.id || !c.title || !Array.isArray(c.topics)) {
+      throw new Error("章データに id, title, topics が必要です。");
+    }
+    map.set(c.id, c);
+  });
+  localStorage.setItem(STORAGE_KEYS.EXTRA_CHAPTERS, JSON.stringify(Array.from(map.values())));
+  loadAllData();
+  renderSidebar();
+  renderMain();
+}
+
+function exportBackup() {
+  const data = {
+    version: 3,
+    exportedAt: new Date().toISOString(),
+    extraChapters: safeParse(STORAGE_KEYS.EXTRA_CHAPTERS, []),
+    progress: progressMap,
+    memos: memoMap,
+    aiHistoryMap,
+    savedQuizzes,
+    weaknesses
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `GrammarFlow_backup_${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+}
+
+function restoreBackup(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const data = JSON.parse(reader.result);
+      if (data.extraChapters) localStorage.setItem(STORAGE_KEYS.EXTRA_CHAPTERS, JSON.stringify(data.extraChapters));
+      if (data.progress) localStorage.setItem(STORAGE_KEYS.PROGRESS, JSON.stringify(data.progress));
+      if (data.memos) localStorage.setItem(STORAGE_KEYS.MEMOS, JSON.stringify(data.memos));
+      if (data.aiHistoryMap) localStorage.setItem(STORAGE_KEYS.AI_HISTORY, JSON.stringify(data.aiHistoryMap));
+      if (data.savedQuizzes) localStorage.setItem(STORAGE_KEYS.SAVED_QUIZZES, JSON.stringify(data.savedQuizzes));
+      if (data.weaknesses) localStorage.setItem(STORAGE_KEYS.WEAKNESSES, JSON.stringify(data.weaknesses));
+      loadAllData();
+      renderSidebar();
+      renderMain();
+      alert("全データのバックアップを復元しました！");
+      closeModal("importModal");
+    } catch (err) {
+      alert("復元エラー：" + err.message);
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = "";
+}
+
+/* =========================================================
+   設定保存・接続テスト・ユーティリティ
+========================================================= */
+document.getElementById("modelSelect").addEventListener("change", toggleCustomModelInput);
+function toggleCustomModelInput() {
+  const isCustom = document.getElementById("modelSelect").value === "custom";
+  document.getElementById("customModelInput").style.display = isCustom ? "block" : "none";
+}
+
+function saveSettings() {
+  settings.apiKey = document.getElementById("apiKeyInput").value.trim();
+  settings.model = document.getElementById("modelSelect").value;
+  settings.customModel = document.getElementById("customModelInput").value.trim();
+  settings.voiceLang = document.getElementById("voiceLangSelect").value;
+  settings.voiceRate = document.getElementById("voiceRateSelect").value;
+  localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(settings));
+  closeModal("settingsModal");
+  renderMain();
+  alert("設定を保存しました。");
+}
+
+function updateTokenUI() {
+  document.getElementById("tokenStats").textContent = `入力: ${tokenStats.input.toLocaleString()} / 出力: ${tokenStats.output.toLocaleString()} トークン`;
+}
+
+async function testConnection() {
+  const key = document.getElementById("apiKeyInput").value.trim();
+  const sel = document.getElementById("modelSelect").value;
+  const custom = document.getElementById("customModelInput").value.trim();
+  const model = sel === "custom" ? (custom || "gemini-3.5-flash") : sel;
+  const box = document.getElementById("connTestResult");
+  const btn = document.getElementById("testConnBtn");
+
+  box.style.display = "block";
+  box.style.background = "var(--surface-2)";
+  box.style.borderColor = "var(--border)";
+  box.style.color = "var(--text)";
+
+  if (!key) {
+    box.style.background = "var(--danger-light)";
+    box.style.borderColor = "var(--danger)";
+    box.style.color = "var(--danger)";
+    box.textContent = "✕ APIキーが入力されていません。Google AI Studio のキーを貼り付けてください。";
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = "テスト中...";
+  box.textContent = `⏳ モデル「${model}」へ接続テストを送信中...`;
+
+  const t0 = performance.now();
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(key)}`;
+
+  try {
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [{ role: "user", parts: [{ text: "Reply with only: OK" }] }],
+        generationConfig: { maxOutputTokens: 16 }
+      })
+    });
+    const elapsed = ((performance.now() - t0) / 1000).toFixed(2);
+    const data = await res.json();
+
+    if (!res.ok) {
+      const msg = data.error?.message || `HTTP ${res.status}`;
+      let hint = "";
+      if (res.status === 400 && /API key not valid/i.test(msg)) {
+        hint = "\n💡 原因：APIキーの文字列が正しくありません（コピー時の欠け・余分な文字を確認してください）。";
+      } else if (res.status === 429) {
+        hint = "\n💡 原因：無料枠のレート制限・クォータ超過です。モデルを gemini-3.5-flash-lite に変えて再テストしてください。";
+      } else if (res.status === 403) {
+        hint = "\n💡 原因：地域制限（中国本土IPでのアクセス）またはAPIキーの制限です。プロキシのルールで googleapis.com が海外経由になっているか確認してください。";
+      } else if (res.status === 404) {
+        hint = "\n💡 原因：指定したモデル名が利用できません。ドロップダウンから別モデルを選んでください。";
+      }
+      box.style.background = "var(--danger-light)";
+      box.style.borderColor = "var(--danger)";
+      box.style.color = "var(--danger)";
+      box.textContent = `✕ 接続失敗 (${res.status}) [${elapsed}秒]\n詳細: ${msg}${hint}`;
+    } else {
+      const reply = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || "(応答あり)";
+      settings.apiKey = key;
+      settings.model = sel;
+      settings.customModel = custom;
+      localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(settings));
+
+      box.style.background = "var(--success-light)";
+      box.style.borderColor = "var(--success)";
+      box.style.color = "var(--success)";
+      box.textContent = `✅ 接続成功！ [${elapsed}秒]\n・使用モデル：${model}\n・AI応答：${reply}\n※この設定を自動保存しました。すぐにAI質問と類題テストが使えます。`;
+    }
+  } catch (err) {
+    const elapsed = ((performance.now() - t0) / 1000).toFixed(2);
+    box.style.background = "var(--danger-light)";
+    box.style.borderColor = "var(--danger)";
+    box.style.color = "var(--danger)";
+    box.textContent = `✕ 通信到達エラー (Failed to fetch) [${elapsed}秒]\nGoogle APIサーバーへ接続できませんでした。\n💡 確認点：\n1. プロキシがオンになっているか\n2. Smart Routing利用時、generativelanguage.googleapis.com がプロキシ経由になっているか`;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "🔌 接続テストを実行";
+  }
+}
+
+function escapeHtml(str) {
+  if (str == null) return "";
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function escapeJs(str) {
+  if (str == null) return "";
+  return String(str)
+    .replace(/\\/g, "\\\\")
+    .replace(/'/g, "\\'")
+    .replace(/"/g, "&quot;")
+    .replace(/\r?\n/g, " ");
+}
+
+// 初期化
+loadAllData();
+renderSidebar();
+renderMain();
+</script>
+</body>
+</html>
